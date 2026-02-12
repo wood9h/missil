@@ -450,11 +450,11 @@ export default function Game() {
         </div>
         <div className="flex items-center gap-4">
           <div className="bg-white rounded-xl px-6 py-3 shadow-sm border border-slate-200">
-            <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Precisão</div>
+            <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Taxa de Acerto</div>
             <div className="text-2xl font-bold text-indigo-600 font-mono">{accuracy}%</div>
           </div>
           <div className="bg-white rounded-xl px-6 py-3 shadow-sm border border-slate-200">
-            <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Acertos</div>
+            <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Alvos Atingidos</div>
             <div className="text-2xl font-bold text-green-600 font-mono">{hits}/{attempts}</div>
           </div>
         </div>

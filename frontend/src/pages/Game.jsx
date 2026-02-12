@@ -926,8 +926,8 @@ export default function Game() {
     }
     
     // Draw USSR target/base (right - União Soviética)
-    const targetScreenX = targetPos.x;
-    const targetScreenY = CANVAS_HEIGHT - 30 - targetPos.height;
+    const targetScreenX = currentTargetPos.x;
+    const targetScreenY = CANVAS_HEIGHT - 30 - currentTargetPos.height;
     
     const settings = DIFFICULTY_SETTINGS[difficulty];
     const isGuerraTotal = settings.ussrRetaliates;

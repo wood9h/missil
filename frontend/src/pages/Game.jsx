@@ -81,7 +81,7 @@ export default function Game() {
     setWallPos({ x: wallX, y: 0, width: wallWidth, height: wallHeight });
     setTargetPos({ 
       x: targetX, 
-      y: CANVAS_HEIGHT - targetHeight - 20, 
+      y: 30, 
       width: targetWidth, 
       height: targetHeight 
     });

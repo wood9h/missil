@@ -1299,81 +1299,95 @@ export default function Game() {
   const accuracy = attempts > 0 ? ((hits / attempts) * 100).toFixed(1) : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 md:p-8">
-      {/* Header */}
-      <header className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight text-slate-900" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-800 to-slate-900 p-4 md:p-6 flex flex-col">
+      {/* Header - Centered */}
+      <header className="mb-4 flex flex-col items-center text-center">
+        <div className="flex items-center gap-4 mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
             Guerra Fria: Cálculo Balístico
           </h1>
-          <p className="text-sm text-slate-500 mt-1">USA 🇺🇸 vs URSS 🚩 | Simulador de Mísseis Intercontinentais</p>
+          {/* Sound Toggle Button */}
+          <Button
+            onClick={toggleMusic}
+            variant="ghost"
+            size="sm"
+            className="text-white hover:bg-slate-700"
+            data-testid="sound-toggle"
+          >
+            {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
+          </Button>
         </div>
-        <div className="flex items-center gap-4">
+        <p className="text-sm text-slate-400">USA 🇺🇸 vs URSS 🚩 | Simulador de Mísseis Intercontinentais</p>
+        
+        {/* Score Display - Centered */}
+        <div className="flex items-center gap-4 mt-4">
           {difficulty === "total" ? (
             <>
-              <div className="bg-blue-600 rounded-xl px-6 py-3 shadow-sm border-2 border-blue-700">
-                <div className="text-xs uppercase tracking-wider text-white mb-1">🇺🇸 USA</div>
-                <div className="text-2xl font-bold text-white font-mono">{hits}</div>
+              <div className="bg-blue-600 rounded-xl px-6 py-3 shadow-lg border-2 border-blue-500">
+                <div className="text-xs uppercase tracking-wider text-blue-200 mb-1">🇺🇸 USA</div>
+                <div className="text-3xl font-bold text-white font-mono">{hits}</div>
               </div>
-              <div className="text-3xl font-bold text-slate-700">VS</div>
-              <div className="bg-red-600 rounded-xl px-6 py-3 shadow-sm border-2 border-red-700">
-                <div className="text-xs uppercase tracking-wider text-white mb-1">🚩 CCCP</div>
-                <div className="text-2xl font-bold text-white font-mono">{ussrHits}</div>
+              <div className="text-3xl font-bold text-slate-400">VS</div>
+              <div className="bg-red-600 rounded-xl px-6 py-3 shadow-lg border-2 border-red-500">
+                <div className="text-xs uppercase tracking-wider text-red-200 mb-1">🚩 CCCP</div>
+                <div className="text-3xl font-bold text-white font-mono">{ussrHits}</div>
               </div>
             </>
           ) : (
             <>
-              <div className="bg-white rounded-xl px-6 py-3 shadow-sm border border-slate-200">
-                <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Taxa de Acerto</div>
-                <div className="text-2xl font-bold text-indigo-600 font-mono">{accuracy}%</div>
+              <div className="bg-slate-700 rounded-xl px-6 py-3 shadow-lg border border-slate-600">
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">Taxa de Acerto</div>
+                <div className="text-2xl font-bold text-emerald-400 font-mono">{accuracy}%</div>
               </div>
-              <div className="bg-white rounded-xl px-6 py-3 shadow-sm border border-slate-200">
-                <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Alvos Atingidos</div>
-                <div className="text-2xl font-bold text-green-600 font-mono">{hits}/{attempts}</div>
+              <div className="bg-slate-700 rounded-xl px-6 py-3 shadow-lg border border-slate-600">
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1">Alvos Atingidos</div>
+                <div className="text-2xl font-bold text-amber-400 font-mono">{hits}/{attempts}</div>
               </div>
             </>
           )}
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 max-h-[calc(100vh-200px)]">
-        {/* Canvas Area */}
-        <div className="lg:col-span-9 bg-white rounded-2xl shadow-lg border border-slate-200 p-6">
+      {/* Main Content - Centered */}
+      <div className="flex-1 flex flex-col lg:flex-row gap-4 items-center justify-center max-w-7xl mx-auto w-full">
+        {/* Canvas Area - Centered */}
+        <div className="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 p-4 flex items-center justify-center">
           <canvas
             ref={canvasRef}
             width={CANVAS_WIDTH}
             height={CANVAS_HEIGHT}
-            className="w-full h-auto border border-slate-100 rounded-lg"
+            className="rounded-lg border border-slate-600 max-w-full h-auto"
+            style={{ maxHeight: 'calc(100vh - 350px)' }}
             data-testid="game-canvas"
           />
         </div>
 
-        {/* Controls Sidebar */}
-        <div className="lg:col-span-3 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-slate-200 p-6 flex flex-col gap-4 overflow-y-auto">
+        {/* Controls Panel - Compact and Centered */}
+        <div className="w-full lg:w-80 bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700 p-5 flex flex-col gap-4">
           {/* Difficulty Selector */}
           <div>
-            <label className="text-sm font-medium uppercase tracking-wider text-slate-500 mb-3 block">
+            <label className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2 block">
               Dificuldade
             </label>
             <Select value={difficulty} onValueChange={setDifficulty}>
-              <SelectTrigger className="w-full" data-testid="difficulty-select">
+              <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-white" data-testid="difficulty-select">
                 <SelectValue placeholder="Selecione" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="easy">Fácil</SelectItem>
-                <SelectItem value="medium">Médio</SelectItem>
-                <SelectItem value="hard">Difícil</SelectItem>
-                <SelectItem value="total">Guerra Total 🔥</SelectItem>
+              <SelectContent className="bg-slate-700 border-slate-600">
+                <SelectItem value="easy" className="text-white hover:bg-slate-600">Fácil</SelectItem>
+                <SelectItem value="medium" className="text-white hover:bg-slate-600">Médio</SelectItem>
+                <SelectItem value="hard" className="text-white hover:bg-slate-600">Difícil</SelectItem>
+                <SelectItem value="total" className="text-white hover:bg-slate-600">Guerra Total 🔥</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Angle Control */}
           <div>
-            <label className="text-sm font-medium uppercase tracking-wider text-slate-500 mb-3 block">
+            <label className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2 block">
               Ângulo de Lançamento
             </label>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <Slider
                 value={[angle]}
                 onValueChange={(val) => setAngle(val[0])}
@@ -1384,7 +1398,7 @@ export default function Game() {
                 disabled={isAnimating}
                 data-testid="angle-slider"
               />
-              <div className="text-2xl font-mono font-bold text-indigo-600 w-16 text-right">
+              <div className="text-xl font-mono font-bold text-emerald-400 w-14 text-right">
                 {angle}°
               </div>
             </div>
@@ -1392,10 +1406,10 @@ export default function Game() {
 
           {/* Velocity Control */}
           <div>
-            <label className="text-sm font-medium uppercase tracking-wider text-slate-500 mb-3 block">
-              Velocidade do Míssil
+            <label className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2 block">
+              Velocidade <span className="text-slate-500">(m/s)</span>
             </label>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <Slider
                 value={[velocity]}
                 onValueChange={(val) => setVelocity(val[0])}
@@ -1406,18 +1420,17 @@ export default function Game() {
                 disabled={isAnimating}
                 data-testid="velocity-slider"
               />
-              <div className="text-2xl font-mono font-bold text-indigo-600 w-16 text-right">
+              <div className="text-xl font-mono font-bold text-emerald-400 w-14 text-right">
                 {velocity}
               </div>
             </div>
-            <div className="text-xs text-slate-400 mt-1">m/s</div>
           </div>
 
           {/* Fire Button */}
           <Button
             onClick={fireProjectile}
             disabled={isAnimating}
-            className="w-full bg-red-600 hover:bg-red-700 text-white py-6 text-lg font-bold rounded-full shadow-lg hover:shadow-xl transition-all active:scale-95"
+            className="w-full bg-red-600 hover:bg-red-500 text-white py-5 text-lg font-bold rounded-xl shadow-lg hover:shadow-red-500/30 transition-all active:scale-95 disabled:opacity-50"
             data-testid="fire-button"
           >
             <Play className="mr-2 h-5 w-5" />
@@ -1428,7 +1441,7 @@ export default function Game() {
           <Button
             onClick={resetGame}
             variant="outline"
-            className="w-full border-2 border-slate-200 hover:bg-slate-50 py-3 rounded-xl"
+            className="w-full border-2 border-slate-600 hover:bg-slate-700 text-slate-300 py-3 rounded-xl"
             data-testid="reset-button"
           >
             <RotateCcw className="mr-2 h-4 w-4" />
@@ -1436,52 +1449,40 @@ export default function Game() {
           </Button>
 
           {/* Stats Card */}
-          <div className="pt-4 border-t border-slate-200">
-            <div className="bg-gradient-to-br from-indigo-50 to-rose-50 rounded-xl p-4">
+          <div className="pt-3 border-t border-slate-700">
+            <div className="bg-gradient-to-br from-slate-700 to-slate-800 rounded-xl p-3">
               <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="h-4 w-4 text-red-600" />
-                <span className="text-xs uppercase tracking-wider text-slate-600 font-medium">
+                <TrendingUp className="h-4 w-4 text-amber-400" />
+                <span className="text-xs uppercase tracking-wider text-slate-400 font-medium">
                   {difficulty === "total" ? "Placar da Guerra" : "Relatório de Missão"}
                 </span>
               </div>
               {difficulty === "total" ? (
-                <div className="space-y-3 text-sm">
-                  <div className="bg-blue-100 p-2 rounded">
-                    <div className="font-bold text-blue-900 mb-1">🇺🇸 Estados Unidos</div>
-                    <div className="flex justify-between text-xs">
-                      <span>Acertos:</span>
-                      <span className="font-bold">{hits}</span>
-                    </div>
-                    <div className="flex justify-between text-xs">
-                      <span>Disparos:</span>
-                      <span className="font-bold">{attempts}</span>
-                    </div>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="bg-blue-900/50 p-2 rounded border border-blue-800">
+                    <div className="font-bold text-blue-300 mb-1">🇺🇸 EUA</div>
+                    <div className="text-slate-300">Acertos: <span className="font-bold text-white">{hits}</span></div>
+                    <div className="text-slate-300">Disparos: <span className="font-bold text-white">{attempts}</span></div>
                   </div>
-                  <div className="bg-red-100 p-2 rounded">
-                    <div className="font-bold text-red-900 mb-1">🚩 União Soviética</div>
-                    <div className="flex justify-between text-xs">
-                      <span>Acertos:</span>
-                      <span className="font-bold">{ussrHits}</span>
-                    </div>
-                    <div className="flex justify-between text-xs">
-                      <span>Disparos:</span>
-                      <span className="font-bold">{ussrAttempts}</span>
-                    </div>
+                  <div className="bg-red-900/50 p-2 rounded border border-red-800">
+                    <div className="font-bold text-red-300 mb-1">🚩 URSS</div>
+                    <div className="text-slate-300">Acertos: <span className="font-bold text-white">{ussrHits}</span></div>
+                    <div className="text-slate-300">Disparos: <span className="font-bold text-white">{ussrAttempts}</span></div>
                   </div>
                 </div>
               ) : (
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-slate-600">Lançamentos:</span>
-                    <span className="font-bold text-slate-900">{attempts}</span>
+                <div className="space-y-1 text-sm">
+                  <div className="flex justify-between text-slate-400">
+                    <span>Lançamentos:</span>
+                    <span className="font-bold text-white">{attempts}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-600">Alvos Destruídos:</span>
-                    <span className="font-bold text-green-600">{hits}</span>
+                  <div className="flex justify-between text-slate-400">
+                    <span>Alvos Destruídos:</span>
+                    <span className="font-bold text-emerald-400">{hits}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-600">Falhas:</span>
-                    <span className="font-bold text-rose-600">{attempts - hits}</span>
+                  <div className="flex justify-between text-slate-400">
+                    <span>Falhas:</span>
+                    <span className="font-bold text-red-400">{attempts - hits}</span>
                   </div>
                 </div>
               )}

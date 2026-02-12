@@ -521,6 +521,14 @@ export default function Game() {
         toast.info("Projétil perdido", {
           description: "Fora do alcance",
         });
+        
+        // USSR retaliation even when USA missile is lost
+        const settings = DIFFICULTY_SETTINGS[difficulty];
+        if (settings.ussrRetaliates) {
+          setTimeout(() => {
+            ussrRetaliate();
+          }, 1500);
+        }
       }
     };
     

@@ -1110,7 +1110,7 @@ export default function Game() {
     let hitType = collision.type;
     
     // Play explosion sound
-    playSound(explosionSoundRef);
+    playExplosionSound();
     
     // Check explosion radius for area damage
     const explosionRadius = 80;

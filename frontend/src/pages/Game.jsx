@@ -860,18 +860,82 @@ export default function Game() {
       ussrTrajectoryPoints.push({ x, y });
       ussrTrajectoryPoints.forEach(point => point.isUSSR = true); // Mark all points as USSR
       
+      // Calculate USSR missile rotation angle
+      const missiles = ussrTrajectoryPoints.slice(-2);
+      let missileAngle = Math.PI; // Default pointing left
+      if (missiles.length >= 2) {
+        const dx = missiles[1].x - missiles[0].x;
+        const dy = missiles[1].y - missiles[0].y;
+        missileAngle = Math.atan2(-dy, dx);
+      }
+      
       // Draw USSR missile in red
       drawCanvas(ctx, null, []);
       
-      // Draw USSR missile
+      const missileX = x;
+      const missileY = CANVAS_HEIGHT - y - 30;
+      
+      ctx.save();
+      ctx.translate(missileX, missileY);
+      ctx.rotate(missileAngle);
+      
+      // USSR Missile body (red)
+      // Main body
       ctx.fillStyle = "#E23636";
+      ctx.fillRect(-12, -4, 24, 8);
+      
+      // Nose cone
       ctx.beginPath();
-      ctx.arc(x, CANVAS_HEIGHT - y - 30, 8, 0, Math.PI * 2);
+      ctx.moveTo(12, -4);
+      ctx.lineTo(18, 0);
+      ctx.lineTo(12, 4);
+      ctx.closePath();
+      ctx.fillStyle = "#B22222";
       ctx.fill();
       
-      ctx.fillStyle = "rgba(226, 54, 54, 0.6)";
+      // Tail fins
+      ctx.fillStyle = "#FF4444";
       ctx.beginPath();
-      ctx.arc(x, CANVAS_HEIGHT - y - 30, 14, 0, Math.PI * 2);
+      ctx.moveTo(-12, -4);
+      ctx.lineTo(-18, -8);
+      ctx.lineTo(-15, -4);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.beginPath();
+      ctx.moveTo(-12, 4);
+      ctx.lineTo(-18, 8);
+      ctx.lineTo(-15, 4);
+      ctx.closePath();
+      ctx.fill();
+      
+      // Yellow stripe (USSR style)
+      ctx.fillStyle = "#FFD700";
+      ctx.fillRect(0, -3, 8, 6);
+      
+      // Flame trail from exhaust
+      ctx.fillStyle = "rgba(255, 100, 50, 0.8)";
+      ctx.beginPath();
+      ctx.moveTo(-12, -2);
+      ctx.lineTo(-20, 0);
+      ctx.lineTo(-12, 2);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.fillStyle = "rgba(255, 150, 100, 0.6)";
+      ctx.beginPath();
+      ctx.moveTo(-12, -1);
+      ctx.lineTo(-16, 0);
+      ctx.lineTo(-12, 1);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.restore();
+      
+      // Glow effect
+      ctx.fillStyle = "rgba(226, 54, 54, 0.3)";
+      ctx.beginPath();
+      ctx.arc(missileX, missileY, 12, 0, Math.PI * 2);
       ctx.fill();
       
       // USSR trajectory in RED

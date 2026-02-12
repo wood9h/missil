@@ -719,83 +719,17 @@ export default function Game() {
       ctx.stroke();
     }
     
-    // Draw projectile (missile)
-    if (projectilePos) {
-      // Calculate missile rotation angle based on trajectory direction
-      const missiles = trajectoryPath.slice(-2); // Last 2 points
-      let missileAngle = 0;
-      if (missiles.length >= 2) {
-        const dx = missiles[1].x - missiles[0].x;
-        const dy = missiles[1].y - missiles[0].y;
-        missileAngle = Math.atan2(-dy, dx); // Negative dy because canvas Y is inverted
+    // Draw all active missiles
+    activeProjectiles.forEach(proj => {
+      if (proj.active && proj.trajectoryPoints && proj.trajectoryPoints.length > 0) {
+        drawMissile(ctx, proj.x, proj.y, proj.trajectoryPoints, proj.isUSSR);
       }
-      
-      const missileX = projectilePos.x;
-      const missileY = CANVAS_HEIGHT - projectilePos.y - 30;
-      
-      ctx.save();
-      ctx.translate(missileX, missileY);
-      ctx.rotate(missileAngle);
-      
-      // USA Missile body (blue)
-      // Main body
-      ctx.fillStyle = "#4A90E2";
-      ctx.fillRect(-12, -4, 24, 8);
-      
-      // Nose cone
-      ctx.beginPath();
-      ctx.moveTo(12, -4);
-      ctx.lineTo(18, 0);
-      ctx.lineTo(12, 4);
-      ctx.closePath();
-      ctx.fillStyle = "#2C5F8D";
-      ctx.fill();
-      
-      // Tail fins
-      ctx.fillStyle = "#5BA3E8";
-      ctx.beginPath();
-      ctx.moveTo(-12, -4);
-      ctx.lineTo(-18, -8);
-      ctx.lineTo(-15, -4);
-      ctx.closePath();
-      ctx.fill();
-      
-      ctx.beginPath();
-      ctx.moveTo(-12, 4);
-      ctx.lineTo(-18, 8);
-      ctx.lineTo(-15, 4);
-      ctx.closePath();
-      ctx.fill();
-      
-      // White stripe
-      ctx.fillStyle = "#FFFFFF";
-      ctx.fillRect(0, -3, 8, 6);
-      
-      // Flame trail from exhaust
-      ctx.fillStyle = "rgba(255, 150, 50, 0.8)";
-      ctx.beginPath();
-      ctx.moveTo(-12, -2);
-      ctx.lineTo(-20, 0);
-      ctx.lineTo(-12, 2);
-      ctx.closePath();
-      ctx.fill();
-      
-      ctx.fillStyle = "rgba(255, 200, 100, 0.6)";
-      ctx.beginPath();
-      ctx.moveTo(-12, -1);
-      ctx.lineTo(-16, 0);
-      ctx.lineTo(-12, 1);
-      ctx.closePath();
-      ctx.fill();
-      
-      ctx.restore();
-      
-      // Glow effect
-      ctx.fillStyle = "rgba(74, 144, 226, 0.3)";
-      ctx.beginPath();
-      ctx.arc(missileX, missileY, 12, 0, Math.PI * 2);
-      ctx.fill();
-    }
+    });
+    
+    // Draw all active explosions
+    activeExplosions.forEach(explosion => {
+      drawMushroomCloud(ctx, explosion.x, explosion.y, explosion.frame, explosion.maxFrames);
+    });
   };
 
   useEffect(() => {

@@ -906,23 +906,23 @@ export default function Game() {
     ctx.fillStyle = "#5D4E37"; // Brown mountains
     ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
     ctx.shadowBlur = 10;
-    ctx.fillRect(wallPos.x, CANVAS_HEIGHT - wallPos.height - 30, wallPos.width, wallPos.height);
+    ctx.fillRect(currentWallPos.x, CANVAS_HEIGHT - currentWallPos.height - 30, currentWallPos.width, currentWallPos.height);
     ctx.shadowBlur = 0;
     
     // Mountain peaks effect
     ctx.fillStyle = "#8B7355";
     ctx.beginPath();
-    for (let i = 0; i < wallPos.width; i += 8) {
-      ctx.moveTo(wallPos.x + i, CANVAS_HEIGHT - 30);
-      ctx.lineTo(wallPos.x + i + 4, CANVAS_HEIGHT - wallPos.height - 30 - 10);
-      ctx.lineTo(wallPos.x + i + 8, CANVAS_HEIGHT - 30);
+    for (let i = 0; i < currentWallPos.width; i += 8) {
+      ctx.moveTo(currentWallPos.x + i, CANVAS_HEIGHT - 30);
+      ctx.lineTo(currentWallPos.x + i + 4, CANVAS_HEIGHT - currentWallPos.height - 30 - 10);
+      ctx.lineTo(currentWallPos.x + i + 8, CANVAS_HEIGHT - 30);
     }
     ctx.fill();
     
     // Snow caps
     ctx.fillStyle = "#FFFFFF";
     for (let i = 0; i < 3; i++) {
-      ctx.fillRect(wallPos.x + (wallPos.width / 4) * i, CANVAS_HEIGHT - wallPos.height - 30, wallPos.width / 4, 5);
+      ctx.fillRect(currentWallPos.x + (currentWallPos.width / 4) * i, CANVAS_HEIGHT - currentWallPos.height - 30, currentWallPos.width / 4, 5);
     }
     
     // Draw USSR target/base (right - União Soviética)

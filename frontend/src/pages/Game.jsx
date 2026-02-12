@@ -388,11 +388,12 @@ export default function Game() {
     
     let wallX, wallHeight, wallWidth, targetX, targetDist;
     let attempts = 0;
-    const maxAttempts = 20;
+    const maxAttempts = 50;
     
-    // In Guerra Total mode, ensure target is further right for better visual
+    // In Guerra Total mode, ensure target is visible on right side but still random
     const isGuerraTotal = settings.ussrRetaliates;
-    const minTargetX = isGuerraTotal ? 800 : 0; // Minimum X position for target in Guerra Total
+    const minTargetX = isGuerraTotal ? 650 : 0; // Minimum X position for target in Guerra Total
+    const maxTargetX = CANVAS_WIDTH - 100; // Maximum X position (leave room for tower)
     
     do {
       // Random wall dimensions
@@ -404,24 +405,33 @@ export default function Game() {
       targetDist = Math.random() * (settings.targetMaxDist - settings.targetMinDist) + settings.targetMinDist;
       targetX = wallX + wallWidth + targetDist;
       
-      // In Guerra Total, ensure target is at least at minTargetX
-      if (isGuerraTotal && targetX < minTargetX) {
-        targetX = minTargetX + Math.random() * 200; // 800-1000
+      // In Guerra Total, ensure target is within acceptable range
+      if (isGuerraTotal) {
+        if (targetX < minTargetX) {
+          targetX = minTargetX + Math.random() * 300; // 650-950
+        }
+        if (targetX > maxTargetX) {
+          targetX = maxTargetX - Math.random() * 100;
+        }
+      }
+      
+      // Ensure target doesn't go off screen
+      if (targetX > maxTargetX) {
+        targetX = maxTargetX - Math.random() * 50;
       }
       
       // If last position was hit, ensure new position is significantly different
       if (wasHit && lastHitPos) {
         const distanceFromLast = Math.abs(targetX - lastHitPos.x);
-        // Require at least 350 pixels difference from last hit position (increased from 250)
-        if (distanceFromLast < 350) {
+        // Require at least 150 pixels difference from last hit position
+        if (distanceFromLast < 150) {
           attempts++;
           continue; // Try again
         }
         
-        // Also vary wall position more dramatically after hit
+        // Also vary wall position after hit
         const wallDistanceFromLast = Math.abs(wallX - lastHitPos.wallX);
-        // Require at least 150 pixels difference for wall (increased from 100)
-        if (wallDistanceFromLast < 150) {
+        if (wallDistanceFromLast < 80) {
           attempts++;
           continue; // Try again
         }
@@ -442,10 +452,8 @@ export default function Game() {
       height: targetHeight 
     });
     
-    // Store position for next round comparison
-    if (wasHit) {
-      setLastHitPos({ x: targetX, wallX: wallX });
-    }
+    // Always store position for next round comparison
+    setLastHitPos({ x: targetX, wallX: wallX });
     
     setTrajectory([]);
   };

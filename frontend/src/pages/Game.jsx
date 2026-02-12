@@ -463,13 +463,19 @@ export default function Game() {
             description: `Novo desafio em 2 segundos...`,
             icon: <Target className="h-5 w-5" />,
           });
+          
+          // Draw mushroom cloud explosion
+          setTrajectory(trajectoryPoints);
+          drawCanvas(ctx, null, trajectoryPoints);
+          drawMushroomCloud(ctx, x, y, 1.0);
+          
           setTimeout(() => {
             setTrajectory([]);
             generateNewRound();
             toast.info("Nova Localização URSS!", {
               description: "Base soviética reposicionada",
             });
-          }, 2000);
+          }, 3000);
         } else if (hitType === "wall") {
           toast.error("Bloqueado por obstáculo geográfico!", {
             description: "Ajuste o ângulo ou velocidade do míssil",

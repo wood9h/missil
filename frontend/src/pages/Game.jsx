@@ -939,9 +939,10 @@ export default function Game() {
       
       if (!ussrHasActiveMissile) {
         ctx.save();
-        ctx.translate(towerCenterX, towerBaseY - 65);
-        // USSR missile points LEFT and UP (180° base + angle)
-        ctx.rotate(Math.PI + Math.PI / 4); // 225 degrees (pointing up-left at 45°)
+        // Position missile above and to the left of the tower
+        ctx.translate(towerCenterX - 10, towerBaseY - 75);
+        // USSR missile points LEFT and UP (180° base + 45° angle)
+        ctx.rotate(-(Math.PI / 4 + Math.PI / 2)); // -135 degrees (pointing up-left at 45°)
         
         const ussrMissileLength = 40;
         const ussrMissileStart = 0;

@@ -1091,7 +1091,7 @@ export default function Game() {
       
       if (ussrHitType) {
         ussrTrajectoryPoints.push({ x, y });
-        ussrTrajectoryPoints[0].isUSSR = true; // Mark as USSR trajectory for red color
+        ussrTrajectoryPoints.forEach(point => point.isUSSR = true); // Mark as USSR trajectory for red color
         
         // Check if explosion radius hits USA base (area damage)
         const explosionRadius = 80;

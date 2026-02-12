@@ -164,34 +164,180 @@ export default function Game() {
     setTrajectory([]);
   };
 
-  const drawCanvas = (ctx, projectilePos = null, trajectoryPath = []) => {
+  // Draw a single missile (shared between USA and USSR)
+  const drawMissile = (ctx, x, y, trajectoryPoints, isUSSR) => {
+    // Calculate missile rotation angle based on trajectory direction
+    const missiles = trajectoryPoints.slice(-2);
+    let missileAngle = isUSSR ? Math.PI : 0; // Default direction
+    if (missiles.length >= 2) {
+      const dx = missiles[1].x - missiles[0].x;
+      const dy = missiles[1].y - missiles[0].y;
+      missileAngle = Math.atan2(-dy, dx);
+    }
+    
+    const missileX = x;
+    const missileY = CANVAS_HEIGHT - y - 30;
+    
+    ctx.save();
+    ctx.translate(missileX, missileY);
+    ctx.rotate(missileAngle);
+    
+    if (isUSSR) {
+      // USSR Missile body (red)
+      ctx.fillStyle = "#E23636";
+      ctx.fillRect(-12, -4, 24, 8);
+      
+      // Nose cone
+      ctx.beginPath();
+      ctx.moveTo(12, -4);
+      ctx.lineTo(18, 0);
+      ctx.lineTo(12, 4);
+      ctx.closePath();
+      ctx.fillStyle = "#B22222";
+      ctx.fill();
+      
+      // Tail fins
+      ctx.fillStyle = "#FF4444";
+      ctx.beginPath();
+      ctx.moveTo(-12, -4);
+      ctx.lineTo(-18, -8);
+      ctx.lineTo(-15, -4);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.beginPath();
+      ctx.moveTo(-12, 4);
+      ctx.lineTo(-18, 8);
+      ctx.lineTo(-15, 4);
+      ctx.closePath();
+      ctx.fill();
+      
+      // Yellow stripe
+      ctx.fillStyle = "#FFD700";
+      ctx.fillRect(0, -3, 8, 6);
+      
+      // Flame trail
+      ctx.fillStyle = "rgba(255, 100, 50, 0.8)";
+      ctx.beginPath();
+      ctx.moveTo(-12, -2);
+      ctx.lineTo(-20, 0);
+      ctx.lineTo(-12, 2);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.fillStyle = "rgba(255, 150, 100, 0.6)";
+      ctx.beginPath();
+      ctx.moveTo(-12, -1);
+      ctx.lineTo(-16, 0);
+      ctx.lineTo(-12, 1);
+      ctx.closePath();
+      ctx.fill();
+    } else {
+      // USA Missile body (blue)
+      ctx.fillStyle = "#4A90E2";
+      ctx.fillRect(-12, -4, 24, 8);
+      
+      // Nose cone
+      ctx.beginPath();
+      ctx.moveTo(12, -4);
+      ctx.lineTo(18, 0);
+      ctx.lineTo(12, 4);
+      ctx.closePath();
+      ctx.fillStyle = "#2C5F8D";
+      ctx.fill();
+      
+      // Tail fins
+      ctx.fillStyle = "#5BA3E8";
+      ctx.beginPath();
+      ctx.moveTo(-12, -4);
+      ctx.lineTo(-18, -8);
+      ctx.lineTo(-15, -4);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.beginPath();
+      ctx.moveTo(-12, 4);
+      ctx.lineTo(-18, 8);
+      ctx.lineTo(-15, 4);
+      ctx.closePath();
+      ctx.fill();
+      
+      // White stripe
+      ctx.fillStyle = "#FFFFFF";
+      ctx.fillRect(0, -3, 8, 6);
+      
+      // Flame trail
+      ctx.fillStyle = "rgba(255, 150, 50, 0.8)";
+      ctx.beginPath();
+      ctx.moveTo(-12, -2);
+      ctx.lineTo(-20, 0);
+      ctx.lineTo(-12, 2);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.fillStyle = "rgba(255, 200, 100, 0.6)";
+      ctx.beginPath();
+      ctx.moveTo(-12, -1);
+      ctx.lineTo(-16, 0);
+      ctx.lineTo(-12, 1);
+      ctx.closePath();
+      ctx.fill();
+    }
+    
+    ctx.restore();
+    
+    // Glow effect
+    ctx.fillStyle = isUSSR ? "rgba(226, 54, 54, 0.3)" : "rgba(74, 144, 226, 0.3)";
+    ctx.beginPath();
+    ctx.arc(missileX, missileY, 12, 0, Math.PI * 2);
+    ctx.fill();
+  };
+
+  // Draw trajectory trail
+  const drawTrajectoryTrail = (ctx, trajectoryPoints, isUSSR) => {
+    if (trajectoryPoints.length < 2) return;
+    
+    ctx.strokeStyle = isUSSR ? "#E23636" : "#4A90E2";
+    ctx.lineWidth = 3;
+    ctx.shadowColor = isUSSR ? "#FF0000" : "#0066FF";
+    ctx.shadowBlur = 10;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    trajectoryPoints.forEach((point, index) => {
+      const screenX = point.x;
+      const screenY = CANVAS_HEIGHT - point.y - 30;
+      if (index === 0) {
+        ctx.moveTo(screenX, screenY);
+      } else {
+        ctx.lineTo(screenX, screenY);
+      }
+    });
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  };
+
+  const drawCanvas = (ctx, activeProjectiles = [], activeExplosions = []) => {
     // Clear canvas
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     
     // Draw world map image as background - Pacific centered projection
     if (mapImage) {
       ctx.globalAlpha = 0.6;
-      // Draw the map shifted to show USA on left and USSR/Russia on right
-      // Original image width is used, we shift it left to center on Pacific
       const mapWidth = mapImage.width;
       const mapHeight = mapImage.height;
-      
-      // Shift the image to the left so USA appears on left side and Asia on right
-      // We'll draw the right portion of the map on the left, and left portion on right
-      const shift = mapWidth * 0.25; // Shift to center on Pacific
       
       // Draw right portion of map on the left side of canvas
       ctx.drawImage(
         mapImage,
-        mapWidth * 0.5, 0, mapWidth * 0.5, mapHeight, // Source: right half of map (Asia/Pacific)
-        0, 0, CANVAS_WIDTH * 0.5, CANVAS_HEIGHT // Destination: left half of canvas
+        mapWidth * 0.5, 0, mapWidth * 0.5, mapHeight,
+        0, 0, CANVAS_WIDTH * 0.5, CANVAS_HEIGHT
       );
       
       // Draw left portion of map on the right side of canvas  
       ctx.drawImage(
         mapImage,
-        0, 0, mapWidth * 0.5, mapHeight, // Source: left half of map (Americas)
-        CANVAS_WIDTH * 0.5, 0, CANVAS_WIDTH * 0.5, CANVAS_HEIGHT // Destination: right half of canvas
+        0, 0, mapWidth * 0.5, mapHeight,
+        CANVAS_WIDTH * 0.5, 0, CANVAS_WIDTH * 0.5, CANVAS_HEIGHT
       );
       
       ctx.globalAlpha = 1.0;
@@ -213,14 +359,12 @@ export default function Game() {
     ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
     ctx.lineWidth = 1;
     ctx.setLineDash([5, 5]);
-    // Latitude lines
     for (let y = 100; y < CANVAS_HEIGHT - 30; y += 80) {
       ctx.beginPath();
       ctx.moveTo(0, y);
       ctx.lineTo(CANVAS_WIDTH, y);
       ctx.stroke();
     }
-    // Longitude lines
     for (let x = 100; x < CANVAS_WIDTH; x += 100) {
       ctx.beginPath();
       ctx.moveTo(x, 0);
@@ -237,46 +381,17 @@ export default function Game() {
     ctx.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT - 30);
     ctx.stroke();
     
-    // Draw trajectory path (missile trail) - USA in BLUE
-    if (trajectoryPath.length > 0 && trajectoryPath[0].isUSSR !== true) {
-      ctx.strokeStyle = "#4A90E2";
-      ctx.lineWidth = 3;
-      ctx.shadowColor = "#0066FF";
-      ctx.shadowBlur = 10;
-      ctx.setLineDash([]);
-      ctx.beginPath();
-      trajectoryPath.forEach((point, index) => {
-        const screenX = point.x;
-        const screenY = CANVAS_HEIGHT - point.y - 30;
-        if (index === 0) {
-          ctx.moveTo(screenX, screenY);
-        } else {
-          ctx.lineTo(screenX, screenY);
-        }
-      });
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-    }
+    // Draw all trajectory trails
+    activeProjectiles.forEach(proj => {
+      if (proj.trajectoryPoints && proj.trajectoryPoints.length > 1) {
+        drawTrajectoryTrail(ctx, proj.trajectoryPoints, proj.isUSSR);
+      }
+    });
     
-    // Draw USSR trajectory in RED
-    if (trajectoryPath.length > 0 && trajectoryPath[0].isUSSR === true) {
-      ctx.strokeStyle = "#E23636";
-      ctx.lineWidth = 3;
-      ctx.shadowColor = "#FF0000";
-      ctx.shadowBlur = 10;
-      ctx.setLineDash([]);
-      ctx.beginPath();
-      trajectoryPath.forEach((point, index) => {
-        const screenX = point.x;
-        const screenY = CANVAS_HEIGHT - point.y - 30;
-        if (index === 0) {
-          ctx.moveTo(screenX, screenY);
-        } else {
-          ctx.lineTo(screenX, screenY);
-        }
-      });
-      ctx.stroke();
-      ctx.shadowBlur = 0;
+    // Also draw stored trajectory (for after missiles have landed)
+    if (trajectory.length > 0) {
+      const isUSSR = trajectory[0]?.isUSSR === true;
+      drawTrajectoryTrail(ctx, trajectory, isUSSR);
     }
     
     // Draw USA missile launch tower (left)

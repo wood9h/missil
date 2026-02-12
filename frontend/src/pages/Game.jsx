@@ -1162,8 +1162,10 @@ export default function Game() {
         missileAngle = Math.atan2(-dy, dx);
       }
       
-      // Draw USSR missile in red
-      drawCanvas(ctx, null, []);
+      // Draw both trajectories: keep USA trajectory visible
+      drawCanvas(ctx, null, trajectory.length > 0 ? trajectory : []);
+      
+      // Now draw USSR missile and trajectory on top
       
       const missileX = x;
       const missileY = CANVAS_HEIGHT - y - 30;

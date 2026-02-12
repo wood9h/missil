@@ -1093,6 +1093,24 @@ export default function Game() {
         ussrTrajectoryPoints.push({ x, y });
         ussrTrajectoryPoints[0].isUSSR = true; // Mark as USSR trajectory for red color
         
+        // Check if explosion radius hits USA base (area damage)
+        const explosionRadius = 80;
+        const distanceToUSA = Math.sqrt(
+          Math.pow(x - cannonPos.x, 2) + 
+          Math.pow(y - cannonPos.y, 2)
+        );
+        
+        // If explosion is close enough to USA base, it's destroyed
+        const usaHitByExplosion = distanceToUSA < explosionRadius;
+        
+        if (usaHitByExplosion && ussrHitType !== "usa") {
+          // USA destroyed by explosion blast!
+          ussrHitType = "usa";
+          toast.error("💥 Base Americana Atingida pela Explosão!", {
+            description: "Onda de choque nuclear!",
+          });
+        }
+        
         // Animate mushroom cloud explosion for ALL USSR impacts
         let explosionFrame = 0;
         const maxExplosionFrames = 60;
@@ -1109,9 +1127,11 @@ export default function Game() {
         
         if (ussrHitType === "usa") {
           setUssrHits(prev => prev + 1);
-          toast.error("💥 Base Americana Atingida!", {
-            description: "URSS marcou ponto!",
-          });
+          if (!usaHitByExplosion) {
+            toast.error("💥 Base Americana Atingida!", {
+              description: "URSS marcou ponto!",
+            });
+          }
         } else if (ussrHitType === "wall") {
           toast.info("Míssil soviético bloqueado", {
             description: "Explosão no obstáculo",

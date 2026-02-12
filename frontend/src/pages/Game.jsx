@@ -61,6 +61,7 @@ export default function Game() {
 
   useEffect(() => {
     generateNewRound();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [difficulty]);
 
   const generateNewRound = () => {
@@ -230,6 +231,7 @@ export default function Game() {
     
     const ctx = canvas.getContext("2d");
     drawCanvas(ctx, null, trajectory);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [angle, velocity, wallPos, targetPos, trajectory]);
 
   const checkCollision = (x, y) => {
@@ -375,7 +377,7 @@ export default function Game() {
         </div>
 
         {/* Controls Sidebar */}
-        <div className="lg:col-span-3 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-slate-200 p-6 flex flex-col gap-6">
+        <div className="lg:col-span-3 bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-slate-200 p-6 flex flex-col gap-4 overflow-y-auto">
           {/* Difficulty Selector */}
           <div>
             <label className="text-sm font-medium uppercase tracking-wider text-slate-500 mb-3 block">
@@ -453,15 +455,15 @@ export default function Game() {
           <Button
             onClick={resetGame}
             variant="outline"
-            className="w-full border-2 border-slate-200 hover:bg-slate-50 py-4 rounded-xl"
+            className="w-full border-2 border-slate-200 hover:bg-slate-50 py-3 rounded-xl"
             data-testid="reset-button"
           >
-            <RotateCcw className="mr-2 h-5 w-5" />
-            Reiniciar Jogo
+            <RotateCcw className="mr-2 h-4 w-4" />
+            Reiniciar
           </Button>
 
           {/* Stats Card */}
-          <div className="mt-auto pt-6 border-t border-slate-200">
+          <div className="pt-4 border-t border-slate-200">
             <div className="bg-gradient-to-br from-indigo-50 to-rose-50 rounded-xl p-4">
               <div className="flex items-center gap-2 mb-2">
                 <TrendingUp className="h-4 w-4 text-indigo-600" />

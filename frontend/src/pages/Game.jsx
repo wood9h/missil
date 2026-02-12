@@ -201,9 +201,30 @@ export default function Game() {
     ctx.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT - 30);
     ctx.stroke();
     
-    // Draw trajectory path (missile trail)
-    if (trajectoryPath.length > 0) {
-      ctx.strokeStyle = "#FF6B6B";
+    // Draw trajectory path (missile trail) - USA in BLUE
+    if (trajectoryPath.length > 0 && trajectoryPath[0].isUSSR !== true) {
+      ctx.strokeStyle = "#4A90E2";
+      ctx.lineWidth = 3;
+      ctx.shadowColor = "#0066FF";
+      ctx.shadowBlur = 10;
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      trajectoryPath.forEach((point, index) => {
+        const screenX = point.x;
+        const screenY = CANVAS_HEIGHT - point.y - 30;
+        if (index === 0) {
+          ctx.moveTo(screenX, screenY);
+        } else {
+          ctx.lineTo(screenX, screenY);
+        }
+      });
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+    
+    // Draw USSR trajectory in RED
+    if (trajectoryPath.length > 0 && trajectoryPath[0].isUSSR === true) {
+      ctx.strokeStyle = "#E23636";
       ctx.lineWidth = 3;
       ctx.shadowColor = "#FF0000";
       ctx.shadowBlur = 10;

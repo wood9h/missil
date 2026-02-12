@@ -460,6 +460,15 @@ export default function Game() {
         }
         
         setIsAnimating(false);
+        
+        // USSR retaliation in "Guerra Total" mode
+        const settings = DIFFICULTY_SETTINGS[difficulty];
+        if (settings.ussrRetaliates && hitType !== "target") {
+          setTimeout(() => {
+            ussrRetaliate();
+          }, 1500);
+        }
+        
         return;
       }
       

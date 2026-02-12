@@ -626,6 +626,10 @@ export default function Game() {
   };
 
   const drawCanvas = (ctx, activeProjectiles = [], activeExplosions = []) => {
+    // Get current positions from refs (for animation loop access)
+    const currentWallPos = wallPosRef.current;
+    const currentTargetPos = targetPosRef.current;
+    
     // Clear canvas
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     

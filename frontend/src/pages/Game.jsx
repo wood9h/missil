@@ -104,44 +104,208 @@ export default function Game() {
     // Clear canvas
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     
-    // Sky gradient (Cold War atmosphere)
-    const skyGradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
-    skyGradient.addColorStop(0, "#1e3a5f");
-    skyGradient.addColorStop(0.7, "#2a5a8a");
-    skyGradient.addColorStop(1, "#3d7ab8");
-    ctx.fillStyle = skyGradient;
+    // Ocean background with depth gradient
+    const oceanGradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
+    oceanGradient.addColorStop(0, "#1a4d6d");
+    oceanGradient.addColorStop(0.5, "#2563a8");
+    oceanGradient.addColorStop(1, "#3d82b8");
+    ctx.fillStyle = oceanGradient;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     
-    // World map simplified continents
-    ctx.fillStyle = "#4a5f3a"; // Dark green for land
-    ctx.globalAlpha = 0.4;
-    
-    // Americas (left side)
-    ctx.fillRect(50, 200, 80, 200);
-    ctx.fillRect(70, 350, 60, 150);
-    
-    // Europe/Asia (middle to right)
-    ctx.fillRect(400, 150, 200, 180);
-    ctx.fillRect(550, 200, 350, 200);
-    ctx.fillRect(750, 350, 150, 120);
-    
-    // Africa (middle-left)
-    ctx.fillRect(380, 320, 120, 180);
-    
-    ctx.globalAlpha = 1.0;
-    
-    // Ocean effect
-    ctx.strokeStyle = "rgba(100, 150, 200, 0.3)";
-    ctx.lineWidth = 2;
-    for (let y = 100; y < CANVAS_HEIGHT - 30; y += 30) {
+    // Latitude/longitude grid lines (war map style)
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+    ctx.lineWidth = 1;
+    // Latitude lines
+    for (let y = 100; y < CANVAS_HEIGHT - 30; y += 60) {
       ctx.beginPath();
       ctx.moveTo(0, y);
       ctx.lineTo(CANVAS_WIDTH, y);
       ctx.stroke();
     }
+    // Longitude lines
+    for (let x = 100; x < CANVAS_WIDTH; x += 80) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, CANVAS_HEIGHT - 30);
+      ctx.stroke();
+    }
+    
+    // Draw continents with more detail
+    ctx.fillStyle = "#3d5a3a"; // Dark green for land
+    ctx.strokeStyle = "#2d4a2a";
+    ctx.lineWidth = 2;
+    
+    // North America (left side)
+    ctx.beginPath();
+    ctx.moveTo(40, 180);
+    ctx.quadraticCurveTo(60, 160, 80, 170);
+    ctx.lineTo(120, 160);
+    ctx.quadraticCurveTo(140, 180, 130, 200);
+    ctx.lineTo(140, 240);
+    ctx.lineTo(130, 280);
+    ctx.lineTo(110, 300);
+    ctx.lineTo(90, 290);
+    ctx.lineTo(70, 310);
+    ctx.lineTo(50, 300);
+    ctx.lineTo(40, 260);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    
+    // South America
+    ctx.beginPath();
+    ctx.moveTo(100, 320);
+    ctx.lineTo(120, 340);
+    ctx.lineTo(130, 380);
+    ctx.lineTo(135, 430);
+    ctx.lineTo(125, 480);
+    ctx.lineTo(110, 500);
+    ctx.lineTo(95, 490);
+    ctx.lineTo(85, 460);
+    ctx.lineTo(80, 420);
+    ctx.lineTo(90, 360);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    
+    // Greenland
+    ctx.beginPath();
+    ctx.moveTo(200, 100);
+    ctx.quadraticCurveTo(220, 90, 240, 100);
+    ctx.lineTo(250, 120);
+    ctx.lineTo(240, 140);
+    ctx.lineTo(210, 145);
+    ctx.lineTo(195, 130);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    
+    // Europe
+    ctx.beginPath();
+    ctx.moveTo(380, 150);
+    ctx.lineTo(420, 140);
+    ctx.lineTo(450, 145);
+    ctx.lineTo(470, 160);
+    ctx.lineTo(480, 180);
+    ctx.lineTo(470, 200);
+    ctx.lineTo(450, 210);
+    ctx.lineTo(420, 215);
+    ctx.lineTo(400, 220);
+    ctx.lineTo(375, 210);
+    ctx.lineTo(360, 190);
+    ctx.lineTo(370, 165);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    
+    // Africa
+    ctx.beginPath();
+    ctx.moveTo(390, 240);
+    ctx.lineTo(430, 230);
+    ctx.lineTo(470, 240);
+    ctx.lineTo(490, 270);
+    ctx.lineTo(495, 310);
+    ctx.lineTo(490, 360);
+    ctx.lineTo(475, 410);
+    ctx.lineTo(450, 450);
+    ctx.lineTo(420, 470);
+    ctx.lineTo(390, 460);
+    ctx.lineTo(370, 430);
+    ctx.lineTo(360, 380);
+    ctx.lineTo(365, 320);
+    ctx.lineTo(375, 270);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    
+    // Asia (large continent)
+    ctx.beginPath();
+    ctx.moveTo(490, 140);
+    ctx.lineTo(550, 130);
+    ctx.lineTo(620, 140);
+    ctx.lineTo(680, 150);
+    ctx.lineTo(750, 160);
+    ctx.lineTo(820, 170);
+    ctx.lineTo(880, 180);
+    ctx.lineTo(920, 200);
+    ctx.lineTo(940, 230);
+    ctx.lineTo(950, 270);
+    ctx.lineTo(940, 310);
+    ctx.lineTo(920, 340);
+    ctx.lineTo(880, 360);
+    ctx.lineTo(830, 370);
+    ctx.lineTo(780, 380);
+    ctx.lineTo(740, 385);
+    ctx.lineTo(700, 380);
+    ctx.lineTo(660, 370);
+    ctx.lineTo(620, 350);
+    ctx.lineTo(580, 330);
+    ctx.lineTo(550, 310);
+    ctx.lineTo(520, 280);
+    ctx.lineTo(500, 250);
+    ctx.lineTo(490, 210);
+    ctx.lineTo(485, 170);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    
+    // Middle East
+    ctx.beginPath();
+    ctx.moveTo(500, 220);
+    ctx.lineTo(540, 210);
+    ctx.lineTo(570, 220);
+    ctx.lineTo(580, 250);
+    ctx.lineTo(570, 280);
+    ctx.lineTo(540, 290);
+    ctx.lineTo(510, 285);
+    ctx.lineTo(495, 260);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    
+    // Australia
+    ctx.beginPath();
+    ctx.moveTo(820, 400);
+    ctx.lineTo(880, 390);
+    ctx.lineTo(920, 400);
+    ctx.lineTo(950, 420);
+    ctx.lineTo(960, 450);
+    ctx.lineTo(950, 480);
+    ctx.lineTo(920, 500);
+    ctx.lineTo(880, 510);
+    ctx.lineTo(840, 505);
+    ctx.lineTo(810, 485);
+    ctx.lineTo(800, 450);
+    ctx.lineTo(805, 420);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    
+    // Add terrain texture to land
+    ctx.fillStyle = "rgba(70, 90, 60, 0.3)";
+    ctx.globalAlpha = 0.3;
+    for (let i = 0; i < 50; i++) {
+      const x = Math.random() * CANVAS_WIDTH;
+      const y = Math.random() * (CANVAS_HEIGHT - 50);
+      ctx.fillRect(x, y, 2, 2);
+    }
+    ctx.globalAlpha = 1.0;
+    
+    // Ocean wave effect
+    ctx.strokeStyle = "rgba(150, 200, 230, 0.2)";
+    ctx.lineWidth = 1;
+    for (let y = 100; y < CANVAS_HEIGHT - 30; y += 40) {
+      ctx.beginPath();
+      for (let x = 0; x < CANVAS_WIDTH; x += 20) {
+        const waveY = y + Math.sin(x / 30) * 3;
+        if (x === 0) ctx.moveTo(x, waveY);
+        else ctx.lineTo(x, waveY);
+      }
+      ctx.stroke();
+    }
     
     // Ground line (Earth surface)
-    ctx.strokeStyle = "#2c3e50";
+    ctx.strokeStyle = "#1a3a4a";
     ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.moveTo(0, CANVAS_HEIGHT - 30);

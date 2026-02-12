@@ -1009,14 +1009,14 @@ export default function Game() {
       // Original building design (non-Guerra Total modes)
       // Soviet base building
       ctx.fillStyle = "#8B0000"; // Dark red
-      ctx.fillRect(targetScreenX, targetScreenY + 20, targetPos.width, targetPos.height - 20);
+      ctx.fillRect(targetScreenX, targetScreenY + 20, currentTargetPos.width, currentTargetPos.height - 20);
       
       // Roof
       ctx.fillStyle = "#A52A2A";
       ctx.beginPath();
       ctx.moveTo(targetScreenX - 5, targetScreenY + 20);
-      ctx.lineTo(targetScreenX + targetPos.width / 2, targetScreenY);
-      ctx.lineTo(targetScreenX + targetPos.width + 5, targetScreenY + 20);
+      ctx.lineTo(targetScreenX + currentTargetPos.width / 2, targetScreenY);
+      ctx.lineTo(targetScreenX + currentTargetPos.width + 5, targetScreenY + 20);
       ctx.closePath();
       ctx.fill();
       

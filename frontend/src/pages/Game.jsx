@@ -390,6 +390,10 @@ export default function Game() {
     let attempts = 0;
     const maxAttempts = 20;
     
+    // In Guerra Total mode, ensure target is further right for better visual
+    const isGuerraTotal = settings.ussrRetaliates;
+    const minTargetX = isGuerraTotal ? 800 : 0; // Minimum X position for target in Guerra Total
+    
     do {
       // Random wall dimensions
       wallHeight = Math.random() * (settings.wallMaxHeight - settings.wallMinHeight) + settings.wallMinHeight;
@@ -399,6 +403,11 @@ export default function Game() {
       // Random target distance
       targetDist = Math.random() * (settings.targetMaxDist - settings.targetMinDist) + settings.targetMinDist;
       targetX = wallX + wallWidth + targetDist;
+      
+      // In Guerra Total, ensure target is at least at minTargetX
+      if (isGuerraTotal && targetX < minTargetX) {
+        targetX = minTargetX + Math.random() * 200; // 800-1000
+      }
       
       // If last position was hit, ensure new position is significantly different
       if (wasHit && lastHitPos) {

@@ -810,23 +810,50 @@ export default function Game() {
               <div className="flex items-center gap-2 mb-2">
                 <TrendingUp className="h-4 w-4 text-red-600" />
                 <span className="text-xs uppercase tracking-wider text-slate-600 font-medium">
-                  Relatório de Missão
+                  {difficulty === "total" ? "Placar da Guerra" : "Relatório de Missão"}
                 </span>
               </div>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-slate-600">Lançamentos:</span>
-                  <span className="font-bold text-slate-900">{attempts}</span>
+              {difficulty === "total" ? (
+                <div className="space-y-3 text-sm">
+                  <div className="bg-blue-100 p-2 rounded">
+                    <div className="font-bold text-blue-900 mb-1">🇺🇸 Estados Unidos</div>
+                    <div className="flex justify-between text-xs">
+                      <span>Acertos:</span>
+                      <span className="font-bold">{hits}</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span>Disparos:</span>
+                      <span className="font-bold">{attempts}</span>
+                    </div>
+                  </div>
+                  <div className="bg-red-100 p-2 rounded">
+                    <div className="font-bold text-red-900 mb-1">🚩 União Soviética</div>
+                    <div className="flex justify-between text-xs">
+                      <span>Acertos:</span>
+                      <span className="font-bold">{ussrHits}</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span>Disparos:</span>
+                      <span className="font-bold">{ussrAttempts}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-600">Alvos Destruídos:</span>
-                  <span className="font-bold text-green-600">{hits}</span>
+              ) : (
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">Lançamentos:</span>
+                    <span className="font-bold text-slate-900">{attempts}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">Alvos Destruídos:</span>
+                    <span className="font-bold text-green-600">{hits}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-600">Falhas:</span>
+                    <span className="font-bold text-rose-600">{attempts - hits}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-600">Falhas:</span>
-                  <span className="font-bold text-rose-600">{attempts - hits}</span>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>

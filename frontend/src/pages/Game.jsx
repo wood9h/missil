@@ -722,9 +722,22 @@ export default function Game() {
             description: "URSS marcou ponto!",
           });
           
-          // Draw mushroom cloud explosion
+          // Draw animated mushroom cloud explosion
           drawCanvas(ctx, null, ussrTrajectoryPoints);
-          drawMushroomCloud(ctx, x, y, 1.2);
+          
+          // Animate mushroom cloud formation
+          let explosionFrame = 0;
+          const maxExplosionFrames = 60; // 1 second at 60fps
+          const animateExplosion = () => {
+            drawCanvas(ctx, null, ussrTrajectoryPoints);
+            drawMushroomCloud(ctx, x, y, explosionFrame, maxExplosionFrames);
+            explosionFrame++;
+            
+            if (explosionFrame < maxExplosionFrames) {
+              requestAnimationFrame(animateExplosion);
+            }
+          };
+          animateExplosion();
           
           // Show explosion for longer
           setTimeout(() => {

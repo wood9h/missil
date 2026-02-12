@@ -843,6 +843,21 @@ export default function Game() {
       ctx.globalAlpha = 1.0;
       
       ctx.restore();
+      
+      // Draw aim line to show launch angle more clearly
+      ctx.save();
+      ctx.strokeStyle = "rgba(74, 144, 226, 0.6)";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(cannonScreenX, launchPointY);
+      const aimLength = 80;
+      const aimEndX = cannonScreenX + Math.cos(angleRad) * aimLength;
+      const aimEndY = launchPointY - Math.sin(angleRad) * aimLength;
+      ctx.lineTo(aimEndX, aimEndY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
     }
     
     // Draw obstacle (mountain range / geographic barrier)

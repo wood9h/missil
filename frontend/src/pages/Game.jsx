@@ -1236,7 +1236,7 @@ export default function Game() {
     const vx = velocity * Math.cos(angleRad);
     const vy = velocity * Math.sin(angleRad);
     
-    // Add USA projectile to the array
+    // Add USA projectile to the array (the animation loop will pick it up)
     const usaProjectile = {
       id: `usa-${Date.now()}`,
       startX: cannonPos.x,
@@ -1252,11 +1252,6 @@ export default function Game() {
     };
     
     projectilesRef.current.push(usaProjectile);
-    
-    // Start the game loop if not already running
-    if (!animationRef.current) {
-      animationRef.current = requestAnimationFrame(runGameLoop);
-    }
   };
 
   const drawMushroomCloud = (ctx, x, y, frame, maxFrames) => {

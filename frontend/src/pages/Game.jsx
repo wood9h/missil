@@ -122,15 +122,16 @@ export default function Game() {
       // If last position was hit, ensure new position is significantly different
       if (wasHit && lastHitPos) {
         const distanceFromLast = Math.abs(targetX - lastHitPos.x);
-        // Require at least 250 pixels difference from last hit position
-        if (distanceFromLast < 250) {
+        // Require at least 350 pixels difference from last hit position (increased from 250)
+        if (distanceFromLast < 350) {
           attempts++;
           continue; // Try again
         }
         
         // Also vary wall position more dramatically after hit
         const wallDistanceFromLast = Math.abs(wallX - lastHitPos.wallX);
-        if (wallDistanceFromLast < 100) {
+        // Require at least 150 pixels difference for wall (increased from 100)
+        if (wallDistanceFromLast < 150) {
           attempts++;
           continue; // Try again
         }

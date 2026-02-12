@@ -788,9 +788,9 @@ export default function Game() {
             
             setTimeout(() => {
               setTrajectory([]);
-              generateNewRound();
+              generateNewRound(true); // Pass true to indicate hit
               toast.info("Nova Localização URSS!", {
-                description: "Base soviética reposicionada",
+                description: "Base soviética reposicionada em local distante",
               });
             }, 3000);
           } else if (hitType === "wall") {

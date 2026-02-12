@@ -142,7 +142,7 @@ export default function Game() {
     
     // Draw cannon
     const cannonScreenX = cannonPos.x;
-    const cannonScreenY = CANVAS_HEIGHT - cannonPos.y;
+    const cannonScreenY = CANVAS_HEIGHT - 30;
     
     // Cannon base
     ctx.fillStyle = "#4338CA";

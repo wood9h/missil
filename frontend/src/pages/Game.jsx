@@ -934,7 +934,7 @@ export default function Game() {
     
     if (isGuerraTotal) {
       // USSR Missile Launch Tower (Guerra Total mode)
-      const towerCenterX = targetScreenX + targetPos.width / 2;
+      const towerCenterX = targetScreenX + currentTargetPos.width / 2;
       const towerBaseY = CANVAS_HEIGHT - 30;
       
       // Tower base platform

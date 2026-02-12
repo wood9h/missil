@@ -1,0 +1,139 @@
+{
+  "identity": {
+    "name": "Physics Cannon Lab",
+    "vibe": "Clean, Educational, Precision, Minimalist",
+    "archetype": "Soft Utility",
+    "theme_mode": "light"
+  },
+  "colors": {
+    "palette": {
+      "background": "#F8FAFC",
+      "foreground": "#0F172A",
+      "primary": "#6366F1",
+      "secondary": "#E2E8F0",
+      "accent": "#F43F5E",
+      "muted": "#94A3B8",
+      "success": "#22C55E",
+      "warning": "#EAB308"
+    },
+    "game_elements": {
+      "canvas_bg": "#FFFFFF",
+      "grid_lines": "#F1F5F9",
+      "cannon": "#6366F1",
+      "cannon_base": "#4338CA",
+      "projectile": "#1E293B",
+      "wall": "#94A3B8",
+      "wall_border": "#64748B",
+      "target": "#F43F5E",
+      "target_highlight": "#FB7185",
+      "trajectory_line": "#CBD5E1",
+      "trajectory_active": "#6366F1"
+    }
+  },
+  "typography": {
+    "font_family_headings": "Space Grotesk, sans-serif",
+    "font_family_body": "Inter, system-ui, sans-serif",
+    "scale": {
+      "h1": "text-4xl font-bold tracking-tight",
+      "h2": "text-2xl font-semibold tracking-tight",
+      "body": "text-base font-normal leading-relaxed",
+      "label": "text-sm font-medium uppercase tracking-wider text-muted-foreground",
+      "value": "text-xl font-mono font-bold text-foreground"
+    }
+  },
+  "layout": {
+    "structure": "Single Page App with Dashboard Layout",
+    "spacing": {
+      "container_padding": "p-4 md:p-8",
+      "section_gap": "gap-6",
+      "control_panel_gap": "gap-4"
+    },
+    "grid_system": "grid grid-cols-1 lg:grid-cols-12 gap-6 h-screen max-h-screen overflow-hidden",
+    "areas": {
+      "header": "col-span-full h-16 flex items-center justify-between px-6 border-b bg-white/50 backdrop-blur-md z-10",
+      "canvas_area": "col-span-full lg:col-span-9 relative rounded-2xl overflow-hidden border shadow-sm bg-white",
+      "sidebar_controls": "col-span-full lg:col-span-3 flex flex-col gap-6 p-6 bg-white/50 rounded-2xl border shadow-sm h-full overflow-y-auto"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-primary text-white hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all active:scale-95 rounded-full px-8 py-4 text-lg font-bold tracking-wide",
+      "secondary": "bg-white text-foreground border border-input hover:bg-accent hover:text-accent-foreground shadow-sm rounded-lg px-4 py-2 text-sm font-medium transition-colors",
+      "icon": "p-2 rounded-full hover:bg-muted transition-colors"
+    },
+    "inputs": {
+      "slider": "w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary",
+      "number": "bg-transparent border-b-2 border-muted focus:border-primary outline-none text-center font-mono text-lg w-20 transition-colors"
+    },
+    "cards": {
+      "stat_card": "bg-white p-4 rounded-xl border shadow-sm flex flex-col items-center justify-center gap-1"
+    },
+    "feedback": {
+      "toast": "sonner",
+      "modal": "shadcn/ui dialog"
+    }
+  },
+  "visual_enhancers": {
+    "shadows": {
+      "soft": "0 4px 20px -2px rgba(0, 0, 0, 0.05)",
+      "sharp": "4px 4px 0px 0px rgba(0,0,0,1)"
+    },
+    "borders": {
+      "radius": "rounded-xl",
+      "width": "border"
+    },
+    "textures": "Subtle dot grid pattern on canvas background (CSS radial-gradient)"
+  },
+  "motion": {
+    "transitions": "transition-all duration-200 ease-out",
+    "animations": {
+      "projectile": "Physics-based requestAnimationFrame loop (60fps)",
+      "explosion": "Particle system expansion and fade out",
+      "ui_entry": "animate-in fade-in slide-in-from-bottom-4 duration-500"
+    }
+  },
+  "assets": {
+    "icons": "lucide-react",
+    "images": {
+      "logo": "Use text logo 'Physics Lab' with a simple geometric icon (circle/square)",
+      "sprites": "Draw game elements (Tank, Cannon, Wall) using HTML5 Canvas API primitives (rect, arc, path) for crisp vector look. DO NOT use external images."
+    }
+  },
+  "accessibility": {
+    "contrast": "Ensure text is Slate-900 on Slate-50 backgrounds. Use Slate-500 for secondary text.",
+    "focus_states": "ring-2 ring-primary ring-offset-2",
+    "aria_labels": "All sliders and buttons must have descriptive aria-labels"
+  },
+  "instructions_to_main_agent": [
+    "Use 'Space Grotesk' from Google Fonts for headings if possible, otherwise fallback to sans-serif.",
+    "Implement the game loop using `requestAnimationFrame` for smooth 60fps physics.",
+    "Draw the 'Cannon' as a rotating rectangle on a semi-circle base.",
+    "Draw the 'Tank' as a combination of rectangles and a small barrel line.",
+    "Draw the 'Wall' as a solid rectangle with a striped pattern fill (context.createPattern).",
+    "Use a 'dashed' line style for the trajectory prediction.",
+    "The 'Fire' button should be the most prominent UI element in the sidebar.",
+    "Show 'Angle' and 'Velocity' values dynamically as the user drags sliders.",
+    "Implement a 'Reset' button to clear the canvas/trajectory.",
+    "Use `sonner` for 'Target Hit!' or 'Missed!' notifications."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy",
+    "Use glass-morphism effects with backdrop filters (12-24px blur)",
+    "You MUST NOT apply universal transition. Eg: `transition: all`. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms",
+    "You MUST NOT center align the app container, ie do not add `.App { text-align: center; }` in the css file. This disrupts the human natural reading flow of text",
+    "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style",
+    "NEVER: use AI assistant Emoji characters like 🤖🧠💭💡🔮🎯📚🎭🎬🎪🎉🎊🎁🎀🎂🍰🎈🎨🎰💰💵💳🏦💎🪙💸🤑📊📈📉💹🔢🏆🥇 etc for icons.",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.",
+    "Main agent relies on these image URLs. Missing categories (especially sponsor logos) = main agent will use placeholder text which is FORBIDDEN",
+    "Prioritize using pre-existing components from src/components/ui when applicable",
+    "Create new components that match the style and conventions of existing components when needed",
+    "Examine existing components to understand the project's component patterns before creating new ones",
+    "Components MUST use named exports (export const ComponentName = ...)",
+    "Pages MUST use default exports (export default function PageName() {...})",
+    "Use `sonner` for toasts"
+  ]
+}

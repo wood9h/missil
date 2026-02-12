@@ -293,11 +293,17 @@ export default function Game() {
         
         if (hitType === "target") {
           setHits(prev => prev + 1);
-          toast.success("Acertou o alvo!", {
-            description: `Ângulo: ${angle}° | Velocidade: ${velocity} m/s`,
+          toast.success("Acertou o alvo! 🎯", {
+            description: `Novo desafio em 2 segundos...`,
             icon: <Target className="h-5 w-5" />,
           });
-          setTimeout(() => generateNewRound(), 1500);
+          setTimeout(() => {
+            setTrajectory([]);
+            generateNewRound();
+            toast.info("Novo cenário!", {
+              description: "Parede e alvo reposicionados",
+            });
+          }, 2000);
         } else if (hitType === "wall") {
           toast.error("Bateu na parede!", {
             description: "Tente um ângulo ou velocidade diferente",

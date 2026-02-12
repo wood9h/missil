@@ -1165,8 +1165,27 @@ export default function Game() {
       // Draw both trajectories: keep USA trajectory visible
       drawCanvas(ctx, null, trajectory.length > 0 ? trajectory : []);
       
-      // Now draw USSR missile and trajectory on top
+      // Draw USSR trajectory in red on top
+      if (ussrTrajectoryPoints.length > 1) {
+        ctx.strokeStyle = "#E23636";
+        ctx.lineWidth = 3;
+        ctx.shadowColor = "#FF0000";
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ussrTrajectoryPoints.forEach((point, index) => {
+          const screenX = point.x;
+          const screenY = CANVAS_HEIGHT - point.y - 30;
+          if (index === 0) {
+            ctx.moveTo(screenX, screenY);
+          } else {
+            ctx.lineTo(screenX, screenY);
+          }
+        });
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
       
+      // Now draw USSR missile on top
       const missileX = x;
       const missileY = CANVAS_HEIGHT - y - 30;
       

@@ -17,6 +17,7 @@ Jogo de artilharia com tema de física da Guerra Fria. Um canhão (EUA) à esque
 - Mapa-múndi real como fundo
 - Torres de lançamento de mísseis detalhadas
 - Sprites de mísseis orientados pela trajetória
+- **Layout centralizado com tema escuro imersivo** ✅
 
 ### Níveis de Dificuldade
 - **Fácil**: Obstáculos menores, alvos mais próximos
@@ -29,6 +30,13 @@ Jogo de artilharia com tema de física da Guerra Fria. Um canhão (EUA) à esque
 - Ambos os mísseis voam simultaneamente na tela ✅
 - Míssil USA = trajetória azul, Míssil USSR = trajetória vermelha ✅
 - Placar "USA vs CCCP" substituí estatísticas normais ✅
+
+### Sistema de Áudio ✅
+- **Som de lançamento de míssil**: Efeito de foguete sintetizado (Web Audio API)
+- **Som de explosão nuclear**: Boom profundo com ruído
+- **Som de alerta**: Sirene quando URSS detecta lançamento
+- **Música de fundo**: Batida de tambor militar em loop
+- **Botão de mudo/som**: Controle de áudio no header
 
 ### Feedback Visual
 - Trajetórias coloridas (azul = USA, vermelho = USSR)
@@ -48,12 +56,19 @@ Jogo de artilharia com tema de física da Guerra Fria. Um canhão (EUA) à esque
 5. ✅ Sprites de mísseis detalhados com orientação dinâmica
 6. ✅ 4 níveis de dificuldade (Fácil, Médio, Difícil, Guerra Total)
 7. ✅ Modo "Guerra Total" com revide soviético imediato
-8. ✅ Voo simultâneo de mísseis (USA e USSR) - **BUG CORRIGIDO**
+8. ✅ Voo simultâneo de mísseis (USA e USSR)
 9. ✅ Trajetórias com cores diferenciadas
 10. ✅ Animação de cogumelo atômico
 11. ✅ Sistema de dano por raio de explosão
 12. ✅ Aleatoriedade na posição de alvos e obstáculos
 13. ✅ Placar "USA vs CCCP" no modo Guerra Total
+14. ✅ **Layout centralizado com tema escuro**
+15. ✅ **Sistema de áudio com Web Audio API**
+16. ✅ **Sons de lançamento de míssil (USA e USSR diferentes)**
+17. ✅ **Som de explosão nuclear**
+18. ✅ **Sirene de alerta para revide soviético**
+19. ✅ **Música de fundo com batida militar**
+20. ✅ **Botão de controle de áudio**
 
 **Correção de Bug Crítico (Dezembro 2025):**
 - Problema: Míssil americano desaparecia quando míssil soviético era lançado
@@ -71,7 +86,7 @@ Jogo de artilharia com tema de física da Guerra Fria. Um canhão (EUA) à esque
     ├── src/
     │   ├── App.js         # Roteador
     │   └── pages/
-    │       └── Game.jsx   # Toda lógica do jogo (canvas, física, animação)
+    │       └── Game.jsx   # Toda lógica do jogo (canvas, física, animação, áudio)
     └── package.json
 ```
 
@@ -81,7 +96,6 @@ Jogo de artilharia com tema de física da Guerra Fria. Um canhão (EUA) à esque
 - [ ] Aumentar variação de posição do alvo após acertos (se necessário)
 
 ### P2 - Média Prioridade
-- [ ] Adicionar efeitos sonoros
 - [ ] Modo multiplayer local
 - [ ] Sistema de níveis/progressão
 - [ ] Ranking de pontuação

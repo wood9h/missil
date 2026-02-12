@@ -1214,7 +1214,7 @@ export default function Game() {
     startBackgroundMusic();
     
     // Play USA launch sound
-    playSound(launchSoundUSARef);
+    playLaunchSound(false);
     
     setIsAnimating(true);
     setAttempts(prev => prev + 1);
@@ -1224,7 +1224,7 @@ export default function Game() {
     const settings = DIFFICULTY_SETTINGS[difficulty];
     if (settings.ussrRetaliates) {
       setTimeout(() => {
-        playSound(alertSoundRef);
+        playAlertSound();
         toast.warning("⚠️ Lançamento Detectado!", {
           description: "URSS preparando contra-ataque...",
         });

@@ -989,50 +989,50 @@ export default function Game() {
       
       if (!ussrHasActiveMissile) {
         ctx.save();
-        // Position missile above and to the left of the tower
-        ctx.translate(towerCenterX - 15, towerBaseY - 80);
+        // Position missile to the left of the tower, pointing up-left
+        ctx.translate(towerCenterX - 25, towerBaseY - 50);
         // USSR missile points LEFT and UP (45° angle pointing up-left)
         ctx.rotate(-Math.PI * 3 / 4); // -135 degrees
         
-        const ussrMissileLength = 40;
+        const ussrMissileLength = 35;
         const ussrMissileStart = 0;
         
-        // USSR Missile body (red with white)
+        // USSR Missile body (red)
         ctx.fillStyle = "#E23636";
-        ctx.fillRect(ussrMissileStart, -5, ussrMissileLength - 6, 10);
+        ctx.fillRect(ussrMissileStart, -4, ussrMissileLength - 6, 8);
         
         // Nose cone
         ctx.fillStyle = "#B22222";
         ctx.beginPath();
-        ctx.moveTo(ussrMissileStart + ussrMissileLength - 6, -5);
-        ctx.lineTo(ussrMissileStart + ussrMissileLength + 5, 0);
-        ctx.lineTo(ussrMissileStart + ussrMissileLength - 6, 5);
+        ctx.moveTo(ussrMissileStart + ussrMissileLength - 6, -4);
+        ctx.lineTo(ussrMissileStart + ussrMissileLength + 4, 0);
+        ctx.lineTo(ussrMissileStart + ussrMissileLength - 6, 4);
         ctx.closePath();
         ctx.fill();
         
         // Tail fins
         ctx.fillStyle = "#FF4444";
         ctx.beginPath();
-        ctx.moveTo(ussrMissileStart, -5);
-        ctx.lineTo(ussrMissileStart - 6, -9);
-        ctx.lineTo(ussrMissileStart + 5, -5);
+        ctx.moveTo(ussrMissileStart, -4);
+        ctx.lineTo(ussrMissileStart - 5, -8);
+        ctx.lineTo(ussrMissileStart + 4, -4);
         ctx.closePath();
         ctx.fill();
         
         ctx.beginPath();
-        ctx.moveTo(ussrMissileStart, 5);
-        ctx.lineTo(ussrMissileStart - 6, 9);
-        ctx.lineTo(ussrMissileStart + 5, 5);
+        ctx.moveTo(ussrMissileStart, 4);
+        ctx.lineTo(ussrMissileStart - 5, 8);
+        ctx.lineTo(ussrMissileStart + 4, 4);
         ctx.closePath();
         ctx.fill();
         
         // Yellow stripe (USSR style)
         ctx.fillStyle = "#FFD700";
-        ctx.fillRect(ussrMissileStart + 16, -4, 10, 8);
+        ctx.fillRect(ussrMissileStart + 14, -3, 8, 6);
         
         // Exhaust nozzle
-        ctx.fillStyle = "#1A3A4A";
-        ctx.fillRect(ussrMissileStart - 3, -4, 4, 8);
+        ctx.fillStyle = "#333";
+        ctx.fillRect(ussrMissileStart - 2, -3, 3, 6);
         
         ctx.restore();
       }

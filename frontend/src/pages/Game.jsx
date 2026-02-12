@@ -824,14 +824,6 @@ export default function Game() {
               description: "Explosão em território neutro",
             });
           }
-          
-          // USSR retaliation in "Guerra Total" mode - ALWAYS retaliate
-          const settings = DIFFICULTY_SETTINGS[difficulty];
-          if (settings.ussrRetaliates) {
-            setTimeout(() => {
-              ussrRetaliate();
-            }, 2500);
-          }
         }, 200); // Brief pause to show trajectory
         
         return;

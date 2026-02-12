@@ -1401,7 +1401,7 @@ export default function Game() {
     setUssrAttempts(prev => prev + 1);
     
     // Play USSR launch sound
-    playSound(launchSoundUSSRRef);
+    playLaunchSound(true);
     
     toast.warning("⚠️ URSS Revidando!", {
       description: "Míssil soviético lançado!",

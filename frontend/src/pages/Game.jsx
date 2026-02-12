@@ -1537,7 +1537,7 @@ export default function Game() {
     const currentTargetPos = targetPosRef.current;
     
     // Calculate launch position - from the USSR tower in Guerra Total mode
-    // The tower is centered at targetPos.x + targetPos.width / 2
+    // The tower is centered at currentTargetPos.x + currentTargetPos.width / 2
     const launchX = currentTargetPos.x + currentTargetPos.width / 2;
     const launchY = 50; // Launch from top of tower (higher than ground level 30)
     

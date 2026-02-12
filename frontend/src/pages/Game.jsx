@@ -104,29 +104,45 @@ export default function Game() {
     // Clear canvas
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     
-    // Background
-    ctx.fillStyle = "#FFFFFF";
+    // Sky gradient (Cold War atmosphere)
+    const skyGradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
+    skyGradient.addColorStop(0, "#1e3a5f");
+    skyGradient.addColorStop(0.7, "#2a5a8a");
+    skyGradient.addColorStop(1, "#3d7ab8");
+    ctx.fillStyle = skyGradient;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     
-    // Grid pattern
-    ctx.strokeStyle = "#F1F5F9";
-    ctx.lineWidth = 1;
-    for (let x = 0; x < CANVAS_WIDTH; x += 40) {
-      ctx.beginPath();
-      ctx.moveTo(x, 0);
-      ctx.lineTo(x, CANVAS_HEIGHT);
-      ctx.stroke();
-    }
-    for (let y = 0; y < CANVAS_HEIGHT; y += 40) {
+    // World map simplified continents
+    ctx.fillStyle = "#4a5f3a"; // Dark green for land
+    ctx.globalAlpha = 0.4;
+    
+    // Americas (left side)
+    ctx.fillRect(50, 200, 80, 200);
+    ctx.fillRect(70, 350, 60, 150);
+    
+    // Europe/Asia (middle to right)
+    ctx.fillRect(400, 150, 200, 180);
+    ctx.fillRect(550, 200, 350, 200);
+    ctx.fillRect(750, 350, 150, 120);
+    
+    // Africa (middle-left)
+    ctx.fillRect(380, 320, 120, 180);
+    
+    ctx.globalAlpha = 1.0;
+    
+    // Ocean effect
+    ctx.strokeStyle = "rgba(100, 150, 200, 0.3)";
+    ctx.lineWidth = 2;
+    for (let y = 100; y < CANVAS_HEIGHT - 30; y += 30) {
       ctx.beginPath();
       ctx.moveTo(0, y);
       ctx.lineTo(CANVAS_WIDTH, y);
       ctx.stroke();
     }
     
-    // Ground line
-    ctx.strokeStyle = "#94A3B8";
-    ctx.lineWidth = 3;
+    // Ground line (Earth surface)
+    ctx.strokeStyle = "#2c3e50";
+    ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.moveTo(0, CANVAS_HEIGHT - 30);
     ctx.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT - 30);

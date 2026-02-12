@@ -84,6 +84,7 @@ export default function Game() {
   const [cannonPos] = useState({ x: 50, y: 30 });
   const [wallPos, setWallPos] = useState({ x: 400, y: 0, width: 20, height: 150 });
   const [targetPos, setTargetPos] = useState({ x: 900, y: 30, width: 60, height: 60 });
+  const [lastHitPos, setLastHitPos] = useState(null); // Track last successful hit position
   const [mapImage, setMapImage] = useState(null);
 
   useEffect(() => {

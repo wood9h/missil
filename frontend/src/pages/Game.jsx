@@ -110,11 +110,17 @@ export default function Game() {
   const [lastHitPos, setLastHitPos] = useState(null); // Track last successful hit position
   const [mapImage, setMapImage] = useState(null);
   
-  // Ref for targetPos to access in callbacks
+  // Refs for positions to access in animation loop
   const targetPosRef = useRef(targetPos);
+  const wallPosRef = useRef(wallPos);
+  
   useEffect(() => {
     targetPosRef.current = targetPos;
   }, [targetPos]);
+  
+  useEffect(() => {
+    wallPosRef.current = wallPos;
+  }, [wallPos]);
 
   // Initialize Web Audio API context
   const getAudioContext = () => {

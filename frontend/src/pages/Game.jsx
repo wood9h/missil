@@ -1136,283 +1136,65 @@ export default function Game() {
       description: "Míssil soviético lançado!",
     });
     
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    
     const settings = DIFFICULTY_SETTINGS[difficulty];
     const willHit = Math.random() < settings.ussrAccuracy;
     
     // Calculate angle and velocity for USSR missile (from right to left)
-    // USSR shoots from targetPos toward cannonPos
     const distanceX = targetPos.x - cannonPos.x;
-    const targetY = 30; // USA base at ground level
     
     let ussrAngle, ussrVelocity;
     
     if (willHit) {
-      // Calculate to hit USA base (50% chance)
-      // Use physics: range = v^2 * sin(2*theta) / g
       const g = 9.8;
       const targetRange = distanceX / SCALE;
-      
-      // Choose a random velocity between 40-70 m/s
       ussrVelocity = 40 + Math.random() * 30;
       
-      // Calculate angle to hit target
-      // sin(2*theta) = g * range / v^2
       const sinValue = (g * targetRange) / (ussrVelocity * ussrVelocity);
       
       if (sinValue <= 1 && sinValue >= -1) {
         const angle2theta = Math.asin(sinValue);
         ussrAngle = (angle2theta / 2) * (180 / Math.PI);
-        
-        // Add small random variation
         ussrAngle += (Math.random() - 0.5) * 5;
       } else {
-        // If calculation fails, use reasonable guess
         ussrAngle = 40 + Math.random() * 15;
       }
     } else {
-      // Miss intentionally (50% chance)
-      // Random angle and velocity that will miss
       ussrAngle = 20 + Math.random() * 60;
       ussrVelocity = 30 + Math.random() * 50;
       
-      // Bias to make it miss
       if (Math.random() > 0.5) {
-        ussrAngle *= 0.7; // Too low
+        ussrAngle *= 0.7;
       } else {
-        ussrVelocity *= 0.8; // Too slow
+        ussrVelocity *= 0.8;
       }
     }
     
-    // Animate USSR missile
+    // Calculate physics for USSR missile
     const angleRad = (ussrAngle * Math.PI) / 180;
     const vx = -ussrVelocity * Math.cos(angleRad); // Negative because going left
     const vy = ussrVelocity * Math.sin(angleRad);
-    const g = 9.8;
     
-    let t = 0;
-    const dt = 0.016;
-    const ussrTrajectoryPoints = [];
-    let ussrHitType = null;
-    
-    const animateUSSR = () => {
-      const x = targetPos.x + vx * SCALE * t;
-      const y = targetPos.y + vy * SCALE * t - 0.5 * g * SCALE * t * t;
-      
-      // Check collision with ground
-      if (y <= 0) {
-        ussrHitType = "ground";
-      }
-      
-      // Check collision with wall (from right side)
-      if (!ussrHitType && x >= wallPos.x && x <= wallPos.x + wallPos.width && y <= wallPos.height) {
-        ussrHitType = "wall";
-      }
-      
-      // Check collision with USA base
-      if (!ussrHitType && x >= cannonPos.x - 30 && x <= cannonPos.x + 30 && y >= 0 && y <= 50) {
-        ussrHitType = "usa";
-      }
-      
-      if (ussrHitType) {
-        ussrTrajectoryPoints.push({ x, y });
-        ussrTrajectoryPoints.forEach(point => point.isUSSR = true); // Mark as USSR trajectory for red color
-        
-        // Check if explosion radius hits USA base (area damage)
-        const explosionRadius = 80;
-        const distanceToUSA = Math.sqrt(
-          Math.pow(x - cannonPos.x, 2) + 
-          Math.pow(y - cannonPos.y, 2)
-        );
-        
-        // If explosion is close enough to USA base, it's destroyed
-        const usaHitByExplosion = distanceToUSA < explosionRadius;
-        
-        if (usaHitByExplosion && ussrHitType !== "usa") {
-          // USA destroyed by explosion blast!
-          ussrHitType = "usa";
-          toast.error("💥 Base Americana Atingida pela Explosão!", {
-            description: "Onda de choque nuclear!",
-          });
-        }
-        
-        // Animate mushroom cloud explosion for ALL USSR impacts
-        let explosionFrame = 0;
-        const maxExplosionFrames = 60;
-        const animateExplosion = () => {
-          // Keep drawing the current trajectory state
-          drawCanvas(ctx, null, trajectory.length > 0 ? trajectory : ussrTrajectoryPoints);
-          drawMushroomCloud(ctx, x, y, explosionFrame, maxExplosionFrames);
-          explosionFrame++;
-          
-          if (explosionFrame < maxExplosionFrames) {
-            requestAnimationFrame(animateExplosion);
-          }
-        };
-        animateExplosion();
-        
-        if (ussrHitType === "usa") {
-          setUssrHits(prev => prev + 1);
-          if (!usaHitByExplosion) {
-            toast.error("💥 Base Americana Atingida!", {
-              description: "URSS marcou ponto!",
-            });
-          }
-        } else if (ussrHitType === "wall") {
-          toast.info("Míssil soviético bloqueado", {
-            description: "Explosão no obstáculo",
-          });
-        } else {
-          toast.info("Míssil soviético errou", {
-            description: "Explosão em território neutro",
-          });
-        }
-        
-        setTimeout(() => {
-          setTrajectory([]);
-        }, 3000);
-        
-        return;
-      }
-      
-      ussrTrajectoryPoints.push({ x, y });
-      ussrTrajectoryPoints.forEach(point => point.isUSSR = true); // Mark all points as USSR
-      
-      // Calculate USSR missile rotation angle
-      const missiles = ussrTrajectoryPoints.slice(-2);
-      let missileAngle = Math.PI; // Default pointing left
-      if (missiles.length >= 2) {
-        const dx = missiles[1].x - missiles[0].x;
-        const dy = missiles[1].y - missiles[0].y;
-        missileAngle = Math.atan2(-dy, dx);
-      }
-      
-      // Draw both trajectories: keep USA trajectory visible
-      drawCanvas(ctx, null, trajectory.length > 0 ? trajectory : []);
-      
-      // Draw USSR trajectory in red on top
-      if (ussrTrajectoryPoints.length > 1) {
-        ctx.strokeStyle = "#E23636";
-        ctx.lineWidth = 3;
-        ctx.shadowColor = "#FF0000";
-        ctx.shadowBlur = 10;
-        ctx.beginPath();
-        ussrTrajectoryPoints.forEach((point, index) => {
-          const screenX = point.x;
-          const screenY = CANVAS_HEIGHT - point.y - 30;
-          if (index === 0) {
-            ctx.moveTo(screenX, screenY);
-          } else {
-            ctx.lineTo(screenX, screenY);
-          }
-        });
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-      }
-      
-      // Now draw USSR missile on top
-      const missileX = x;
-      const missileY = CANVAS_HEIGHT - y - 30;
-      
-      ctx.save();
-      ctx.translate(missileX, missileY);
-      ctx.rotate(missileAngle);
-      
-      // USSR Missile body (red)
-      // Main body
-      ctx.fillStyle = "#E23636";
-      ctx.fillRect(-12, -4, 24, 8);
-      
-      // Nose cone
-      ctx.beginPath();
-      ctx.moveTo(12, -4);
-      ctx.lineTo(18, 0);
-      ctx.lineTo(12, 4);
-      ctx.closePath();
-      ctx.fillStyle = "#B22222";
-      ctx.fill();
-      
-      // Tail fins
-      ctx.fillStyle = "#FF4444";
-      ctx.beginPath();
-      ctx.moveTo(-12, -4);
-      ctx.lineTo(-18, -8);
-      ctx.lineTo(-15, -4);
-      ctx.closePath();
-      ctx.fill();
-      
-      ctx.beginPath();
-      ctx.moveTo(-12, 4);
-      ctx.lineTo(-18, 8);
-      ctx.lineTo(-15, 4);
-      ctx.closePath();
-      ctx.fill();
-      
-      // Yellow stripe (USSR style)
-      ctx.fillStyle = "#FFD700";
-      ctx.fillRect(0, -3, 8, 6);
-      
-      // Flame trail from exhaust
-      ctx.fillStyle = "rgba(255, 100, 50, 0.8)";
-      ctx.beginPath();
-      ctx.moveTo(-12, -2);
-      ctx.lineTo(-20, 0);
-      ctx.lineTo(-12, 2);
-      ctx.closePath();
-      ctx.fill();
-      
-      ctx.fillStyle = "rgba(255, 150, 100, 0.6)";
-      ctx.beginPath();
-      ctx.moveTo(-12, -1);
-      ctx.lineTo(-16, 0);
-      ctx.lineTo(-12, 1);
-      ctx.closePath();
-      ctx.fill();
-      
-      ctx.restore();
-      
-      // Glow effect
-      ctx.fillStyle = "rgba(226, 54, 54, 0.3)";
-      ctx.beginPath();
-      ctx.arc(missileX, missileY, 12, 0, Math.PI * 2);
-      ctx.fill();
-      
-      // USSR trajectory in RED
-      if (ussrTrajectoryPoints.length > 1) {
-        ctx.strokeStyle = "#E23636";
-        ctx.lineWidth = 3;
-        ctx.shadowColor = "#FF0000";
-        ctx.shadowBlur = 10;
-        ctx.beginPath();
-        ussrTrajectoryPoints.forEach((point, index) => {
-          const screenX = point.x;
-          const screenY = CANVAS_HEIGHT - point.y - 30;
-          if (index === 0) {
-            ctx.moveTo(screenX, screenY);
-          } else {
-            ctx.lineTo(screenX, screenY);
-          }
-        });
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-      }
-      
-      t += dt;
-      
-      if (t < 10 && x > -50) {
-        animationRef.current = requestAnimationFrame(animateUSSR);
-      } else {
-        // Missed completely
-        toast.info("Míssil soviético perdido");
-        setTimeout(() => {
-          setTrajectory([]);
-        }, 1000);
-      }
+    // Add USSR projectile to the array
+    const ussrProjectile = {
+      id: `ussr-${Date.now()}`,
+      startX: targetPos.x,
+      startY: targetPos.y,
+      x: targetPos.x,
+      y: targetPos.y,
+      vx,
+      vy,
+      t: 0,
+      isUSSR: true,
+      trajectoryPoints: [{ x: targetPos.x, y: targetPos.y, isUSSR: true }],
+      active: true,
     };
     
-    animateUSSR();
+    projectilesRef.current.push(ussrProjectile);
+    
+    // Start the game loop if not already running
+    if (!animationRef.current) {
+      animationRef.current = requestAnimationFrame(runGameLoop);
+    }
   };
 
   const resetGame = () => {

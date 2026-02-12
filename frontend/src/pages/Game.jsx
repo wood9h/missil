@@ -361,9 +361,10 @@ export default function Game() {
       
       ctx.save();
       ctx.translate(cannonScreenX, launchPointY);
-      ctx.rotate(angleRad);
+      // Rotate 90 degrees more to make missile perpendicular (standing on the angle line)
+      ctx.rotate(angleRad + Math.PI / 2);
       
-      // Draw the missile ready to launch
+      // Draw the missile standing perpendicular to launch angle
       const missileLength = 35;
       const missileStart = 5;
       

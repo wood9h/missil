@@ -678,14 +678,30 @@ export default function Game() {
           <p className="text-sm text-slate-500 mt-1">USA 🇺🇸 vs URSS 🚩 | Simulador de Mísseis Intercontinentais</p>
         </div>
         <div className="flex items-center gap-4">
-          <div className="bg-white rounded-xl px-6 py-3 shadow-sm border border-slate-200">
-            <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Taxa de Acerto</div>
-            <div className="text-2xl font-bold text-indigo-600 font-mono">{accuracy}%</div>
-          </div>
-          <div className="bg-white rounded-xl px-6 py-3 shadow-sm border border-slate-200">
-            <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Alvos Atingidos</div>
-            <div className="text-2xl font-bold text-green-600 font-mono">{hits}/{attempts}</div>
-          </div>
+          {difficulty === "total" ? (
+            <>
+              <div className="bg-blue-600 rounded-xl px-6 py-3 shadow-sm border-2 border-blue-700">
+                <div className="text-xs uppercase tracking-wider text-white mb-1">🇺🇸 USA</div>
+                <div className="text-2xl font-bold text-white font-mono">{hits}</div>
+              </div>
+              <div className="text-3xl font-bold text-slate-700">VS</div>
+              <div className="bg-red-600 rounded-xl px-6 py-3 shadow-sm border-2 border-red-700">
+                <div className="text-xs uppercase tracking-wider text-white mb-1">🚩 CCCP</div>
+                <div className="text-2xl font-bold text-white font-mono">{ussrHits}</div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="bg-white rounded-xl px-6 py-3 shadow-sm border border-slate-200">
+                <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Taxa de Acerto</div>
+                <div className="text-2xl font-bold text-indigo-600 font-mono">{accuracy}%</div>
+              </div>
+              <div className="bg-white rounded-xl px-6 py-3 shadow-sm border border-slate-200">
+                <div className="text-xs uppercase tracking-wider text-slate-500 mb-1">Alvos Atingidos</div>
+                <div className="text-2xl font-bold text-green-600 font-mono">{hits}/{attempts}</div>
+              </div>
+            </>
+          )}
         </div>
       </header>
 

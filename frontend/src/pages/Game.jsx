@@ -90,6 +90,19 @@ export default function Game() {
   // Unified projectile management for simultaneous missile flights
   const projectilesRef = useRef([]); // Array of active projectiles: { id, x, y, vx, vy, t, isUSSR, trajectoryPoints, active }
   const explosionsRef = useRef([]); // Array of active explosions: { x, y, frame, maxFrames }
+  
+  // Refs to access current values in animation loop
+  const angleRef = useRef(angle);
+  const velocityRef = useRef(velocity);
+  
+  // Keep refs in sync with state
+  useEffect(() => {
+    angleRef.current = angle;
+  }, [angle]);
+  
+  useEffect(() => {
+    velocityRef.current = velocity;
+  }, [velocity]);
 
   const [cannonPos] = useState({ x: 50, y: 30 });
   const [wallPos, setWallPos] = useState({ x: 400, y: 0, width: 20, height: 150 });

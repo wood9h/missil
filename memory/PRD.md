@@ -25,24 +25,26 @@ Jogo de artilharia com tema de física da Guerra Fria. Um canhão (EUA) à esque
 - **Difícil**: Obstáculos maiores, alvos mais distantes
 - **Guerra Total**: URSS revida imediatamente (50% precisão)
 
-### Modo "Guerra Total"
+### Modo "Guerra Total" ✅
+- Torre de lançamento para USA E URSS (ambas com mísseis visíveis)
 - URSS lança contra-ataque 3 segundos após disparo americano
 - Ambos os mísseis voam simultaneamente na tela ✅
 - Míssil USA = trajetória azul, Míssil USSR = trajetória vermelha ✅
-- Placar "USA vs CCCP" substituí estatísticas normais ✅
+- Placar "USA vs CCCP" substitui estatísticas normais ✅
 
 ### Sistema de Áudio ✅
 - **Som de lançamento de míssil**: Efeito de foguete sintetizado (Web Audio API)
 - **Som de explosão nuclear**: Boom profundo com ruído
 - **Som de alerta**: Sirene quando URSS detecta lançamento
 - **Música de fundo**: Batida de tambor militar em loop
-- **Botão de mudo/som**: Controle de áudio no header
+- **Botão de som**: "Som ON/OFF" bem visível no header (verde quando ativo) ✅
 
 ### Feedback Visual
 - Trajetórias coloridas (azul = USA, vermelho = USSR)
 - Sprite de míssil orienta-se tangencialmente à trajetória
 - Animação de cogumelo atômico em qualquer impacto
 - Dano por raio de explosão (80 pixels)
+- Míssil na plataforma indica o ângulo de lançamento ✅
 
 ## O Que Foi Implementado
 
@@ -68,12 +70,9 @@ Jogo de artilharia com tema de física da Guerra Fria. Um canhão (EUA) à esque
 17. ✅ **Som de explosão nuclear**
 18. ✅ **Sirene de alerta para revide soviético**
 19. ✅ **Música de fundo com batida militar**
-20. ✅ **Botão de controle de áudio**
-
-**Correção de Bug Crítico (Dezembro 2025):**
-- Problema: Míssil americano desaparecia quando míssil soviético era lançado
-- Solução: Sistema unificado de gerenciamento de projéteis (`projectilesRef`) com loop de animação único (`runGameLoop`)
-- Status: ✅ Verificado e funcionando
+20. ✅ **Botão de controle de áudio "Som ON/OFF"**
+21. ✅ **Torre de lançamento soviética com míssil no modo Guerra Total**
+22. ✅ **Míssil na plataforma mostra ângulo de lançamento**
 
 ## Arquitetura
 
@@ -91,9 +90,6 @@ Jogo de artilharia com tema de física da Guerra Fria. Um canhão (EUA) à esque
 ```
 
 ## Backlog / Melhorias Futuras
-
-### P1 - Alta Prioridade
-- [ ] Aumentar variação de posição do alvo após acertos (se necessário)
 
 ### P2 - Média Prioridade
 - [ ] Modo multiplayer local

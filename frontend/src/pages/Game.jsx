@@ -711,55 +711,40 @@ export default function Game() {
       
       if (ussrHitType) {
         ussrTrajectoryPoints.push({ x, y });
+        ussrTrajectoryPoints[0].isUSSR = true; // Mark as USSR trajectory for red color
+        
+        // Animate mushroom cloud explosion for ALL USSR impacts
+        let explosionFrame = 0;
+        const maxExplosionFrames = 60;
+        const animateExplosion = () => {
+          drawCanvas(ctx, null, ussrTrajectoryPoints);
+          drawMushroomCloud(ctx, x, y, explosionFrame, maxExplosionFrames);
+          explosionFrame++;
+          
+          if (explosionFrame < maxExplosionFrames) {
+            requestAnimationFrame(animateExplosion);
+          }
+        };
+        animateExplosion();
         
         if (ussrHitType === "usa") {
           setUssrHits(prev => prev + 1);
           toast.error("💥 Base Americana Atingida!", {
             description: "URSS marcou ponto!",
           });
-          
-          // Draw animated mushroom cloud explosion
-          drawCanvas(ctx, null, ussrTrajectoryPoints);
-          
-          // Animate mushroom cloud formation
-          let explosionFrame = 0;
-          const maxExplosionFrames = 60; // 1 second at 60fps
-          const animateExplosion = () => {
-            drawCanvas(ctx, null, ussrTrajectoryPoints);
-            drawMushroomCloud(ctx, x, y, explosionFrame, maxExplosionFrames);
-            explosionFrame++;
-            
-            if (explosionFrame < maxExplosionFrames) {
-              requestAnimationFrame(animateExplosion);
-            }
-          };
-          animateExplosion();
-          
-          // Show explosion for longer
-          setTimeout(() => {
-            setTrajectory([]);
-          }, 3000);
         } else if (ussrHitType === "wall") {
           toast.info("Míssil soviético bloqueado", {
-            description: "Interceptado por obstáculo",
+            description: "Explosão no obstáculo",
           });
-          
-          // Draw final trajectory
-          drawCanvas(ctx, null, ussrTrajectoryPoints);
-          setTimeout(() => {
-            setTrajectory([]);
-          }, 2000);
         } else {
           toast.info("Míssil soviético errou", {
-            description: "EUA está seguro... por enquanto",
+            description: "Explosão em território neutro",
           });
-          
-          // Draw final trajectory
-          drawCanvas(ctx, null, ussrTrajectoryPoints);
-          setTimeout(() => {
-            setTrajectory([]);
-          }, 2000);
         }
+        
+        setTimeout(() => {
+          setTrajectory([]);
+        }, 3000);
         
         return;
       }

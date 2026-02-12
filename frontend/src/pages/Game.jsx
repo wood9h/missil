@@ -243,59 +243,119 @@ export default function Game() {
       ctx.shadowBlur = 0;
     }
     
-    // Draw USA missile base (left - Estados Unidos)
+    // Draw USA missile launch tower (left)
     const cannonScreenX = cannonPos.x;
     const cannonScreenY = CANVAS_HEIGHT - 30;
     
-    // USA Flag colors
+    // Tower base platform
+    ctx.fillStyle = "#2C3E50";
+    ctx.fillRect(cannonScreenX - 30, cannonScreenY - 10, 60, 10);
+    
+    // Main tower structure
+    ctx.fillStyle = "#34495E";
+    ctx.fillRect(cannonScreenX - 15, cannonScreenY - 60, 30, 50);
+    
+    // Tower details (panels)
+    ctx.strokeStyle = "#4A5F7F";
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 4; i++) {
+      ctx.beginPath();
+      ctx.moveTo(cannonScreenX - 15, cannonScreenY - 15 - i * 12);
+      ctx.lineTo(cannonScreenX + 15, cannonScreenY - 15 - i * 12);
+      ctx.stroke();
+    }
+    
+    // Vertical lines
+    ctx.beginPath();
+    ctx.moveTo(cannonScreenX - 5, cannonScreenY - 60);
+    ctx.lineTo(cannonScreenX - 5, cannonScreenY - 10);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cannonScreenX + 5, cannonScreenY - 60);
+    ctx.lineTo(cannonScreenX + 5, cannonScreenY - 10);
+    ctx.stroke();
+    
+    // Radar dish on top
+    ctx.fillStyle = "#5A6F8F";
+    ctx.beginPath();
+    ctx.ellipse(cannonScreenX, cannonScreenY - 65, 12, 6, 0, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Antenna
+    ctx.strokeStyle = "#7F8C8D";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(cannonScreenX, cannonScreenY - 65);
+    ctx.lineTo(cannonScreenX, cannonScreenY - 80);
+    ctx.stroke();
+    
+    // Red warning light on antenna
+    ctx.fillStyle = "#E74C3C";
+    ctx.beginPath();
+    ctx.arc(cannonScreenX, cannonScreenY - 80, 3, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // USA Flag colors on tower side
     ctx.fillStyle = "#B22234"; // Red
-    ctx.fillRect(cannonScreenX - 25, cannonScreenY - 50, 50, 30);
+    ctx.fillRect(cannonScreenX - 18, cannonScreenY - 58, 6, 20);
     
     // White stripes
     ctx.fillStyle = "#FFFFFF";
-    for (let i = 0; i < 4; i++) {
-      ctx.fillRect(cannonScreenX - 25, cannonScreenY - 50 + i * 10, 50, 5);
+    for (let i = 0; i < 3; i++) {
+      ctx.fillRect(cannonScreenX - 18, cannonScreenY - 58 + i * 8, 6, 3);
     }
     
     // Blue canton
     ctx.fillStyle = "#3C3B6E";
-    ctx.fillRect(cannonScreenX - 25, cannonScreenY - 50, 20, 15);
+    ctx.fillRect(cannonScreenX - 18, cannonScreenY - 58, 6, 10);
     
     // Stars (simplified)
     ctx.fillStyle = "#FFFFFF";
-    for (let i = 0; i < 8; i++) {
-      ctx.fillRect(cannonScreenX - 22 + (i % 4) * 4, cannonScreenY - 47 + Math.floor(i / 4) * 6, 2, 2);
+    for (let i = 0; i < 4; i++) {
+      ctx.fillRect(cannonScreenX - 16 + (i % 2) * 3, cannonScreenY - 55 + Math.floor(i / 2) * 4, 1.5, 1.5);
     }
-    
-    // Missile launcher base
-    ctx.fillStyle = "#2C3E50";
-    ctx.fillRect(cannonScreenX - 15, cannonScreenY - 20, 30, 20);
     
     // Label USA
     ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 14px Arial";
+    ctx.font = "bold 12px Arial";
     ctx.textAlign = "center";
-    ctx.fillText("USA", cannonScreenX, cannonScreenY - 55);
+    ctx.fillText("USA", cannonScreenX, cannonScreenY - 85);
     
-    // Missile/barrel
+    // Missile launcher angle indicator
     const angleRad = (angle * Math.PI) / 180;
-    const barrelLength = 45;
+    const barrelLength = 35;
     const barrelEndX = cannonScreenX + Math.cos(angleRad) * barrelLength;
-    const barrelEndY = cannonScreenY - Math.sin(angleRad) * barrelLength;
+    const barrelEndY = cannonScreenY - 35 - Math.sin(angleRad) * barrelLength;
     
-    ctx.strokeStyle = "#34495E";
-    ctx.lineWidth = 10;
+    // Launch tube
+    ctx.strokeStyle = "#4A90E2";
+    ctx.lineWidth = 6;
     ctx.lineCap = "round";
     ctx.beginPath();
-    ctx.moveTo(cannonScreenX, cannonScreenY - 10);
+    ctx.moveTo(cannonScreenX, cannonScreenY - 35);
     ctx.lineTo(barrelEndX, barrelEndY);
     ctx.stroke();
     
-    // Missile tip
-    ctx.fillStyle = "#E74C3C";
-    ctx.beginPath();
-    ctx.arc(barrelEndX, barrelEndY, 6, 0, Math.PI * 2);
-    ctx.fill();
+    // Missile in launcher (when not firing)
+    if (!isAnimating) {
+      ctx.save();
+      ctx.translate(cannonScreenX, cannonScreenY - 35);
+      ctx.rotate(angleRad);
+      
+      // Small missile in tube
+      ctx.fillStyle = "#4A90E2";
+      ctx.fillRect(5, -3, 15, 6);
+      
+      ctx.fillStyle = "#2C5F8D";
+      ctx.beginPath();
+      ctx.moveTo(20, -3);
+      ctx.lineTo(25, 0);
+      ctx.lineTo(20, 3);
+      ctx.closePath();
+      ctx.fill();
+      
+      ctx.restore();
+    }
     
     // Draw obstacle (mountain range / geographic barrier)
     ctx.fillStyle = "#5D4E37"; // Brown mountains

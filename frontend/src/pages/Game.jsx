@@ -540,11 +540,11 @@ export default function Game() {
           <Button
             onClick={fireProjectile}
             disabled={isAnimating}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-6 text-lg font-bold rounded-full shadow-lg hover:shadow-xl transition-all active:scale-95"
+            className="w-full bg-red-600 hover:bg-red-700 text-white py-6 text-lg font-bold rounded-full shadow-lg hover:shadow-xl transition-all active:scale-95"
             data-testid="fire-button"
           >
             <Play className="mr-2 h-5 w-5" />
-            {isAnimating ? "Disparando..." : "Disparar"}
+            {isAnimating ? "Míssil em voo..." : "Lançar Míssil"}
           </Button>
 
           {/* Reset Button */}
@@ -555,7 +555,7 @@ export default function Game() {
             data-testid="reset-button"
           >
             <RotateCcw className="mr-2 h-4 w-4" />
-            Reiniciar
+            Reiniciar Missão
           </Button>
 
           {/* Stats Card */}

@@ -29,6 +29,7 @@ const DIFFICULTY_SETTINGS = {
     wallMaxX: 450,
     targetMinDist: 150,
     targetMaxDist: 250,
+    ussrRetaliates: false,
   },
   medium: {
     wallMinHeight: 100,
@@ -39,6 +40,7 @@ const DIFFICULTY_SETTINGS = {
     wallMaxX: 480,
     targetMinDist: 180,
     targetMaxDist: 280,
+    ussrRetaliates: false,
   },
   hard: {
     wallMinHeight: 150,
@@ -49,6 +51,19 @@ const DIFFICULTY_SETTINGS = {
     wallMaxX: 500,
     targetMinDist: 200,
     targetMaxDist: 320,
+    ussrRetaliates: false,
+  },
+  total: {
+    wallMinHeight: 150,
+    wallMaxHeight: 280,
+    wallMinWidth: 25,
+    wallMaxWidth: 45,
+    wallMinX: 280,
+    wallMaxX: 520,
+    targetMinDist: 220,
+    targetMaxDist: 350,
+    ussrRetaliates: true,
+    ussrAccuracy: 0.5, // 50% chance
   },
 };
 

@@ -751,25 +751,25 @@ export default function Game() {
       
       ussrTrajectoryPoints.push({ x, y });
       
-      // Draw USSR missile in orange/yellow
+      // Draw USSR missile in red
       drawCanvas(ctx, null, []);
       
       // Draw USSR missile
-      ctx.fillStyle = "#FFA500";
+      ctx.fillStyle = "#E23636";
       ctx.beginPath();
       ctx.arc(x, CANVAS_HEIGHT - y - 30, 8, 0, Math.PI * 2);
       ctx.fill();
       
-      ctx.fillStyle = "rgba(255, 200, 0, 0.6)";
+      ctx.fillStyle = "rgba(226, 54, 54, 0.6)";
       ctx.beginPath();
       ctx.arc(x, CANVAS_HEIGHT - y - 30, 14, 0, Math.PI * 2);
       ctx.fill();
       
-      // USSR trajectory in orange
+      // USSR trajectory in RED
       if (ussrTrajectoryPoints.length > 1) {
-        ctx.strokeStyle = "#FFA500";
+        ctx.strokeStyle = "#E23636";
         ctx.lineWidth = 3;
-        ctx.shadowColor = "#FF8C00";
+        ctx.shadowColor = "#FF0000";
         ctx.shadowBlur = 10;
         ctx.beginPath();
         ussrTrajectoryPoints.forEach((point, index) => {

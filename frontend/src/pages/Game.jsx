@@ -1286,8 +1286,8 @@ export default function Game() {
     } else {
       // USA missile - check if explosion hits USSR target
       const distanceToTarget = Math.sqrt(
-        Math.pow(x - (targetPos.x + targetPos.width / 2), 2) + 
-        Math.pow(y - targetPos.height / 2, 2)
+        Math.pow(x - (targetPosRef.current.x + targetPosRef.current.width / 2), 2) + 
+        Math.pow(y - targetPosRef.current.height / 2, 2)
       );
       
       const targetHitByExplosion = distanceToTarget < explosionRadius;

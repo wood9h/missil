@@ -737,7 +737,7 @@ export default function Game() {
     if (!canvas) return;
     
     const ctx = canvas.getContext("2d");
-    drawCanvas(ctx, null, trajectory);
+    drawCanvas(ctx, projectilesRef.current, explosionsRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [angle, velocity, wallPos, targetPos, trajectory, mapImage]);
 

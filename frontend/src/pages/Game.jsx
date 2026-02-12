@@ -383,7 +383,7 @@ export default function Game() {
             </label>
             <Select value={difficulty} onValueChange={setDifficulty}>
               <SelectTrigger className="w-full" data-testid="difficulty-select">
-                <SelectValue />
+                <SelectValue placeholder="Selecione" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="easy">Fácil</SelectItem>

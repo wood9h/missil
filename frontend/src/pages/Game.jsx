@@ -67,6 +67,17 @@ export default function Game() {
   const [cannonPos] = useState({ x: 50, y: 30 });
   const [wallPos, setWallPos] = useState({ x: 400, y: 0, width: 20, height: 150 });
   const [targetPos, setTargetPos] = useState({ x: 900, y: 30, width: 60, height: 60 });
+  const [mapImage, setMapImage] = useState(null);
+
+  useEffect(() => {
+    // Load world map image
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = "https://images.unsplash.com/photo-1742415105376-43d3a5fd03fc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwyfHxmbGF0JTIwd29ybGQlMjBhdGxhcyUyMGNvbnRpbmVudHMlMjB2aW50YWdlfGVufDB8fHx8MTc3MDg5MjMxOHww&ixlib=rb-4.1.0&q=85&w=1200&h=600&fit=crop";
+    img.onload = () => {
+      setMapImage(img);
+    };
+  }, []);
 
   useEffect(() => {
     generateNewRound();

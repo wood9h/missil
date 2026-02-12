@@ -239,22 +239,20 @@ export default function Game() {
     if (y <= 0) return { type: "ground" };
     
     // Check wall
-    const screenY = y;
     if (
       x >= wallPos.x &&
       x <= wallPos.x + wallPos.width &&
-      screenY <= wallPos.height
+      y <= wallPos.height
     ) {
       return { type: "wall" };
     }
     
-    // Check target
-    const targetScreenY = targetPos.y - (CANVAS_HEIGHT - 30);
+    // Check target - target is at ground level (y=30)
     if (
       x >= targetPos.x &&
       x <= targetPos.x + targetPos.width &&
-      y >= targetScreenY &&
-      y <= targetScreenY + targetPos.height
+      y >= 0 &&
+      y <= targetPos.height
     ) {
       return { type: "target" };
     }

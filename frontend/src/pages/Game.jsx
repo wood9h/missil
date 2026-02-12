@@ -433,7 +433,7 @@ export default function Game() {
     setHits(0);
     setAttempts(0);
     generateNewRound();
-    toast.info("Jogo reiniciado!");
+    toast.info("Missão reiniciada!");
   };
 
   const accuracy = attempts > 0 ? ((hits / attempts) * 100).toFixed(1) : 0;

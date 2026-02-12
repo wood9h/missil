@@ -1042,14 +1042,14 @@ export default function Game() {
       ctx.fillStyle = "#FFFFFF";
       ctx.font = "bold 14px Arial";
       ctx.textAlign = "center";
-      ctx.fillText("СССР", targetScreenX + targetPos.width / 2, targetScreenY - 20);
+      ctx.fillText("СССР", targetScreenX + currentTargetPos.width / 2, targetScreenY - 20);
       
       // Antenna/tower
       ctx.strokeStyle = "#8B0000";
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(targetScreenX + targetPos.width - 5, targetScreenY + 20);
-      ctx.lineTo(targetScreenX + targetPos.width - 5, targetScreenY - 5);
+      ctx.moveTo(targetScreenX + currentTargetPos.width - 5, targetScreenY + 20);
+      ctx.lineTo(targetScreenX + currentTargetPos.width - 5, targetScreenY - 5);
       ctx.stroke();
     }
     

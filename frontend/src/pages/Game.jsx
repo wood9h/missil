@@ -71,12 +71,8 @@ export default function Game() {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
   
-  // Audio refs
-  const bgMusicRef = useRef(null);
-  const launchSoundUSARef = useRef(null);
-  const launchSoundUSSRRef = useRef(null);
-  const explosionSoundRef = useRef(null);
-  const alertSoundRef = useRef(null);
+  // Audio context ref
+  const audioContextRef = useRef(null);
 
   const [angle, setAngle] = useState(45);
   const [velocity, setVelocity] = useState(30);
@@ -88,6 +84,7 @@ export default function Game() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [trajectory, setTrajectory] = useState([]);
   const [isMuted, setIsMuted] = useState(false);
+  const [musicPlaying, setMusicPlaying] = useState(false);
   
   // Unified projectile management for simultaneous missile flights
   const projectilesRef = useRef([]); // Array of active projectiles: { id, x, y, vx, vy, t, isUSSR, trajectoryPoints, active }
@@ -99,63 +96,257 @@ export default function Game() {
   const [lastHitPos, setLastHitPos] = useState(null); // Track last successful hit position
   const [mapImage, setMapImage] = useState(null);
 
-  // Initialize audio on component mount
-  useEffect(() => {
-    // Background music - Cold War era military march style
-    bgMusicRef.current = new Audio("https://www.soundjay.com/misc/sounds/drum-roll-1.mp3");
-    bgMusicRef.current.loop = true;
-    bgMusicRef.current.volume = 0.3;
-    
-    // Launch sounds - synthesized missile launch effect
-    launchSoundUSARef.current = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdXmHh4d7c3V9hYqJhX51cnh9goOCfnZ0eH1/gIF/enZ4e3+AgH56d3h7foCAf3t3eHp+gIB/e3d4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97");
-    launchSoundUSARef.current.volume = 0.5;
-    
-    launchSoundUSSRRef.current = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdXmHh4d7c3V9hYqJhX51cnh9goOCfnZ0eH1/gIF/enZ4e3+AgH56d3h7foCAf3t3eHp+gIB/e3d4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97");
-    launchSoundUSSRRef.current.volume = 0.5;
-    
-    // Explosion sound
-    explosionSoundRef.current = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdXmHh4d7c3V9hYqJhX51cnh9goOCfnZ0eH1/gIF/enZ4e3+AgH56d3h7foCAf3t3eHp+gIB/e3d4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97");
-    explosionSoundRef.current.volume = 0.6;
-    
-    // Alert sound for USSR retaliation
-    alertSoundRef.current = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdXmHh4d7c3V9hYqJhX51cnh9goOCfnZ0eH1/gIF/enZ4e3+AgH56d3h7foCAf3t3eHp+gIB/e3d4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97");
-    alertSoundRef.current.volume = 0.4;
-    
-    return () => {
-      // Cleanup audio on unmount
-      if (bgMusicRef.current) {
-        bgMusicRef.current.pause();
-        bgMusicRef.current = null;
-      }
-    };
-  }, []);
-
-  // Play sound helper function
-  const playSound = (soundRef) => {
-    if (!isMuted && soundRef.current) {
-      soundRef.current.currentTime = 0;
-      soundRef.current.play().catch(() => {});
+  // Initialize Web Audio API context
+  const getAudioContext = () => {
+    if (!audioContextRef.current) {
+      audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
     }
+    return audioContextRef.current;
+  };
+
+  // Synthesize missile launch sound
+  const playLaunchSound = (isUSSR = false) => {
+    if (isMuted) return;
+    
+    const ctx = getAudioContext();
+    const now = ctx.currentTime;
+    
+    // Main rocket whoosh sound
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+    
+    oscillator.type = 'sawtooth';
+    oscillator.frequency.setValueAtTime(isUSSR ? 150 : 180, now);
+    oscillator.frequency.exponentialRampToValueAtTime(isUSSR ? 400 : 500, now + 0.3);
+    oscillator.frequency.exponentialRampToValueAtTime(isUSSR ? 100 : 120, now + 1.5);
+    
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(800, now);
+    filter.frequency.exponentialRampToValueAtTime(2000, now + 0.2);
+    filter.frequency.exponentialRampToValueAtTime(400, now + 1.5);
+    
+    gainNode.gain.setValueAtTime(0, now);
+    gainNode.gain.linearRampToValueAtTime(0.3, now + 0.05);
+    gainNode.gain.linearRampToValueAtTime(0.15, now + 0.5);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 1.5);
+    
+    oscillator.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    
+    oscillator.start(now);
+    oscillator.stop(now + 1.5);
+    
+    // Add noise burst for ignition
+    const bufferSize = ctx.sampleRate * 0.5;
+    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1;
+    }
+    
+    const noiseSource = ctx.createBufferSource();
+    const noiseGain = ctx.createGain();
+    const noiseFilter = ctx.createBiquadFilter();
+    
+    noiseSource.buffer = noiseBuffer;
+    noiseFilter.type = 'bandpass';
+    noiseFilter.frequency.value = 1500;
+    noiseFilter.Q.value = 0.5;
+    
+    noiseGain.gain.setValueAtTime(0.2, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+    
+    noiseSource.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(ctx.destination);
+    
+    noiseSource.start(now);
+    noiseSource.stop(now + 0.5);
+  };
+
+  // Synthesize explosion sound
+  const playExplosionSound = () => {
+    if (isMuted) return;
+    
+    const ctx = getAudioContext();
+    const now = ctx.currentTime;
+    
+    // Deep boom
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    
+    oscillator.type = 'sine';
+    oscillator.frequency.setValueAtTime(100, now);
+    oscillator.frequency.exponentialRampToValueAtTime(20, now + 0.8);
+    
+    gainNode.gain.setValueAtTime(0.5, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    
+    oscillator.start(now);
+    oscillator.stop(now + 0.8);
+    
+    // Explosion noise
+    const bufferSize = ctx.sampleRate * 1.2;
+    const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1;
+    }
+    
+    const noiseSource = ctx.createBufferSource();
+    const noiseGain = ctx.createGain();
+    const noiseFilter = ctx.createBiquadFilter();
+    
+    noiseSource.buffer = noiseBuffer;
+    noiseFilter.type = 'lowpass';
+    noiseFilter.frequency.setValueAtTime(3000, now);
+    noiseFilter.frequency.exponentialRampToValueAtTime(200, now + 1.2);
+    
+    noiseGain.gain.setValueAtTime(0.4, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 1.2);
+    
+    noiseSource.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(ctx.destination);
+    
+    noiseSource.start(now);
+    noiseSource.stop(now + 1.2);
+  };
+
+  // Play alert siren sound
+  const playAlertSound = () => {
+    if (isMuted) return;
+    
+    const ctx = getAudioContext();
+    const now = ctx.currentTime;
+    
+    // Siren oscillator
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+    
+    oscillator.type = 'square';
+    
+    // Siren pattern
+    for (let i = 0; i < 3; i++) {
+      const t = i * 0.4;
+      oscillator.frequency.setValueAtTime(600, now + t);
+      oscillator.frequency.linearRampToValueAtTime(900, now + t + 0.2);
+      oscillator.frequency.linearRampToValueAtTime(600, now + t + 0.4);
+    }
+    
+    gainNode.gain.setValueAtTime(0.15, now);
+    gainNode.gain.setValueAtTime(0.15, now + 1.1);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, now + 1.2);
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    
+    oscillator.start(now);
+    oscillator.stop(now + 1.2);
+  };
+
+  // Background military march music generator
+  const bgMusicNodesRef = useRef({ isPlaying: false, nodes: [] });
+  
+  const playBackgroundMusic = () => {
+    if (isMuted || bgMusicNodesRef.current.isPlaying) return;
+    
+    const ctx = getAudioContext();
+    bgMusicNodesRef.current.isPlaying = true;
+    setMusicPlaying(true);
+    
+    // Create a simple military drum beat pattern
+    const playDrumBeat = () => {
+      if (!bgMusicNodesRef.current.isPlaying || isMuted) return;
+      
+      const now = ctx.currentTime;
+      const beatDuration = 0.5;
+      
+      // Bass drum
+      const bassDrum = () => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.exponentialRampToValueAtTime(50, now + 0.1);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.15);
+      };
+      
+      // Snare drum (noise burst)
+      const snareDrum = (time) => {
+        const bufferSize = ctx.sampleRate * 0.1;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+        const noise = ctx.createBufferSource();
+        const gain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+        noise.buffer = buffer;
+        filter.type = 'highpass';
+        filter.frequency.value = 1000;
+        gain.gain.setValueAtTime(0.15, time);
+        gain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start(time);
+        noise.stop(time + 0.1);
+      };
+      
+      // Beat pattern: BOOM - - SNAP - BOOM - SNAP -
+      bassDrum();
+      snareDrum(now + beatDuration);
+      
+      // Schedule next beat
+      setTimeout(playDrumBeat, beatDuration * 2 * 1000);
+    };
+    
+    playDrumBeat();
+  };
+
+  const stopBackgroundMusic = () => {
+    bgMusicNodesRef.current.isPlaying = false;
+    setMusicPlaying(false);
   };
 
   // Toggle background music
   const toggleMusic = () => {
-    setIsMuted(!isMuted);
-    if (bgMusicRef.current) {
-      if (isMuted) {
-        bgMusicRef.current.play().catch(() => {});
-      } else {
-        bgMusicRef.current.pause();
-      }
+    const newMuted = !isMuted;
+    setIsMuted(newMuted);
+    
+    if (newMuted) {
+      stopBackgroundMusic();
     }
   };
 
   // Start background music on first interaction
   const startBackgroundMusic = () => {
-    if (!isMuted && bgMusicRef.current && bgMusicRef.current.paused) {
-      bgMusicRef.current.play().catch(() => {});
+    if (!isMuted && !bgMusicNodesRef.current.isPlaying) {
+      playBackgroundMusic();
     }
   };
+  
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      stopBackgroundMusic();
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     // Load world map image

@@ -787,6 +787,25 @@ export default function Game() {
         
         // Wait a moment to show the complete trajectory before explosion
         setTimeout(() => {
+          // Check if explosion radius hits the target (area damage)
+          const explosionRadius = 80; // Nuclear explosion damage radius
+          const distanceToTarget = Math.sqrt(
+            Math.pow(x - (targetPos.x + targetPos.width / 2), 2) + 
+            Math.pow(y - targetPos.height / 2, 2)
+          );
+          
+          // If explosion is close enough to target, it's destroyed
+          const targetHitByExplosion = distanceToTarget < explosionRadius;
+          
+          if (targetHitByExplosion && hitType !== "target") {
+            // Target destroyed by explosion blast!
+            hitType = "target";
+            toast.success("Alvo Destruído pela Explosão! 💥", {
+              description: `Onda de choque nuclear atingiu o alvo!`,
+              icon: <Target className="h-5 w-5" />,
+            });
+          }
+          
           // Draw animated mushroom cloud explosion for ALL impacts
           let explosionFrame = 0;
           const maxExplosionFrames = 60; // 1 second at 60fps
@@ -803,10 +822,12 @@ export default function Game() {
           
           if (hitType === "target") {
             setHits(prev => prev + 1);
-            toast.success("Alvo Soviético Destruído! 🎯", {
-              description: `Explosão nuclear confirmada!`,
-              icon: <Target className="h-5 w-5" />,
-            });
+            if (!targetHitByExplosion) {
+              toast.success("Alvo Soviético Destruído! 🎯", {
+                description: `Explosão nuclear confirmada!`,
+                icon: <Target className="h-5 w-5" />,
+              });
+            }
             
             setTimeout(() => {
               setTrajectory([]);

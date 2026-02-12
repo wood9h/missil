@@ -76,16 +76,18 @@ export default function Game() {
   const generateNewRound = () => {
     const settings = DIFFICULTY_SETTINGS[difficulty];
     
-    // Random wall dimensions
+    // Random wall dimensions with MORE variation
     const wallHeight = Math.random() * (settings.wallMaxHeight - settings.wallMinHeight) + settings.wallMinHeight;
-    const wallWidth = settings.wallWidth;
-    const wallX = 400;
+    const wallWidth = Math.random() * (settings.wallMaxWidth - settings.wallMinWidth) + settings.wallMinWidth;
+    const wallX = Math.random() * (settings.wallMaxX - settings.wallMinX) + settings.wallMinX;
     
-    // Random target distance
+    // Random target distance with MORE variation
     const targetDist = Math.random() * (settings.targetMaxDist - settings.targetMinDist) + settings.targetMinDist;
     const targetX = wallX + wallWidth + targetDist;
-    const targetWidth = 60;
-    const targetHeight = 60;
+    
+    // Random target size for even more variation
+    const targetWidth = 50 + Math.random() * 30; // 50-80 pixels
+    const targetHeight = 50 + Math.random() * 30; // 50-80 pixels
     
     setWallPos({ x: wallX, y: 0, width: wallWidth, height: wallHeight });
     setTargetPos({ 

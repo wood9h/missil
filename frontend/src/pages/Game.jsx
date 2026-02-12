@@ -512,6 +512,44 @@ export default function Game() {
     animate();
   };
 
+  const drawMushroomCloud = (ctx, x, y, size = 1) => {
+    // Draw mushroom cloud explosion effect
+    const centerX = x;
+    const centerY = CANVAS_HEIGHT - y - 30;
+    
+    // Explosion flash
+    ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 40 * size, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Fire ball
+    ctx.fillStyle = "rgba(255, 100, 0, 0.9)";
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 30 * size, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Mushroom stem
+    ctx.fillStyle = "rgba(139, 69, 19, 0.8)";
+    ctx.fillRect(centerX - 8 * size, centerY, 16 * size, 60 * size);
+    
+    // Mushroom cap
+    ctx.fillStyle = "rgba(105, 105, 105, 0.9)";
+    ctx.beginPath();
+    ctx.arc(centerX, centerY - 20 * size, 35 * size, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Smoke effects
+    ctx.fillStyle = "rgba(64, 64, 64, 0.6)";
+    for (let i = 0; i < 5; i++) {
+      const smokeX = centerX + (Math.random() - 0.5) * 60 * size;
+      const smokeY = centerY - 40 * size - i * 15 * size;
+      ctx.beginPath();
+      ctx.arc(smokeX, smokeY, 15 * size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  };
+
   const ussrRetaliate = () => {
     setUssrAttempts(prev => prev + 1);
     toast.warning("⚠️ URSS Revidando!", {

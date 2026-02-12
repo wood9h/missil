@@ -1167,7 +1167,7 @@ export default function Game() {
         if (proj.isUSSR) {
           // USSR missile collisions
           if (proj.y <= 0) collision = { type: "ground" };
-          else if (proj.x >= wallPos.x && proj.x <= wallPos.x + wallPos.width && proj.y <= wallPos.height) {
+          else if (proj.x >= wallPosRef.current.x && proj.x <= wallPosRef.current.x + wallPosRef.current.width && proj.y <= wallPosRef.current.height) {
             collision = { type: "wall" };
           } else if (proj.x >= cannonPos.x - 30 && proj.x <= cannonPos.x + 30 && proj.y >= 0 && proj.y <= 50) {
             collision = { type: "usa" };
@@ -1175,9 +1175,9 @@ export default function Game() {
         } else {
           // USA missile collisions
           if (proj.y <= 0) collision = { type: "ground" };
-          else if (proj.x >= wallPos.x && proj.x <= wallPos.x + wallPos.width && proj.y <= wallPos.height) {
+          else if (proj.x >= wallPosRef.current.x && proj.x <= wallPosRef.current.x + wallPosRef.current.width && proj.y <= wallPosRef.current.height) {
             collision = { type: "wall" };
-          } else if (proj.x >= targetPos.x && proj.x <= targetPos.x + targetPos.width && proj.y >= 0 && proj.y <= targetPos.height) {
+          } else if (proj.x >= targetPosRef.current.x && proj.x <= targetPosRef.current.x + targetPosRef.current.width && proj.y >= 0 && proj.y <= targetPosRef.current.height) {
             collision = { type: "target" };
           }
         }

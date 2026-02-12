@@ -529,97 +529,135 @@ export default function Game() {
 
   const drawMushroomCloud = (ctx, x, y, frame, maxFrames) => {
     const progress = frame / maxFrames;
-    const size = 40 * (1 + progress * 2); // Grows over time
+    const baseSize = 25; // Reduced from 40
+    const size = baseSize * (1 + progress * 1.5);
+    const centerY = CANVAS_HEIGHT - y - 30;
     
-    // Explosion flash (first few frames)
-    if (frame < 8) {
-      ctx.fillStyle = `rgba(255, 255, 255, ${1 - frame / 8})`;
+    // Initial flash (first 5 frames)
+    if (frame < 5) {
+      ctx.fillStyle = `rgba(255, 255, 255, ${1 - frame / 5})`;
       ctx.beginPath();
-      ctx.arc(x, CANVAS_HEIGHT - y - 30, size * 2, 0, Math.PI * 2);
+      ctx.arc(x, centerY, size * 3, 0, Math.PI * 2);
       ctx.fill();
     }
     
-    // Fireball
-    const fireballGradient = ctx.createRadialGradient(x, CANVAS_HEIGHT - y - 30, 0, x, CANVAS_HEIGHT - y - 30, size);
-    fireballGradient.addColorStop(0, `rgba(255, 255, 200, ${1 - progress * 0.7})`);
-    fireballGradient.addColorStop(0.3, `rgba(255, 150, 0, ${1 - progress * 0.5})`);
-    fireballGradient.addColorStop(0.6, `rgba(255, 50, 0, ${1 - progress * 0.6})`);
-    fireballGradient.addColorStop(1, `rgba(100, 0, 0, ${1 - progress})`);
-    
-    ctx.fillStyle = fireballGradient;
-    ctx.beginPath();
-    ctx.arc(x, CANVAS_HEIGHT - y - 30, size, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Mushroom stem (rises up)
-    if (progress > 0.2) {
-      const stemHeight = size * 2 * (progress - 0.2);
-      const stemWidth = size * 0.4;
+    // Central fireball
+    if (progress < 0.8) {
+      const fireballRadius = size * (1.2 - progress * 0.3);
+      const fireGradient = ctx.createRadialGradient(x, centerY, 0, x, centerY, fireballRadius);
+      fireGradient.addColorStop(0, `rgba(255, 255, 220, ${0.9 - progress * 0.7})`);
+      fireGradient.addColorStop(0.4, `rgba(255, 180, 50, ${0.8 - progress * 0.6})`);
+      fireGradient.addColorStop(0.7, `rgba(255, 80, 0, ${0.7 - progress * 0.5})`);
+      fireGradient.addColorStop(1, `rgba(150, 30, 0, ${0.5 - progress * 0.4})`);
       
-      ctx.fillStyle = `rgba(80, 40, 20, ${0.8 - progress * 0.5})`;
-      ctx.fillRect(
-        x - stemWidth / 2,
-        CANVAS_HEIGHT - y - 30 - stemHeight,
-        stemWidth,
-        stemHeight
-      );
+      ctx.fillStyle = fireGradient;
+      ctx.beginPath();
+      ctx.arc(x, centerY, fireballRadius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    
+    // Mushroom stem (starts at progress 0.25)
+    if (progress > 0.25) {
+      const stemProgress = (progress - 0.25) / 0.75;
+      const stemHeight = size * 2.5 * stemProgress;
+      const stemTop = centerY - stemHeight;
+      const stemWidthBottom = size * 0.5;
+      const stemWidthTop = size * 0.35;
       
-      // Smoke on stem
-      ctx.fillStyle = `rgba(60, 60, 60, ${0.6 - progress * 0.4})`;
+      // Stem gradient (darker brown/gray)
+      const stemGradient = ctx.createLinearGradient(x, centerY, x, stemTop);
+      stemGradient.addColorStop(0, `rgba(100, 50, 30, ${0.9 - progress * 0.4})`);
+      stemGradient.addColorStop(0.5, `rgba(80, 40, 25, ${0.85 - progress * 0.4})`);
+      stemGradient.addColorStop(1, `rgba(60, 30, 20, ${0.8 - progress * 0.4})`);
+      
+      ctx.fillStyle = stemGradient;
+      ctx.beginPath();
+      ctx.moveTo(x - stemWidthBottom, centerY);
+      ctx.lineTo(x - stemWidthTop, stemTop);
+      ctx.lineTo(x + stemWidthTop, stemTop);
+      ctx.lineTo(x + stemWidthBottom, centerY);
+      ctx.closePath();
+      ctx.fill();
+      
+      // Smoke texture on stem
+      ctx.fillStyle = `rgba(50, 50, 50, ${0.4 - progress * 0.3})`;
       for (let i = 0; i < 3; i++) {
+        const smokeY = centerY - stemHeight * (0.3 + i * 0.3);
         ctx.beginPath();
-        ctx.arc(
-          x + (Math.random() - 0.5) * stemWidth,
-          CANVAS_HEIGHT - y - 30 - stemHeight * (0.3 + i * 0.3),
-          stemWidth * 0.6,
-          0,
-          Math.PI * 2
-        );
+        ctx.ellipse(x, smokeY, stemWidthTop * 0.8, stemWidthTop * 0.5, 0, 0, Math.PI * 2);
         ctx.fill();
       }
     }
     
-    // Mushroom cap (forms at top)
+    // Mushroom cap (starts at progress 0.4)
     if (progress > 0.4) {
       const capProgress = (progress - 0.4) / 0.6;
-      const capRadius = size * 1.5 * capProgress;
-      const capY = CANVAS_HEIGHT - y - 30 - size * 2.5 * progress;
+      const stemHeight = size * 2.5 * ((progress - 0.25) / 0.75);
+      const capCenterY = centerY - stemHeight;
+      const capRadius = size * 1.3 * capProgress;
       
-      // Main cap
-      ctx.fillStyle = `rgba(139, 69, 19, ${0.9 - progress * 0.4})`;
+      // Cap main body (brownish cloud)
+      const capGradient = ctx.createRadialGradient(x, capCenterY, 0, x, capCenterY, capRadius);
+      capGradient.addColorStop(0, `rgba(120, 80, 60, ${0.9 - progress * 0.5})`);
+      capGradient.addColorStop(0.5, `rgba(100, 60, 40, ${0.85 - progress * 0.45})`);
+      capGradient.addColorStop(1, `rgba(70, 50, 35, ${0.6 - progress * 0.3})`);
+      
+      ctx.fillStyle = capGradient;
       ctx.beginPath();
-      ctx.arc(x, capY, capRadius, 0, Math.PI * 2);
+      ctx.ellipse(x, capCenterY, capRadius, capRadius * 0.7, 0, 0, Math.PI * 2);
       ctx.fill();
       
-      // Cap shadow/detail
-      ctx.fillStyle = `rgba(90, 50, 20, ${0.7 - progress * 0.3})`;
+      // Cap underside (darker, concave appearance)
+      ctx.fillStyle = `rgba(60, 40, 30, ${0.7 - progress * 0.4})`;
       ctx.beginPath();
-      ctx.arc(x, capY + capRadius * 0.3, capRadius * 0.8, 0, Math.PI);
+      ctx.ellipse(x, capCenterY + capRadius * 0.3, capRadius * 0.9, capRadius * 0.35, 0, 0, Math.PI);
       ctx.fill();
       
-      // Smoke clouds around cap
-      ctx.fillStyle = `rgba(80, 80, 80, ${0.5 - progress * 0.3})`;
-      for (let i = 0; i < 5; i++) {
-        const angle = (i / 5) * Math.PI * 2;
-        const cloudX = x + Math.cos(angle) * capRadius * 0.8;
-        const cloudY = capY + Math.sin(angle) * capRadius * 0.8;
+      // Smoke puffs around the cap edge
+      const numPuffs = 8;
+      for (let i = 0; i < numPuffs; i++) {
+        const angle = (i / numPuffs) * Math.PI * 2;
+        const puffDistance = capRadius * 0.85;
+        const puffX = x + Math.cos(angle) * puffDistance;
+        const puffY = capCenterY + Math.sin(angle) * puffDistance * 0.6;
+        const puffSize = capRadius * 0.25;
+        
+        ctx.fillStyle = `rgba(90, 70, 50, ${0.5 - progress * 0.35})`;
         ctx.beginPath();
-        ctx.arc(cloudX, cloudY, capRadius * 0.4, 0, Math.PI * 2);
+        ctx.arc(puffX, puffY, puffSize, 0, Math.PI * 2);
         ctx.fill();
       }
+      
+      // Top of cap highlights
+      ctx.fillStyle = `rgba(140, 100, 70, ${0.6 - progress * 0.4})`;
+      ctx.beginPath();
+      ctx.ellipse(x, capCenterY - capRadius * 0.3, capRadius * 0.6, capRadius * 0.25, 0, 0, Math.PI * 2);
+      ctx.fill();
     }
     
-    // Debris particles
-    for (let i = 0; i < 10; i++) {
-      const angle = (i / 10) * Math.PI * 2;
-      const distance = size * progress * 2;
-      const particleX = x + Math.cos(angle) * distance;
-      const particleY = CANVAS_HEIGHT - y - 30 + Math.sin(angle) * distance - progress * 50;
+    // Flying debris particles
+    const numParticles = 12;
+    for (let i = 0; i < numParticles; i++) {
+      const angle = (i / numParticles) * Math.PI * 2 + progress * 0.5;
+      const particleDistance = size * progress * 3;
+      const particleX = x + Math.cos(angle) * particleDistance;
+      const particleY = centerY + Math.sin(angle) * particleDistance - progress * 60;
+      const particleSize = 2 + Math.random() * 2;
       
-      ctx.fillStyle = `rgba(255, 100, 0, ${1 - progress})`;
+      ctx.fillStyle = `rgba(255, ${150 - progress * 100}, 0, ${1 - progress})`;
       ctx.beginPath();
-      ctx.arc(particleX, particleY, 3, 0, Math.PI * 2);
+      ctx.arc(particleX, particleY, particleSize, 0, Math.PI * 2);
       ctx.fill();
+    }
+    
+    // Ground dust/shockwave
+    if (progress < 0.5) {
+      const shockwaveRadius = size * 4 * (progress / 0.5);
+      ctx.strokeStyle = `rgba(150, 120, 80, ${0.6 - progress * 1.2})`;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(x, CANVAS_HEIGHT - 30, shockwaveRadius, Math.PI, Math.PI * 2);
+      ctx.stroke();
     }
   };
 

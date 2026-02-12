@@ -1491,8 +1491,13 @@ export default function Game() {
     const settings = DIFFICULTY_SETTINGS[difficulty];
     const willHit = Math.random() < settings.ussrAccuracy;
     
+    // Calculate launch position - from the USSR tower in Guerra Total mode
+    // The tower is centered at targetPos.x + targetPos.width / 2
+    const launchX = targetPos.x + targetPos.width / 2;
+    const launchY = 50; // Launch from top of tower (higher than ground level 30)
+    
     // Calculate angle and velocity for USSR missile (from right to left)
-    const distanceX = targetPos.x - cannonPos.x;
+    const distanceX = launchX - cannonPos.x;
     
     let ussrAngle, ussrVelocity;
     
@@ -1529,15 +1534,15 @@ export default function Game() {
     // Add USSR projectile to the array (the animation loop will pick it up)
     const ussrProjectile = {
       id: `ussr-${Date.now()}`,
-      startX: targetPos.x,
-      startY: targetPos.y,
-      x: targetPos.x,
-      y: targetPos.y,
+      startX: launchX,
+      startY: launchY,
+      x: launchX,
+      y: launchY,
       vx,
       vy,
       t: 0,
       isUSSR: true,
-      trajectoryPoints: [{ x: targetPos.x, y: targetPos.y, isUSSR: true }],
+      trajectoryPoints: [{ x: launchX, y: launchY, isUSSR: true }],
       active: true,
     };
     

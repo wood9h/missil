@@ -385,24 +385,24 @@ export default function Game() {
         
         if (hitType === "target") {
           setHits(prev => prev + 1);
-          toast.success("Acertou o alvo! 🎯", {
+          toast.success("Alvo Soviético Destruído! 🎯", {
             description: `Novo desafio em 2 segundos...`,
             icon: <Target className="h-5 w-5" />,
           });
           setTimeout(() => {
             setTrajectory([]);
             generateNewRound();
-            toast.info("Novo cenário!", {
-              description: "Parede e alvo reposicionados",
+            toast.info("Nova Localização URSS!", {
+              description: "Base soviética reposicionada",
             });
           }, 2000);
         } else if (hitType === "wall") {
-          toast.error("Bateu na parede!", {
-            description: "Tente um ângulo ou velocidade diferente",
+          toast.error("Bloqueado por obstáculo geográfico!", {
+            description: "Ajuste o ângulo ou velocidade do míssil",
           });
         } else {
-          toast.info("Errou o alvo", {
-            description: "Continue tentando!",
+          toast.info("Míssil perdido", {
+            description: "Não atingiu o território soviético",
           });
         }
         

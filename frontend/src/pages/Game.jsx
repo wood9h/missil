@@ -644,21 +644,36 @@ export default function Game() {
           toast.error("💥 Base Americana Atingida!", {
             description: "URSS marcou ponto!",
           });
+          
+          // Draw mushroom cloud explosion
+          drawCanvas(ctx, null, ussrTrajectoryPoints);
+          drawMushroomCloud(ctx, x, y, 1.2);
+          
+          // Show explosion for longer
+          setTimeout(() => {
+            setTrajectory([]);
+          }, 3000);
         } else if (ussrHitType === "wall") {
           toast.info("Míssil soviético bloqueado", {
             description: "Interceptado por obstáculo",
           });
+          
+          // Draw final trajectory
+          drawCanvas(ctx, null, ussrTrajectoryPoints);
+          setTimeout(() => {
+            setTrajectory([]);
+          }, 2000);
         } else {
           toast.info("Míssil soviético errou", {
             description: "EUA está seguro... por enquanto",
           });
+          
+          // Draw final trajectory
+          drawCanvas(ctx, null, ussrTrajectoryPoints);
+          setTimeout(() => {
+            setTrajectory([]);
+          }, 2000);
         }
-        
-        // Draw final trajectory
-        drawCanvas(ctx, null, ussrTrajectoryPoints);
-        setTimeout(() => {
-          setTrajectory([]);
-        }, 2000);
         
         return;
       }

@@ -386,63 +386,70 @@ export default function Game() {
   const generateNewRound = (wasHit = false) => {
     const settings = DIFFICULTY_SETTINGS[difficulty];
     
+    // Force more randomness with timestamp-based seed variation
+    const randomSeed = Date.now() % 1000;
+    
     let wallX, wallHeight, wallWidth, targetX, targetDist;
-    let attempts = 0;
-    const maxAttempts = 50;
     
     // In Guerra Total mode, ensure target is visible on right side but still random
     const isGuerraTotal = settings.ussrRetaliates;
-    const minTargetX = isGuerraTotal ? 650 : 0; // Minimum X position for target in Guerra Total
-    const maxTargetX = CANVAS_WIDTH - 100; // Maximum X position (leave room for tower)
     
-    do {
-      // Random wall dimensions
-      wallHeight = Math.random() * (settings.wallMaxHeight - settings.wallMinHeight) + settings.wallMinHeight;
-      wallWidth = Math.random() * (settings.wallMaxWidth - settings.wallMinWidth) + settings.wallMinWidth;
-      wallX = Math.random() * (settings.wallMaxX - settings.wallMinX) + settings.wallMinX;
+    // Generate random values with more variation
+    wallHeight = settings.wallMinHeight + (Math.random() * (settings.wallMaxHeight - settings.wallMinHeight));
+    wallWidth = settings.wallMinWidth + (Math.random() * (settings.wallMaxWidth - settings.wallMinWidth));
+    wallX = settings.wallMinX + (Math.random() * (settings.wallMaxX - settings.wallMinX));
+    
+    // Add extra randomness based on seed
+    wallX += (randomSeed % 100) - 50;
+    wallX = Math.max(settings.wallMinX, Math.min(settings.wallMaxX, wallX));
+    
+    // Random target distance with extra variation
+    targetDist = settings.targetMinDist + (Math.random() * (settings.targetMaxDist - settings.targetMinDist));
+    targetDist += (randomSeed % 50) - 25;
+    
+    targetX = wallX + wallWidth + targetDist;
+    
+    // In Guerra Total, ensure target is within acceptable range but still varies
+    if (isGuerraTotal) {
+      const minTargetX = 650;
+      const maxTargetX = CANVAS_WIDTH - 100;
       
-      // Random target distance
-      targetDist = Math.random() * (settings.targetMaxDist - settings.targetMinDist) + settings.targetMinDist;
-      targetX = wallX + wallWidth + targetDist;
-      
-      // In Guerra Total, ensure target is within acceptable range
-      if (isGuerraTotal) {
-        if (targetX < minTargetX) {
-          targetX = minTargetX + Math.random() * 300; // 650-950
-        }
-        if (targetX > maxTargetX) {
-          targetX = maxTargetX - Math.random() * 100;
-        }
+      if (targetX < minTargetX) {
+        targetX = minTargetX + (Math.random() * 300); // 650-950
       }
-      
-      // Ensure target doesn't go off screen
       if (targetX > maxTargetX) {
-        targetX = maxTargetX - Math.random() * 50;
+        targetX = maxTargetX - (Math.random() * 100);
       }
-      
-      // If last position was hit, ensure new position is significantly different
-      if (wasHit && lastHitPos) {
-        const distanceFromLast = Math.abs(targetX - lastHitPos.x);
-        // Require at least 150 pixels difference from last hit position
-        if (distanceFromLast < 150) {
-          attempts++;
-          continue; // Try again
-        }
-        
-        // Also vary wall position after hit
-        const wallDistanceFromLast = Math.abs(wallX - lastHitPos.wallX);
-        if (wallDistanceFromLast < 80) {
-          attempts++;
-          continue; // Try again
-        }
-      }
-      
-      break; // Position is acceptable
-    } while (attempts < maxAttempts);
+    }
     
-    // Random target size for even more variation
-    const targetWidth = 50 + Math.random() * 30; // 50-80 pixels
-    const targetHeight = 50 + Math.random() * 30; // 50-80 pixels
+    // Ensure target doesn't go off screen
+    const maxTargetX = CANVAS_WIDTH - 100;
+    if (targetX > maxTargetX) {
+      targetX = maxTargetX - (Math.random() * 50);
+    }
+    
+    // If there was a hit, try to move position significantly
+    if (wasHit && lastHitPos) {
+      // Force a different position by adjusting if too close
+      if (Math.abs(targetX - lastHitPos.x) < 100) {
+        targetX = lastHitPos.x > (CANVAS_WIDTH / 2) 
+          ? lastHitPos.x - 150 - (Math.random() * 100)
+          : lastHitPos.x + 150 + (Math.random() * 100);
+      }
+      if (Math.abs(wallX - lastHitPos.wallX) < 50) {
+        wallX = lastHitPos.wallX > (CANVAS_WIDTH / 2) 
+          ? lastHitPos.wallX - 80 - (Math.random() * 50)
+          : lastHitPos.wallX + 80 + (Math.random() * 50);
+      }
+    }
+    
+    // Clamp values to valid ranges
+    wallX = Math.max(200, Math.min(600, wallX));
+    targetX = Math.max(wallX + wallWidth + 100, Math.min(CANVAS_WIDTH - 80, targetX));
+    
+    // Random target size for more variation
+    const targetWidth = 50 + (Math.random() * 30);
+    const targetHeight = 50 + (Math.random() * 30);
     
     setWallPos({ x: wallX, y: 0, width: wallWidth, height: wallHeight });
     setTargetPos({ 

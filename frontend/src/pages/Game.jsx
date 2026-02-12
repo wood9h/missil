@@ -1436,7 +1436,7 @@ export default function Game() {
     const vx = -ussrVelocity * Math.cos(angleRad); // Negative because going left
     const vy = ussrVelocity * Math.sin(angleRad);
     
-    // Add USSR projectile to the array
+    // Add USSR projectile to the array (the animation loop will pick it up)
     const ussrProjectile = {
       id: `ussr-${Date.now()}`,
       startX: targetPos.x,
@@ -1452,19 +1452,9 @@ export default function Game() {
     };
     
     projectilesRef.current.push(ussrProjectile);
-    
-    // Start the game loop if not already running
-    if (!animationRef.current) {
-      animationRef.current = requestAnimationFrame(runGameLoop);
-    }
   };
 
   const resetGame = () => {
-    // Cancel any ongoing animation
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-      animationRef.current = null;
-    }
     // Clear projectiles and explosions
     projectilesRef.current = [];
     explosionsRef.current = [];
@@ -1474,6 +1464,8 @@ export default function Game() {
     setUssrHits(0);
     setUssrAttempts(0);
     setIsAnimating(false);
+    setTrajectory([]);
+    stopBackgroundMusic();
     generateNewRound();
     toast.info("Missão reiniciada!");
   };

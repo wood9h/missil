@@ -80,7 +80,10 @@ export default function Game() {
   const [ussrAttempts, setUssrAttempts] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [trajectory, setTrajectory] = useState([]);
-  const [usaMissileState, setUsaMissileState] = useState(null); // Track USA missile flight state
+  
+  // Unified projectile management for simultaneous missile flights
+  const projectilesRef = useRef([]); // Array of active projectiles: { id, x, y, vx, vy, t, isUSSR, trajectoryPoints, active }
+  const explosionsRef = useRef([]); // Array of active explosions: { x, y, frame, maxFrames }
 
   const [cannonPos] = useState({ x: 50, y: 30 });
   const [wallPos, setWallPos] = useState({ x: 400, y: 0, width: 20, height: 150 });

@@ -457,30 +457,26 @@ export default function Game() {
         trajectoryPoints.push({ x, y });
         setTrajectory(trajectoryPoints);
         
+        // Draw animated mushroom cloud explosion for ALL impacts
+        let explosionFrame = 0;
+        const maxExplosionFrames = 60; // 1 second at 60fps
+        const animateExplosion = () => {
+          drawCanvas(ctx, null, trajectoryPoints);
+          drawMushroomCloud(ctx, x, y, explosionFrame, maxExplosionFrames);
+          explosionFrame++;
+          
+          if (explosionFrame < maxExplosionFrames) {
+            requestAnimationFrame(animateExplosion);
+          }
+        };
+        animateExplosion();
+        
         if (hitType === "target") {
           setHits(prev => prev + 1);
           toast.success("Alvo Soviético Destruído! 🎯", {
-            description: `Novo desafio em 2 segundos...`,
+            description: `Explosão nuclear confirmada!`,
             icon: <Target className="h-5 w-5" />,
           });
-          
-          // Draw animated mushroom cloud explosion
-          setTrajectory(trajectoryPoints);
-          drawCanvas(ctx, null, trajectoryPoints);
-          
-          // Animate mushroom cloud formation
-          let explosionFrame = 0;
-          const maxExplosionFrames = 60; // 1 second at 60fps
-          const animateExplosion = () => {
-            drawCanvas(ctx, null, trajectoryPoints);
-            drawMushroomCloud(ctx, x, y, explosionFrame, maxExplosionFrames);
-            explosionFrame++;
-            
-            if (explosionFrame < maxExplosionFrames) {
-              requestAnimationFrame(animateExplosion);
-            }
-          };
-          animateExplosion();
           
           setTimeout(() => {
             setTrajectory([]);
@@ -491,11 +487,11 @@ export default function Game() {
           }, 3000);
         } else if (hitType === "wall") {
           toast.error("Bloqueado por obstáculo geográfico!", {
-            description: "Ajuste o ângulo ou velocidade do míssil",
+            description: "Explosão na montanha",
           });
         } else {
           toast.info("Míssil perdido", {
-            description: "Não atingiu o território soviético",
+            description: "Explosão em território neutro",
           });
         }
         
@@ -506,7 +502,7 @@ export default function Game() {
         if (settings.ussrRetaliates && hitType !== "target") {
           setTimeout(() => {
             ussrRetaliate();
-          }, 1500);
+          }, 2000);
         }
         
         return;

@@ -70,6 +70,13 @@ const DIFFICULTY_SETTINGS = {
 export default function Game() {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
+  
+  // Audio refs
+  const bgMusicRef = useRef(null);
+  const launchSoundUSARef = useRef(null);
+  const launchSoundUSSRRef = useRef(null);
+  const explosionSoundRef = useRef(null);
+  const alertSoundRef = useRef(null);
 
   const [angle, setAngle] = useState(45);
   const [velocity, setVelocity] = useState(30);
@@ -80,6 +87,7 @@ export default function Game() {
   const [ussrAttempts, setUssrAttempts] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [trajectory, setTrajectory] = useState([]);
+  const [isMuted, setIsMuted] = useState(false);
   
   // Unified projectile management for simultaneous missile flights
   const projectilesRef = useRef([]); // Array of active projectiles: { id, x, y, vx, vy, t, isUSSR, trajectoryPoints, active }
@@ -90,6 +98,64 @@ export default function Game() {
   const [targetPos, setTargetPos] = useState({ x: 900, y: 30, width: 60, height: 60 });
   const [lastHitPos, setLastHitPos] = useState(null); // Track last successful hit position
   const [mapImage, setMapImage] = useState(null);
+
+  // Initialize audio on component mount
+  useEffect(() => {
+    // Background music - Cold War era military march style
+    bgMusicRef.current = new Audio("https://www.soundjay.com/misc/sounds/drum-roll-1.mp3");
+    bgMusicRef.current.loop = true;
+    bgMusicRef.current.volume = 0.3;
+    
+    // Launch sounds - synthesized missile launch effect
+    launchSoundUSARef.current = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdXmHh4d7c3V9hYqJhX51cnh9goOCfnZ0eH1/gIF/enZ4e3+AgH56d3h7foCAf3t3eHp+gIB/e3d4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97");
+    launchSoundUSARef.current.volume = 0.5;
+    
+    launchSoundUSSRRef.current = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdXmHh4d7c3V9hYqJhX51cnh9goOCfnZ0eH1/gIF/enZ4e3+AgH56d3h7foCAf3t3eHp+gIB/e3d4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97");
+    launchSoundUSSRRef.current.volume = 0.5;
+    
+    // Explosion sound
+    explosionSoundRef.current = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdXmHh4d7c3V9hYqJhX51cnh9goOCfnZ0eH1/gIF/enZ4e3+AgH56d3h7foCAf3t3eHp+gIB/e3d4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97");
+    explosionSoundRef.current.volume = 0.6;
+    
+    // Alert sound for USSR retaliation
+    alertSoundRef.current = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdXmHh4d7c3V9hYqJhX51cnh9goOCfnZ0eH1/gIF/enZ4e3+AgH56d3h7foCAf3t3eHp+gIB/e3d4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97eHh6fn+Af3t4eHp+f4B/e3h4en5/gH97");
+    alertSoundRef.current.volume = 0.4;
+    
+    return () => {
+      // Cleanup audio on unmount
+      if (bgMusicRef.current) {
+        bgMusicRef.current.pause();
+        bgMusicRef.current = null;
+      }
+    };
+  }, []);
+
+  // Play sound helper function
+  const playSound = (soundRef) => {
+    if (!isMuted && soundRef.current) {
+      soundRef.current.currentTime = 0;
+      soundRef.current.play().catch(() => {});
+    }
+  };
+
+  // Toggle background music
+  const toggleMusic = () => {
+    setIsMuted(!isMuted);
+    if (bgMusicRef.current) {
+      if (isMuted) {
+        bgMusicRef.current.play().catch(() => {});
+      } else {
+        bgMusicRef.current.pause();
+      }
+    }
+  };
+
+  // Start background music on first interaction
+  const startBackgroundMusic = () => {
+    if (!isMuted && bgMusicRef.current && bgMusicRef.current.paused) {
+      bgMusicRef.current.play().catch(() => {});
+    }
+  };
 
   useEffect(() => {
     // Load world map image

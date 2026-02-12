@@ -102,17 +102,42 @@ export default function Game() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [difficulty]);
 
-  const generateNewRound = () => {
+  const generateNewRound = (wasHit = false) => {
     const settings = DIFFICULTY_SETTINGS[difficulty];
     
-    // Random wall dimensions with MORE variation
-    const wallHeight = Math.random() * (settings.wallMaxHeight - settings.wallMinHeight) + settings.wallMinHeight;
-    const wallWidth = Math.random() * (settings.wallMaxWidth - settings.wallMinWidth) + settings.wallMinWidth;
-    const wallX = Math.random() * (settings.wallMaxX - settings.wallMinX) + settings.wallMinX;
+    let wallX, wallHeight, wallWidth, targetX, targetDist;
+    let attempts = 0;
+    const maxAttempts = 20;
     
-    // Random target distance with MORE variation
-    const targetDist = Math.random() * (settings.targetMaxDist - settings.targetMinDist) + settings.targetMinDist;
-    const targetX = wallX + wallWidth + targetDist;
+    do {
+      // Random wall dimensions
+      wallHeight = Math.random() * (settings.wallMaxHeight - settings.wallMinHeight) + settings.wallMinHeight;
+      wallWidth = Math.random() * (settings.wallMaxWidth - settings.wallMinWidth) + settings.wallMinWidth;
+      wallX = Math.random() * (settings.wallMaxX - settings.wallMinX) + settings.wallMinX;
+      
+      // Random target distance
+      targetDist = Math.random() * (settings.targetMaxDist - settings.targetMinDist) + settings.targetMinDist;
+      targetX = wallX + wallWidth + targetDist;
+      
+      // If last position was hit, ensure new position is significantly different
+      if (wasHit && lastHitPos) {
+        const distanceFromLast = Math.abs(targetX - lastHitPos.x);
+        // Require at least 250 pixels difference from last hit position
+        if (distanceFromLast < 250) {
+          attempts++;
+          continue; // Try again
+        }
+        
+        // Also vary wall position more dramatically after hit
+        const wallDistanceFromLast = Math.abs(wallX - lastHitPos.wallX);
+        if (wallDistanceFromLast < 100) {
+          attempts++;
+          continue; // Try again
+        }
+      }
+      
+      break; // Position is acceptable
+    } while (attempts < maxAttempts);
     
     // Random target size for even more variation
     const targetWidth = 50 + Math.random() * 30; // 50-80 pixels
@@ -125,6 +150,11 @@ export default function Game() {
       width: targetWidth, 
       height: targetHeight 
     });
+    
+    // Store position for next round comparison
+    if (wasHit) {
+      setLastHitPos({ x: targetX, wallX: wallX });
+    }
     
     setTrajectory([]);
   };

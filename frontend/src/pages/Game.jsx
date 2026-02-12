@@ -444,9 +444,9 @@ export default function Game() {
       <header className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-slate-900" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            Physics Cannon Lab
+            Guerra Fria: Cálculo Balístico
           </h1>
-          <p className="text-sm text-slate-500 mt-1">Lançamento Oblíquo</p>
+          <p className="text-sm text-slate-500 mt-1">USA 🇺🇸 vs URSS 🚩 | Simulador de Mísseis Intercontinentais</p>
         </div>
         <div className="flex items-center gap-4">
           <div className="bg-white rounded-xl px-6 py-3 shadow-sm border border-slate-200">

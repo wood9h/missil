@@ -55,9 +55,9 @@ export default function Game() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [trajectory, setTrajectory] = useState([]);
 
-  const [cannonPos] = useState({ x: 50, y: CANVAS_HEIGHT - 50 });
+  const [cannonPos] = useState({ x: 50, y: 30 });
   const [wallPos, setWallPos] = useState({ x: 400, y: 0, width: 20, height: 150 });
-  const [targetPos, setTargetPos] = useState({ x: 900, y: CANVAS_HEIGHT - 80, width: 60, height: 60 });
+  const [targetPos, setTargetPos] = useState({ x: 900, y: 30, width: 60, height: 60 });
 
   useEffect(() => {
     generateNewRound();

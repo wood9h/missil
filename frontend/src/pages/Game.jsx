@@ -741,6 +741,21 @@ export default function Game() {
     setIsAnimating(true);
     setAttempts(prev => prev + 1);
     
+    // USSR retaliation triggered immediately in "Guerra Total" mode
+    const settings = DIFFICULTY_SETTINGS[difficulty];
+    if (settings.ussrRetaliates) {
+      // USSR detects launch and retaliates after short delay (3 seconds)
+      setTimeout(() => {
+        toast.warning("⚠️ Lançamento Detectado!", {
+          description: "URSS preparando contra-ataque...",
+        });
+      }, 1000);
+      
+      setTimeout(() => {
+        ussrRetaliate();
+      }, 3000); // USSR launches 3 seconds after USA launch
+    }
+    
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     

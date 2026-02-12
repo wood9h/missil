@@ -76,6 +76,8 @@ export default function Game() {
   const [difficulty, setDifficulty] = useState("medium");
   const [hits, setHits] = useState(0);
   const [attempts, setAttempts] = useState(0);
+  const [ussrHits, setUssrHits] = useState(0);
+  const [ussrAttempts, setUssrAttempts] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [trajectory, setTrajectory] = useState([]);
 

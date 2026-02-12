@@ -516,7 +516,7 @@ export default function Game() {
           {/* Velocity Control */}
           <div>
             <label className="text-sm font-medium uppercase tracking-wider text-slate-500 mb-3 block">
-              Velocidade
+              Velocidade do Míssil
             </label>
             <div className="flex items-center gap-4">
               <Slider

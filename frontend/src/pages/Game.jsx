@@ -452,8 +452,10 @@ export default function Game() {
       height: targetHeight 
     });
     
-    // Always store position for next round comparison
-    setLastHitPos({ x: targetX, wallX: wallX });
+    // Store position for next round comparison only when there was a hit
+    if (wasHit) {
+      setLastHitPos({ x: targetX, wallX: wallX });
+    }
     
     setTrajectory([]);
   };

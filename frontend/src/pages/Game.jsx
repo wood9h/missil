@@ -276,11 +276,11 @@ export default function Game() {
       ctx.shadowBlur = 0;
     }
     
-    // Draw USA missile launch platform (left)
+    // Draw USA missile launch tower (left)
     const cannonScreenX = cannonPos.x;
     const cannonScreenY = CANVAS_HEIGHT - 30;
     
-    // Base platform (fixed)
+    // Tower base platform
     ctx.fillStyle = "#2C3E50";
     ctx.fillRect(cannonScreenX - 35, cannonScreenY - 5, 70, 5);
     ctx.fillRect(cannonScreenX - 30, cannonScreenY - 10, 60, 5);
@@ -290,7 +290,7 @@ export default function Game() {
     ctx.fillRect(cannonScreenX - 25, cannonScreenY - 35, 8, 30);
     ctx.fillRect(cannonScreenX + 17, cannonScreenY - 35, 8, 30);
     
-    // Main tower structure behind launch platform
+    // Main tower structure
     ctx.fillStyle = "#34495E";
     ctx.fillRect(cannonScreenX - 15, cannonScreenY - 60, 30, 25);
     
@@ -303,6 +303,16 @@ export default function Game() {
       ctx.lineTo(cannonScreenX + 15, cannonScreenY - 45 - i * 10);
       ctx.stroke();
     }
+    
+    // Vertical lines
+    ctx.beginPath();
+    ctx.moveTo(cannonScreenX - 5, cannonScreenY - 60);
+    ctx.lineTo(cannonScreenX - 5, cannonScreenY - 35);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cannonScreenX + 5, cannonScreenY - 60);
+    ctx.lineTo(cannonScreenX + 5, cannonScreenY - 35);
+    ctx.stroke();
     
     // Radar dish on top
     ctx.fillStyle = "#5A6F8F";
@@ -344,53 +354,18 @@ export default function Game() {
     ctx.textAlign = "center";
     ctx.fillText("USA", cannonScreenX, cannonScreenY - 85);
     
-    // LAUNCH PLATFORM - Tilting launcher that rotates with angle
-    const angleRad = (angle * Math.PI) / 180;
-    const platformBase = cannonScreenY - 32; // Launch point
-    
-    ctx.save();
-    ctx.translate(cannonScreenX, platformBase);
-    ctx.rotate(angleRad);
-    
-    // Platform rail (the part that holds the missile and tilts)
-    const railLength = 50;
-    
-    // Rail base structure
-    ctx.fillStyle = "#2C5F8D";
-    ctx.fillRect(0, -6, railLength, 12);
-    
-    // Rail top highlight
-    ctx.fillStyle = "#4A90E2";
-    ctx.fillRect(0, -5, railLength, 4);
-    
-    // Rail bottom shadow
-    ctx.fillStyle = "#1A3A4A";
-    ctx.fillRect(0, 1, railLength, 4);
-    
-    // Support brackets along the rail
-    ctx.fillStyle = "#34495E";
-    for (let i = 0; i < 3; i++) {
-      const x = 10 + i * 15;
-      ctx.fillRect(x, -8, 3, 16);
-    }
-    
-    // Hydraulic piston (extends from pivot point)
-    ctx.strokeStyle = "#7F8C8D";
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.moveTo(-5, 0);
-    ctx.lineTo(-15, 15);
-    ctx.stroke();
-    
-    ctx.fillStyle = "#95A5A6";
-    ctx.beginPath();
-    ctx.arc(-15, 15, 5, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // Missile on the tilted platform (when not firing)
+    // MISSILE positioned at launch angle (when not firing)
     if (!isAnimating) {
-      const missileLength = 32;
-      const missileStart = 10;
+      const angleRad = (angle * Math.PI) / 180;
+      const launchPointY = cannonScreenY - 32;
+      
+      ctx.save();
+      ctx.translate(cannonScreenX, launchPointY);
+      ctx.rotate(angleRad);
+      
+      // Draw the missile ready to launch
+      const missileLength = 35;
+      const missileStart = 5;
       
       // Main missile body with gradient
       const bodyGradient = ctx.createLinearGradient(missileStart, 0, missileStart + missileLength, 0);
@@ -398,84 +373,81 @@ export default function Game() {
       bodyGradient.addColorStop(0.5, "#FFFFFF");
       bodyGradient.addColorStop(1, "#4A90E2");
       ctx.fillStyle = bodyGradient;
-      ctx.fillRect(missileStart, -4, missileLength - 6, 8);
+      ctx.fillRect(missileStart, -5, missileLength - 6, 10);
       
       // Nose cone
       ctx.fillStyle = "#2C5F8D";
       ctx.beginPath();
-      ctx.moveTo(missileStart + missileLength - 6, -4);
-      ctx.lineTo(missileStart + missileLength + 4, 0);
-      ctx.lineTo(missileStart + missileLength - 6, 4);
+      ctx.moveTo(missileStart + missileLength - 6, -5);
+      ctx.lineTo(missileStart + missileLength + 5, 0);
+      ctx.lineTo(missileStart + missileLength - 6, 5);
       ctx.closePath();
       ctx.fill();
       
       // Nose cone highlight
       ctx.fillStyle = "#3D7AB8";
       ctx.beginPath();
-      ctx.moveTo(missileStart + missileLength - 6, -2);
-      ctx.lineTo(missileStart + missileLength + 4, 0);
-      ctx.lineTo(missileStart + missileLength - 6, 2);
+      ctx.moveTo(missileStart + missileLength - 6, -2.5);
+      ctx.lineTo(missileStart + missileLength + 5, 0);
+      ctx.lineTo(missileStart + missileLength - 6, 2.5);
       ctx.closePath();
       ctx.fill();
       
       // Tail fins
       ctx.fillStyle = "#4A90E2";
+      // Top fin
       ctx.beginPath();
-      ctx.moveTo(missileStart, -4);
-      ctx.lineTo(missileStart - 5, -7);
-      ctx.lineTo(missileStart + 4, -4);
+      ctx.moveTo(missileStart, -5);
+      ctx.lineTo(missileStart - 6, -9);
+      ctx.lineTo(missileStart + 5, -5);
       ctx.closePath();
       ctx.fill();
       
+      // Bottom fin
       ctx.beginPath();
-      ctx.moveTo(missileStart, 4);
-      ctx.lineTo(missileStart - 5, 7);
-      ctx.lineTo(missileStart + 4, 4);
+      ctx.moveTo(missileStart, 5);
+      ctx.lineTo(missileStart - 6, 9);
+      ctx.lineTo(missileStart + 5, 5);
       ctx.closePath();
       ctx.fill();
       
       // Mid fins
       ctx.fillStyle = "#5BA3E8";
-      ctx.fillRect(missileStart + 2, -5, 3, 1.5);
-      ctx.fillRect(missileStart + 2, 3.5, 3, 1.5);
+      ctx.fillRect(missileStart + 3, -6, 4, 2);
+      ctx.fillRect(missileStart + 3, 4, 4, 2);
       
       // USA markings
       ctx.fillStyle = "#FFFFFF";
-      ctx.fillRect(missileStart + 14, -3, 8, 6);
+      ctx.fillRect(missileStart + 16, -4, 10, 8);
       
       ctx.fillStyle = "#E74C3C";
-      ctx.fillRect(missileStart + 16, -2, 4, 4);
+      ctx.fillRect(missileStart + 18, -3, 6, 6);
       
       // Detail lines
       ctx.strokeStyle = "#2C5F8D";
       ctx.lineWidth = 0.5;
       for (let i = 0; i < 3; i++) {
         ctx.beginPath();
-        ctx.moveTo(missileStart + 10 + i * 5, -4);
-        ctx.lineTo(missileStart + 10 + i * 5, 4);
+        ctx.moveTo(missileStart + 12 + i * 6, -5);
+        ctx.lineTo(missileStart + 12 + i * 6, 5);
         ctx.stroke();
       }
       
       // Exhaust nozzle
       ctx.fillStyle = "#1A3A4A";
-      ctx.fillRect(missileStart - 2, -3, 3, 6);
+      ctx.fillRect(missileStart - 3, -4, 4, 8);
       
       ctx.fillStyle = "#34495E";
-      ctx.fillRect(missileStart - 1, -2, 2, 4);
+      ctx.fillRect(missileStart - 2, -3, 3, 6);
+      
+      // Glow effect behind missile
+      ctx.globalAlpha = 0.3;
+      ctx.fillStyle = "#4A90E2";
+      ctx.fillRect(missileStart, -7, missileLength - 6, 14);
+      ctx.globalAlpha = 1.0;
+      
+      ctx.restore();
     }
-    
-    ctx.restore();
-    
-    // Pivot point indicator
-    ctx.fillStyle = "#95A5A6";
-    ctx.beginPath();
-    ctx.arc(cannonScreenX, platformBase, 6, 0, Math.PI * 2);
-    ctx.fill();
-    
-    ctx.fillStyle = "#34495E";
-    ctx.beginPath();
-    ctx.arc(cannonScreenX, platformBase, 3, 0, Math.PI * 2);
-    ctx.fill();
     
     // Draw obstacle (mountain range / geographic barrier)
     ctx.fillStyle = "#5D4E37"; // Brown mountains

@@ -338,7 +338,7 @@ export default function Game() {
     const ctx = canvas.getContext("2d");
     drawCanvas(ctx, null, trajectory);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [angle, velocity, wallPos, targetPos, trajectory]);
+  }, [angle, velocity, wallPos, targetPos, trajectory, mapImage]);
 
   const checkCollision = (x, y) => {
     // Check ground

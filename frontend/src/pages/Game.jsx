@@ -1055,7 +1055,7 @@ export default function Game() {
     
     // USSR Missile on launch platform in Guerra Total mode (drawn last so it's on top)
     if (isGuerraTotal) {
-      const towerCenterX = targetScreenX + targetPos.width / 2;
+      const towerCenterX = targetScreenX + currentTargetPos.width / 2;
       const towerBaseY = CANVAS_HEIGHT - 30;
       const ussrHasActiveMissile = activeProjectiles.some(p => p.isUSSR && p.active);
       

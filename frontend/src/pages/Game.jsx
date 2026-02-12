@@ -1022,13 +1022,13 @@ export default function Game() {
       
       // Soviet flag on top
       ctx.fillStyle = "#CC0000"; // Bright red
-      ctx.fillRect(targetScreenX + targetPos.width / 2 - 2, targetScreenY - 15, 2, 15);
-      ctx.fillRect(targetScreenX + targetPos.width / 2, targetScreenY - 15, 20, 12);
+      ctx.fillRect(targetScreenX + currentTargetPos.width / 2 - 2, targetScreenY - 15, 2, 15);
+      ctx.fillRect(targetScreenX + currentTargetPos.width / 2, targetScreenY - 15, 20, 12);
       
       // Hammer and Sickle (simplified)
       ctx.fillStyle = "#FFD700"; // Gold
       ctx.font = "bold 10px Arial";
-      ctx.fillText("☭", targetScreenX + targetPos.width / 2 + 7, targetScreenY - 5);
+      ctx.fillText("☭", targetScreenX + currentTargetPos.width / 2 + 7, targetScreenY - 5);
       
       // Windows
       ctx.fillStyle = "#FFD700";

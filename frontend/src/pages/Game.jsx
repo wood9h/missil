@@ -801,6 +801,7 @@ export default function Game() {
       }
       
       ussrTrajectoryPoints.push({ x, y });
+      ussrTrajectoryPoints.forEach(point => point.isUSSR = true); // Mark all points as USSR
       
       // Draw USSR missile in red
       drawCanvas(ctx, null, []);

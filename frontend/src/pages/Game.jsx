@@ -494,7 +494,7 @@ export default function Game() {
           {/* Angle Control */}
           <div>
             <label className="text-sm font-medium uppercase tracking-wider text-slate-500 mb-3 block">
-              Ângulo
+              Ângulo de Lançamento
             </label>
             <div className="flex items-center gap-4">
               <Slider

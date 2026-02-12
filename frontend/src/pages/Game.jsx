@@ -562,22 +562,22 @@ export default function Game() {
           <div className="pt-4 border-t border-slate-200">
             <div className="bg-gradient-to-br from-indigo-50 to-rose-50 rounded-xl p-4">
               <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="h-4 w-4 text-indigo-600" />
+                <TrendingUp className="h-4 w-4 text-red-600" />
                 <span className="text-xs uppercase tracking-wider text-slate-600 font-medium">
-                  Estatísticas
+                  Relatório de Missão
                 </span>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Tentativas:</span>
+                  <span className="text-slate-600">Lançamentos:</span>
                   <span className="font-bold text-slate-900">{attempts}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Acertos:</span>
+                  <span className="text-slate-600">Alvos Destruídos:</span>
                   <span className="font-bold text-green-600">{hits}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600">Erros:</span>
+                  <span className="text-slate-600">Falhas:</span>
                   <span className="font-bold text-rose-600">{attempts - hits}</span>
                 </div>
               </div>

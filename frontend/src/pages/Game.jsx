@@ -115,10 +115,32 @@ export default function Game() {
     // Clear canvas
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     
-    // Draw world map image as background
+    // Draw world map image as background - Pacific centered projection
     if (mapImage) {
       ctx.globalAlpha = 0.6;
-      ctx.drawImage(mapImage, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      // Draw the map shifted to show USA on left and USSR/Russia on right
+      // Original image width is used, we shift it left to center on Pacific
+      const mapWidth = mapImage.width;
+      const mapHeight = mapImage.height;
+      
+      // Shift the image to the left so USA appears on left side and Asia on right
+      // We'll draw the right portion of the map on the left, and left portion on right
+      const shift = mapWidth * 0.25; // Shift to center on Pacific
+      
+      // Draw right portion of map on the left side of canvas
+      ctx.drawImage(
+        mapImage,
+        mapWidth * 0.5, 0, mapWidth * 0.5, mapHeight, // Source: right half of map (Asia/Pacific)
+        0, 0, CANVAS_WIDTH * 0.5, CANVAS_HEIGHT // Destination: left half of canvas
+      );
+      
+      // Draw left portion of map on the right side of canvas  
+      ctx.drawImage(
+        mapImage,
+        0, 0, mapWidth * 0.5, mapHeight, // Source: left half of map (Americas)
+        CANVAS_WIDTH * 0.5, 0, CANVAS_WIDTH * 0.5, CANVAS_HEIGHT // Destination: right half of canvas
+      );
+      
       ctx.globalAlpha = 1.0;
     } else {
       // Fallback ocean gradient if image not loaded
@@ -131,11 +153,11 @@ export default function Game() {
     }
     
     // Dark overlay for better contrast with game elements
-    ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     
     // Latitude/longitude grid lines (military map style)
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
     ctx.lineWidth = 1;
     ctx.setLineDash([5, 5]);
     // Latitude lines

@@ -736,10 +736,11 @@ export default function Game() {
       
       ctx.save();
       ctx.translate(cannonScreenX, launchPointY);
-      // Rotate 90 degrees more to make missile perpendicular, then flip 180 to invert direction
-      ctx.rotate(angleRad + Math.PI / 2 + Math.PI);
+      // Rotate so 0° is horizontal (pointing right) and 90° is vertical (pointing up)
+      // In canvas, negative rotation goes counter-clockwise, so we use -angleRad
+      ctx.rotate(-angleRad);
       
-      // Draw the missile standing perpendicular to launch angle (inverted)
+      // Draw the missile pointing in the direction of launch
       const missileLength = 35;
       const missileStart = 5;
       

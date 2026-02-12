@@ -323,17 +323,25 @@ export default function Game() {
     
     // Missile launcher angle indicator
     const angleRad = (angle * Math.PI) / 180;
-    const barrelLength = 35;
-    const barrelEndX = cannonScreenX + Math.cos(angleRad) * barrelLength;
-    const barrelEndY = cannonScreenY - 35 - Math.sin(angleRad) * barrelLength;
+    const launcherLength = 40;
+    const launcherEndX = cannonScreenX + Math.cos(angleRad) * launcherLength;
+    const launcherEndY = cannonScreenY - 35 - Math.sin(angleRad) * launcherLength;
     
-    // Launch tube
-    ctx.strokeStyle = "#4A90E2";
-    ctx.lineWidth = 6;
+    // Launch tube structure
+    ctx.strokeStyle = "#2C5F8D";
+    ctx.lineWidth = 10;
     ctx.lineCap = "round";
     ctx.beginPath();
     ctx.moveTo(cannonScreenX, cannonScreenY - 35);
-    ctx.lineTo(barrelEndX, barrelEndY);
+    ctx.lineTo(launcherEndX, launcherEndY);
+    ctx.stroke();
+    
+    // Launch tube highlights
+    ctx.strokeStyle = "#4A90E2";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(cannonScreenX, cannonScreenY - 35);
+    ctx.lineTo(launcherEndX, launcherEndY);
     ctx.stroke();
     
     // Missile in launcher (when not firing)
@@ -342,17 +350,84 @@ export default function Game() {
       ctx.translate(cannonScreenX, cannonScreenY - 35);
       ctx.rotate(angleRad);
       
-      // Small missile in tube
-      ctx.fillStyle = "#4A90E2";
-      ctx.fillRect(5, -3, 15, 6);
+      // Missile positioned inside tube
+      const missileLength = 28;
+      const missileStart = 8;
       
+      // Main missile body (blue-white)
+      const bodyGradient = ctx.createLinearGradient(missileStart, 0, missileStart + missileLength, 0);
+      bodyGradient.addColorStop(0, "#5BA3E8");
+      bodyGradient.addColorStop(0.5, "#FFFFFF");
+      bodyGradient.addColorStop(1, "#4A90E2");
+      ctx.fillStyle = bodyGradient;
+      ctx.fillRect(missileStart, -4, missileLength - 5, 8);
+      
+      // Nose cone (pointed)
       ctx.fillStyle = "#2C5F8D";
       ctx.beginPath();
-      ctx.moveTo(20, -3);
-      ctx.lineTo(25, 0);
-      ctx.lineTo(20, 3);
+      ctx.moveTo(missileStart + missileLength - 5, -4);
+      ctx.lineTo(missileStart + missileLength + 4, 0);
+      ctx.lineTo(missileStart + missileLength - 5, 4);
       ctx.closePath();
       ctx.fill();
+      
+      // Nose cone highlight
+      ctx.fillStyle = "#3D7AB8";
+      ctx.beginPath();
+      ctx.moveTo(missileStart + missileLength - 5, -2);
+      ctx.lineTo(missileStart + missileLength + 4, 0);
+      ctx.lineTo(missileStart + missileLength - 5, 2);
+      ctx.closePath();
+      ctx.fill();
+      
+      // Tail fins (4 fins)
+      ctx.fillStyle = "#4A90E2";
+      // Top fin
+      ctx.beginPath();
+      ctx.moveTo(missileStart, -4);
+      ctx.lineTo(missileStart - 5, -7);
+      ctx.lineTo(missileStart + 4, -4);
+      ctx.closePath();
+      ctx.fill();
+      
+      // Bottom fin
+      ctx.beginPath();
+      ctx.moveTo(missileStart, 4);
+      ctx.lineTo(missileStart - 5, 7);
+      ctx.lineTo(missileStart + 4, 4);
+      ctx.closePath();
+      ctx.fill();
+      
+      // Mid fins (smaller, left-right)
+      ctx.fillStyle = "#5BA3E8";
+      ctx.fillRect(missileStart + 2, -5, 3, 1.5);
+      ctx.fillRect(missileStart + 2, 3.5, 3, 1.5);
+      
+      // USA markings on missile
+      ctx.fillStyle = "#FFFFFF";
+      ctx.fillRect(missileStart + 12, -3, 8, 6);
+      
+      // Red stripe
+      ctx.fillStyle = "#E74C3C";
+      ctx.fillRect(missileStart + 14, -2, 4, 4);
+      
+      // Detail lines on body
+      ctx.strokeStyle = "#2C5F8D";
+      ctx.lineWidth = 0.5;
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.moveTo(missileStart + 8 + i * 5, -4);
+        ctx.lineTo(missileStart + 8 + i * 5, 4);
+        ctx.stroke();
+      }
+      
+      // Exhaust nozzle
+      ctx.fillStyle = "#1A3A4A";
+      ctx.fillRect(missileStart - 2, -3, 3, 6);
+      
+      // Nozzle inner glow
+      ctx.fillStyle = "#34495E";
+      ctx.fillRect(missileStart - 1, -2, 2, 4);
       
       ctx.restore();
     }

@@ -981,6 +981,63 @@ export default function Game() {
       ctx.stroke();
     }
     
+    // USSR Missile on launch platform in Guerra Total mode (drawn last so it's on top)
+    if (isGuerraTotal) {
+      const towerCenterX = targetScreenX + targetPos.width / 2;
+      const towerBaseY = CANVAS_HEIGHT - 30;
+      const ussrHasActiveMissile = activeProjectiles.some(p => p.isUSSR && p.active);
+      
+      if (!ussrHasActiveMissile) {
+        ctx.save();
+        // Position missile above and to the left of the tower
+        ctx.translate(towerCenterX - 15, towerBaseY - 80);
+        // USSR missile points LEFT and UP (45° angle pointing up-left)
+        ctx.rotate(-Math.PI * 3 / 4); // -135 degrees
+        
+        const ussrMissileLength = 40;
+        const ussrMissileStart = 0;
+        
+        // USSR Missile body (red with white)
+        ctx.fillStyle = "#E23636";
+        ctx.fillRect(ussrMissileStart, -5, ussrMissileLength - 6, 10);
+        
+        // Nose cone
+        ctx.fillStyle = "#B22222";
+        ctx.beginPath();
+        ctx.moveTo(ussrMissileStart + ussrMissileLength - 6, -5);
+        ctx.lineTo(ussrMissileStart + ussrMissileLength + 5, 0);
+        ctx.lineTo(ussrMissileStart + ussrMissileLength - 6, 5);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Tail fins
+        ctx.fillStyle = "#FF4444";
+        ctx.beginPath();
+        ctx.moveTo(ussrMissileStart, -5);
+        ctx.lineTo(ussrMissileStart - 6, -9);
+        ctx.lineTo(ussrMissileStart + 5, -5);
+        ctx.closePath();
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.moveTo(ussrMissileStart, 5);
+        ctx.lineTo(ussrMissileStart - 6, 9);
+        ctx.lineTo(ussrMissileStart + 5, 5);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Yellow stripe (USSR style)
+        ctx.fillStyle = "#FFD700";
+        ctx.fillRect(ussrMissileStart + 16, -4, 10, 8);
+        
+        // Exhaust nozzle
+        ctx.fillStyle = "#1A3A4A";
+        ctx.fillRect(ussrMissileStart - 3, -4, 4, 8);
+        
+        ctx.restore();
+      }
+    }
+    
     // Draw all active missiles
     activeProjectiles.forEach(proj => {
       if (proj.active && proj.trajectoryPoints && proj.trajectoryPoints.length > 0) {

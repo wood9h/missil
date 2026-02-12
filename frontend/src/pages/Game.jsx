@@ -1198,10 +1198,20 @@ export default function Game() {
   };
 
   const resetGame = () => {
+    // Cancel any ongoing animation
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
+    // Clear projectiles and explosions
+    projectilesRef.current = [];
+    explosionsRef.current = [];
+    
     setHits(0);
     setAttempts(0);
     setUssrHits(0);
     setUssrAttempts(0);
+    setIsAnimating(false);
     generateNewRound();
     toast.info("Missão reiniciada!");
   };

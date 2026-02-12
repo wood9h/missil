@@ -223,51 +223,77 @@ export default function Game() {
     ctx.arc(barrelEndX, barrelEndY, 6, 0, Math.PI * 2);
     ctx.fill();
     
-    // Draw wall
-    ctx.fillStyle = "#94A3B8";
+    // Draw obstacle (mountain range / geographic barrier)
+    ctx.fillStyle = "#5D4E37"; // Brown mountains
+    ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+    ctx.shadowBlur = 10;
     ctx.fillRect(wallPos.x, CANVAS_HEIGHT - wallPos.height - 30, wallPos.width, wallPos.height);
+    ctx.shadowBlur = 0;
     
-    // Wall pattern
-    ctx.strokeStyle = "#64748B";
-    ctx.lineWidth = 2;
-    for (let i = 0; i < wallPos.height; i += 20) {
-      ctx.beginPath();
-      ctx.moveTo(wallPos.x, CANVAS_HEIGHT - 30 - i);
-      ctx.lineTo(wallPos.x + wallPos.width, CANVAS_HEIGHT - 30 - i);
-      ctx.stroke();
+    // Mountain peaks effect
+    ctx.fillStyle = "#8B7355";
+    ctx.beginPath();
+    for (let i = 0; i < wallPos.width; i += 8) {
+      ctx.moveTo(wallPos.x + i, CANVAS_HEIGHT - 30);
+      ctx.lineTo(wallPos.x + i + 4, CANVAS_HEIGHT - wallPos.height - 30 - 10);
+      ctx.lineTo(wallPos.x + i + 8, CANVAS_HEIGHT - 30);
+    }
+    ctx.fill();
+    
+    // Snow caps
+    ctx.fillStyle = "#FFFFFF";
+    for (let i = 0; i < 3; i++) {
+      ctx.fillRect(wallPos.x + (wallPos.width / 4) * i, CANVAS_HEIGHT - wallPos.height - 30, wallPos.width / 4, 5);
     }
     
-    // Draw target (tank)
+    // Draw USSR target (right - União Soviética)
     const targetScreenX = targetPos.x;
     const targetScreenY = CANVAS_HEIGHT - 30 - targetPos.height;
     
-    // Tank body
-    ctx.fillStyle = "#F43F5E";
-    ctx.fillRect(targetScreenX + 10, targetScreenY + 20, 40, 25);
+    // Soviet base building
+    ctx.fillStyle = "#8B0000"; // Dark red
+    ctx.fillRect(targetScreenX, targetScreenY + 20, targetPos.width, targetPos.height - 20);
     
-    // Tank turret
-    ctx.fillStyle = "#FB7185";
-    ctx.fillRect(targetScreenX + 20, targetScreenY + 10, 20, 15);
-    
-    // Tank barrel
-    ctx.strokeStyle = "#F43F5E";
-    ctx.lineWidth = 4;
+    // Roof
+    ctx.fillStyle = "#A52A2A";
     ctx.beginPath();
-    ctx.moveTo(targetScreenX + 40, targetScreenY + 17);
-    ctx.lineTo(targetScreenX + 55, targetScreenY + 17);
+    ctx.moveTo(targetScreenX - 5, targetScreenY + 20);
+    ctx.lineTo(targetScreenX + targetPos.width / 2, targetScreenY);
+    ctx.lineTo(targetScreenX + targetPos.width + 5, targetScreenY + 20);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Soviet flag on top
+    ctx.fillStyle = "#CC0000"; // Bright red
+    ctx.fillRect(targetScreenX + targetPos.width / 2 - 2, targetScreenY - 15, 2, 15);
+    ctx.fillRect(targetScreenX + targetPos.width / 2, targetScreenY - 15, 20, 12);
+    
+    // Hammer and Sickle (simplified)
+    ctx.fillStyle = "#FFD700"; // Gold
+    ctx.font = "bold 10px Arial";
+    ctx.fillText("☭", targetScreenX + targetPos.width / 2 + 7, targetScreenY - 5);
+    
+    // Windows
+    ctx.fillStyle = "#FFD700";
+    for (let i = 0; i < 2; i++) {
+      for (let j = 0; j < 2; j++) {
+        ctx.fillRect(targetScreenX + 10 + i * 20, targetScreenY + 30 + j * 15, 8, 10);
+      }
+    }
+    
+    // Label USSR
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 14px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("СССР", targetScreenX + targetPos.width / 2, targetScreenY - 20);
+    
+    // Antenna/tower
+    ctx.strokeStyle = "#8B0000";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(targetScreenX + targetPos.width - 5, targetScreenY + 20);
+    ctx.lineTo(targetScreenX + targetPos.width - 5, targetScreenY - 5);
     ctx.stroke();
-    
-    // Tank wheels
-    ctx.fillStyle = "#1E293B";
-    ctx.beginPath();
-    ctx.arc(targetScreenX + 18, targetScreenY + 45, 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(targetScreenX + 30, targetScreenY + 45, 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.arc(targetScreenX + 42, targetScreenY + 45, 5, 0, Math.PI * 2);
-    ctx.fill();
     
     // Draw projectile
     if (projectilePos) {

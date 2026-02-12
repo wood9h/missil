@@ -455,55 +455,60 @@ export default function Game() {
       if (collision) {
         hitType = collision.type;
         trajectoryPoints.push({ x, y });
+        
+        // Continue animation showing the trajectory reaching the impact point
+        drawCanvas(ctx, { x, y }, trajectoryPoints);
         setTrajectory(trajectoryPoints);
-        
-        // Draw animated mushroom cloud explosion for ALL impacts
-        let explosionFrame = 0;
-        const maxExplosionFrames = 60; // 1 second at 60fps
-        const animateExplosion = () => {
-          drawCanvas(ctx, null, trajectoryPoints);
-          drawMushroomCloud(ctx, x, y, explosionFrame, maxExplosionFrames);
-          explosionFrame++;
-          
-          if (explosionFrame < maxExplosionFrames) {
-            requestAnimationFrame(animateExplosion);
-          }
-        };
-        animateExplosion();
-        
-        if (hitType === "target") {
-          setHits(prev => prev + 1);
-          toast.success("Alvo Soviético Destruído! 🎯", {
-            description: `Explosão nuclear confirmada!`,
-            icon: <Target className="h-5 w-5" />,
-          });
-          
-          setTimeout(() => {
-            setTrajectory([]);
-            generateNewRound();
-            toast.info("Nova Localização URSS!", {
-              description: "Base soviética reposicionada",
-            });
-          }, 3000);
-        } else if (hitType === "wall") {
-          toast.error("Bloqueado por obstáculo geográfico!", {
-            description: "Explosão na montanha",
-          });
-        } else {
-          toast.info("Míssil perdido", {
-            description: "Explosão em território neutro",
-          });
-        }
-        
         setIsAnimating(false);
         
-        // USSR retaliation in "Guerra Total" mode
-        const settings = DIFFICULTY_SETTINGS[difficulty];
-        if (settings.ussrRetaliates && hitType !== "target") {
-          setTimeout(() => {
-            ussrRetaliate();
-          }, 2000);
-        }
+        // Wait a moment to show the complete trajectory before explosion
+        setTimeout(() => {
+          // Draw animated mushroom cloud explosion for ALL impacts
+          let explosionFrame = 0;
+          const maxExplosionFrames = 60; // 1 second at 60fps
+          const animateExplosion = () => {
+            drawCanvas(ctx, null, trajectoryPoints);
+            drawMushroomCloud(ctx, x, y, explosionFrame, maxExplosionFrames);
+            explosionFrame++;
+            
+            if (explosionFrame < maxExplosionFrames) {
+              requestAnimationFrame(animateExplosion);
+            }
+          };
+          animateExplosion();
+          
+          if (hitType === "target") {
+            setHits(prev => prev + 1);
+            toast.success("Alvo Soviético Destruído! 🎯", {
+              description: `Explosão nuclear confirmada!`,
+              icon: <Target className="h-5 w-5" />,
+            });
+            
+            setTimeout(() => {
+              setTrajectory([]);
+              generateNewRound();
+              toast.info("Nova Localização URSS!", {
+                description: "Base soviética reposicionada",
+              });
+            }, 3000);
+          } else if (hitType === "wall") {
+            toast.error("Bloqueado por obstáculo geográfico!", {
+              description: "Explosão na montanha",
+            });
+          } else {
+            toast.info("Míssil perdido", {
+              description: "Explosão em território neutro",
+            });
+          }
+          
+          // USSR retaliation in "Guerra Total" mode - ALWAYS retaliate
+          const settings = DIFFICULTY_SETTINGS[difficulty];
+          if (settings.ussrRetaliates) {
+            setTimeout(() => {
+              ussrRetaliate();
+            }, 2500);
+          }
+        }, 200); // Brief pause to show trajectory
         
         return;
       }

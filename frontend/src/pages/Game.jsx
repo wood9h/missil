@@ -934,56 +934,61 @@ export default function Game() {
       }
       
       // USSR Missile on launch platform (pointing left at 45 degrees)
-      ctx.save();
-      ctx.translate(towerCenterX, towerBaseY - 32);
-      // USSR missile points LEFT and UP (180° base + angle)
-      ctx.rotate(Math.PI + Math.PI / 4); // 225 degrees (pointing up-left at 45°)
+      // Only show if USSR doesn't have active missiles
+      const ussrHasActiveMissile = activeProjectiles.some(p => p.isUSSR && p.active);
       
-      const ussrMissileLength = 35;
-      const ussrMissileStart = 5;
-      
-      // USSR Missile body (red)
-      const ussrBodyGradient = ctx.createLinearGradient(ussrMissileStart, 0, ussrMissileStart + ussrMissileLength, 0);
-      ussrBodyGradient.addColorStop(0, "#FF4444");
-      ussrBodyGradient.addColorStop(0.5, "#FFFFFF");
-      ussrBodyGradient.addColorStop(1, "#E23636");
-      ctx.fillStyle = ussrBodyGradient;
-      ctx.fillRect(ussrMissileStart, -5, ussrMissileLength - 6, 10);
-      
-      // Nose cone
-      ctx.fillStyle = "#B22222";
-      ctx.beginPath();
-      ctx.moveTo(ussrMissileStart + ussrMissileLength - 6, -5);
-      ctx.lineTo(ussrMissileStart + ussrMissileLength + 5, 0);
-      ctx.lineTo(ussrMissileStart + ussrMissileLength - 6, 5);
-      ctx.closePath();
-      ctx.fill();
-      
-      // Tail fins
-      ctx.fillStyle = "#E23636";
-      ctx.beginPath();
-      ctx.moveTo(ussrMissileStart, -5);
-      ctx.lineTo(ussrMissileStart - 6, -9);
-      ctx.lineTo(ussrMissileStart + 5, -5);
-      ctx.closePath();
-      ctx.fill();
-      
-      ctx.beginPath();
-      ctx.moveTo(ussrMissileStart, 5);
-      ctx.lineTo(ussrMissileStart - 6, 9);
-      ctx.lineTo(ussrMissileStart + 5, 5);
-      ctx.closePath();
-      ctx.fill();
-      
-      // Yellow stripe (USSR style)
-      ctx.fillStyle = "#FFD700";
-      ctx.fillRect(ussrMissileStart + 16, -4, 10, 8);
-      
-      // Exhaust nozzle
-      ctx.fillStyle = "#1A3A4A";
-      ctx.fillRect(ussrMissileStart - 3, -4, 4, 8);
-      
-      ctx.restore();
+      if (!ussrHasActiveMissile) {
+        ctx.save();
+        ctx.translate(towerCenterX, towerBaseY - 65);
+        // USSR missile points LEFT and UP (180° base + angle)
+        ctx.rotate(Math.PI + Math.PI / 4); // 225 degrees (pointing up-left at 45°)
+        
+        const ussrMissileLength = 40;
+        const ussrMissileStart = 0;
+        
+        // USSR Missile body (red)
+        const ussrBodyGradient = ctx.createLinearGradient(ussrMissileStart, 0, ussrMissileStart + ussrMissileLength, 0);
+        ussrBodyGradient.addColorStop(0, "#FF4444");
+        ussrBodyGradient.addColorStop(0.5, "#FFFFFF");
+        ussrBodyGradient.addColorStop(1, "#E23636");
+        ctx.fillStyle = ussrBodyGradient;
+        ctx.fillRect(ussrMissileStart, -5, ussrMissileLength - 6, 10);
+        
+        // Nose cone
+        ctx.fillStyle = "#B22222";
+        ctx.beginPath();
+        ctx.moveTo(ussrMissileStart + ussrMissileLength - 6, -5);
+        ctx.lineTo(ussrMissileStart + ussrMissileLength + 5, 0);
+        ctx.lineTo(ussrMissileStart + ussrMissileLength - 6, 5);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Tail fins
+        ctx.fillStyle = "#E23636";
+        ctx.beginPath();
+        ctx.moveTo(ussrMissileStart, -5);
+        ctx.lineTo(ussrMissileStart - 6, -9);
+        ctx.lineTo(ussrMissileStart + 5, -5);
+        ctx.closePath();
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.moveTo(ussrMissileStart, 5);
+        ctx.lineTo(ussrMissileStart - 6, 9);
+        ctx.lineTo(ussrMissileStart + 5, 5);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Yellow stripe (USSR style)
+        ctx.fillStyle = "#FFD700";
+        ctx.fillRect(ussrMissileStart + 16, -4, 10, 8);
+        
+        // Exhaust nozzle
+        ctx.fillStyle = "#1A3A4A";
+        ctx.fillRect(ussrMissileStart - 3, -4, 4, 8);
+        
+        ctx.restore();
+      }
       
     } else {
       // Original building design (non-Guerra Total modes)

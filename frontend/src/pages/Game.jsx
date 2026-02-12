@@ -1097,11 +1097,15 @@ export default function Game() {
     // Draw everything
     drawCanvas(ctx, projectilesRef.current, explosionsRef.current);
     
+    // Check if there are still active projectiles (re-check after potential new additions)
+    const stillHasActive = projectilesRef.current.some(p => p.active);
+    
     // Continue loop if there are active projectiles or explosions
-    if (hasActiveProjectiles || explosionsRef.current.length > 0) {
+    if (stillHasActive || explosionsRef.current.length > 0) {
       animationRef.current = requestAnimationFrame(runGameLoop);
     } else {
       // Clean up finished projectiles
+      animationRef.current = null;
       projectilesRef.current = projectilesRef.current.filter(p => p.active);
     }
   };

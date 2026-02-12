@@ -918,6 +918,9 @@ export default function Game() {
     const { x, y, isUSSR } = proj;
     let hitType = collision.type;
     
+    // Play explosion sound
+    playSound(explosionSoundRef);
+    
     // Check explosion radius for area damage
     const explosionRadius = 80;
     

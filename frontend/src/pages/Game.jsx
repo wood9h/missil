@@ -716,6 +716,7 @@ export default function Game() {
                 <SelectItem value="easy">Fácil</SelectItem>
                 <SelectItem value="medium">Médio</SelectItem>
                 <SelectItem value="hard">Difícil</SelectItem>
+                <SelectItem value="total">Guerra Total 🔥</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -485,6 +485,8 @@ export default function Game() {
   const resetGame = () => {
     setHits(0);
     setAttempts(0);
+    setUssrHits(0);
+    setUssrAttempts(0);
     generateNewRound();
     toast.info("Missão reiniciada!");
   };

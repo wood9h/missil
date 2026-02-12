@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { Target, Play, RotateCcw, TrendingUp } from "lucide-react";
+import { Target, Play, RotateCcw, TrendingUp, Volume2, VolumeX } from "lucide-react";
 import { toast } from "sonner";
 import {
   Select,

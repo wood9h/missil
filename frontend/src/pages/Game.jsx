@@ -1115,7 +1115,8 @@ export default function Game() {
         let explosionFrame = 0;
         const maxExplosionFrames = 60;
         const animateExplosion = () => {
-          drawCanvas(ctx, null, ussrTrajectoryPoints);
+          // Keep drawing the current trajectory state
+          drawCanvas(ctx, null, trajectory.length > 0 ? trajectory : ussrTrajectoryPoints);
           drawMushroomCloud(ctx, x, y, explosionFrame, maxExplosionFrames);
           explosionFrame++;
           

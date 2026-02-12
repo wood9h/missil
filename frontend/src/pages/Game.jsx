@@ -748,7 +748,9 @@ export default function Game() {
     const usaHasActiveMissile = activeProjectiles.some(p => !p.isUSSR && p.active);
     
     if (!usaHasActiveMissile) {
-      const angleRad = (angle * Math.PI) / 180;
+      // Use angleRef to get current angle value in animation loop
+      const currentAngle = angleRef.current;
+      const angleRad = (currentAngle * Math.PI) / 180;
       const launchPointY = cannonScreenY - 32;
       
       ctx.save();

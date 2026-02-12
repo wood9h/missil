@@ -1497,9 +1497,12 @@ export default function Game() {
     const settings = DIFFICULTY_SETTINGS[difficulty];
     const willHit = Math.random() < settings.ussrAccuracy;
     
+    // Get current target position from ref
+    const currentTargetPos = targetPosRef.current;
+    
     // Calculate launch position - from the USSR tower in Guerra Total mode
     // The tower is centered at targetPos.x + targetPos.width / 2
-    const launchX = targetPos.x + targetPos.width / 2;
+    const launchX = currentTargetPos.x + currentTargetPos.width / 2;
     const launchY = 50; // Launch from top of tower (higher than ground level 30)
     
     // Calculate angle and velocity for USSR missile (from right to left)

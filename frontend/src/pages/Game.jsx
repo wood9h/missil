@@ -464,10 +464,23 @@ export default function Game() {
             icon: <Target className="h-5 w-5" />,
           });
           
-          // Draw mushroom cloud explosion
+          // Draw animated mushroom cloud explosion
           setTrajectory(trajectoryPoints);
           drawCanvas(ctx, null, trajectoryPoints);
-          drawMushroomCloud(ctx, x, y, 1.0);
+          
+          // Animate mushroom cloud formation
+          let explosionFrame = 0;
+          const maxExplosionFrames = 60; // 1 second at 60fps
+          const animateExplosion = () => {
+            drawCanvas(ctx, null, trajectoryPoints);
+            drawMushroomCloud(ctx, x, y, explosionFrame, maxExplosionFrames);
+            explosionFrame++;
+            
+            if (explosionFrame < maxExplosionFrames) {
+              requestAnimationFrame(animateExplosion);
+            }
+          };
+          animateExplosion();
           
           setTimeout(() => {
             setTrajectory([]);

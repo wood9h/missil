@@ -529,7 +529,7 @@ export default function Game() {
 
   const drawMushroomCloud = (ctx, x, y, frame, maxFrames) => {
     const progress = frame / maxFrames;
-    const baseSize = 25; // Reduced from 40
+    const baseSize = 35; // Adjusted from 25 to 35 for better visibility
     const size = baseSize * (1 + progress * 1.5);
     const centerY = CANVAS_HEIGHT - y - 30;
     

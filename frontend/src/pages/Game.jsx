@@ -1000,6 +1000,209 @@ export default function Game() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [angle, velocity, wallPos, targetPos, trajectory, mapImage]);
 
+  // Animation loop effect - runs continuously when there are active projectiles
+  useEffect(() => {
+    let frameId = null;
+    
+    const animate = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        frameId = requestAnimationFrame(animate);
+        return;
+      }
+      
+      const ctx = canvas.getContext("2d");
+      const dt = 0.016;
+      
+      let hasActiveProjectiles = false;
+      
+      // Update all projectiles
+      projectilesRef.current.forEach(proj => {
+        if (!proj.active) return;
+        hasActiveProjectiles = true;
+        
+        proj.t += dt;
+        
+        // Calculate new position
+        proj.x = proj.startX + proj.vx * SCALE * proj.t;
+        proj.y = proj.startY + proj.vy * SCALE * proj.t - 0.5 * GRAVITY * SCALE * proj.t * proj.t;
+        
+        proj.trajectoryPoints.push({ x: proj.x, y: proj.y, isUSSR: proj.isUSSR });
+        
+        // Check collision
+        let collision = null;
+        
+        if (proj.isUSSR) {
+          // USSR missile collisions
+          if (proj.y <= 0) collision = { type: "ground" };
+          else if (proj.x >= wallPos.x && proj.x <= wallPos.x + wallPos.width && proj.y <= wallPos.height) {
+            collision = { type: "wall" };
+          } else if (proj.x >= cannonPos.x - 30 && proj.x <= cannonPos.x + 30 && proj.y >= 0 && proj.y <= 50) {
+            collision = { type: "usa" };
+          }
+        } else {
+          // USA missile collisions
+          if (proj.y <= 0) collision = { type: "ground" };
+          else if (proj.x >= wallPos.x && proj.x <= wallPos.x + wallPos.width && proj.y <= wallPos.height) {
+            collision = { type: "wall" };
+          } else if (proj.x >= targetPos.x && proj.x <= targetPos.x + targetPos.width && proj.y >= 0 && proj.y <= targetPos.height) {
+            collision = { type: "target" };
+          }
+        }
+        
+        // Check out of bounds or timeout
+        if (collision || proj.t >= 10 || (proj.isUSSR && proj.x < -50) || (!proj.isUSSR && proj.x > CANVAS_WIDTH + 50)) {
+          proj.active = false;
+          
+          if (collision) {
+            handleProjectileImpactInternal(proj, collision);
+          } else {
+            if (proj.isUSSR) {
+              toast.info("Míssil soviético perdido");
+            } else {
+              toast.info("Projétil perdido", { description: "Fora do alcance" });
+              setIsAnimating(false);
+            }
+          }
+        }
+      });
+      
+      // Update explosions
+      explosionsRef.current = explosionsRef.current.filter(exp => {
+        exp.frame++;
+        return exp.frame < exp.maxFrames;
+      });
+      
+      // Draw everything
+      drawCanvas(ctx, projectilesRef.current, explosionsRef.current);
+      
+      // Check again for active projectiles (might have been added during collision handling)
+      const stillHasActive = projectilesRef.current.some(p => p.active);
+      
+      // Continue loop if there are active projectiles or explosions
+      if (stillHasActive || explosionsRef.current.length > 0) {
+        frameId = requestAnimationFrame(animate);
+      } else {
+        // Clean up finished projectiles
+        projectilesRef.current = projectilesRef.current.filter(p => p.active);
+        frameId = requestAnimationFrame(animate); // Keep checking for new projectiles
+      }
+    };
+    
+    // Start the animation loop
+    frameId = requestAnimationFrame(animate);
+    
+    return () => {
+      if (frameId) {
+        cancelAnimationFrame(frameId);
+      }
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run once on mount
+
+  // Internal impact handler to avoid closure issues
+  const handleProjectileImpactInternal = (proj, collision) => {
+    const { x, y, isUSSR } = proj;
+    let hitType = collision.type;
+    
+    // Play explosion sound
+    playExplosionSound();
+    
+    // Check explosion radius for area damage
+    const explosionRadius = 80;
+    
+    if (isUSSR) {
+      // USSR missile - check if explosion hits USA base
+      const distanceToUSA = Math.sqrt(
+        Math.pow(x - cannonPos.x, 2) + 
+        Math.pow(y - cannonPos.y, 2)
+      );
+      
+      const usaHitByExplosion = distanceToUSA < explosionRadius;
+      
+      if (usaHitByExplosion && hitType !== "usa") {
+        hitType = "usa";
+        toast.error("💥 Base Americana Atingida pela Explosão!", {
+          description: "Onda de choque nuclear!",
+        });
+      }
+      
+      // Add explosion
+      explosionsRef.current.push({ x, y, frame: 0, maxFrames: 60 });
+      
+      if (hitType === "usa") {
+        setUssrHits(prev => prev + 1);
+        if (!usaHitByExplosion) {
+          toast.error("💥 Base Americana Atingida!", {
+            description: "URSS marcou ponto!",
+          });
+        }
+      } else if (hitType === "wall") {
+        toast.info("Míssil soviético bloqueado", {
+          description: "Explosão no obstáculo",
+        });
+      } else {
+        toast.info("Míssil soviético errou", {
+          description: "Explosão em território neutro",
+        });
+      }
+      
+      // Store trajectory for display
+      const ussrTraj = proj.trajectoryPoints.map(p => ({ ...p, isUSSR: true }));
+      setTrajectory(prev => [...prev, ...ussrTraj]);
+      
+    } else {
+      // USA missile - check if explosion hits USSR target
+      const distanceToTarget = Math.sqrt(
+        Math.pow(x - (targetPos.x + targetPos.width / 2), 2) + 
+        Math.pow(y - targetPos.height / 2, 2)
+      );
+      
+      const targetHitByExplosion = distanceToTarget < explosionRadius;
+      
+      if (targetHitByExplosion && hitType !== "target") {
+        hitType = "target";
+        toast.success("Alvo Destruído pela Explosão! 💥", {
+          description: `Onda de choque nuclear atingiu o alvo!`,
+          icon: <Target className="h-5 w-5" />,
+        });
+      }
+      
+      // Add explosion
+      explosionsRef.current.push({ x, y, frame: 0, maxFrames: 60 });
+      
+      // Store trajectory for display
+      setTrajectory(proj.trajectoryPoints);
+      setIsAnimating(false);
+      
+      if (hitType === "target") {
+        setHits(prev => prev + 1);
+        if (!targetHitByExplosion) {
+          toast.success("Alvo Soviético Destruído! 🎯", {
+            description: `Explosão nuclear confirmada!`,
+            icon: <Target className="h-5 w-5" />,
+          });
+        }
+        
+        setTimeout(() => {
+          setTrajectory([]);
+          generateNewRound(true);
+          toast.info("Nova Localização URSS!", {
+            description: "Base soviética reposicionada em local distante",
+          });
+        }, 3000);
+      } else if (hitType === "wall") {
+        toast.error("Bloqueado por obstáculo geográfico!", {
+          description: "Explosão na montanha",
+        });
+      } else {
+        toast.info("Míssil perdido", {
+          description: "Explosão em território neutro",
+        });
+      }
+    }
+  };
+
   const checkCollisionForUSA = (x, y) => {
     // Check ground
     if (y <= 0) return { type: "ground" };

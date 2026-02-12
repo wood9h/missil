@@ -731,7 +731,10 @@ export default function Game() {
     ctx.fillText("USA", cannonScreenX, cannonScreenY - 85);
     
     // MISSILE positioned at launch angle (when not firing)
-    if (!isAnimating) {
+    // Check if USA has any active projectiles
+    const usaHasActiveMissile = activeProjectiles.some(p => !p.isUSSR && p.active);
+    
+    if (!usaHasActiveMissile) {
       const angleRad = (angle * Math.PI) / 180;
       const launchPointY = cannonScreenY - 32;
       

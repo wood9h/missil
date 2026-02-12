@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ const API = `${BACKEND_URL}/api`;
 const CANVAS_WIDTH = 1200;
 const CANVAS_HEIGHT = 600;
 const SCALE = 4; // pixels per meter
+const GRAVITY = 9.8;
 
 const DIFFICULTY_SETTINGS = {
   easy: {

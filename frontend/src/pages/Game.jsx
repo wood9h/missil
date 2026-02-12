@@ -1538,12 +1538,13 @@ export default function Game() {
           {/* Sound Toggle Button */}
           <Button
             onClick={toggleMusic}
-            variant="ghost"
+            variant={isMuted ? "outline" : "default"}
             size="sm"
-            className="text-white hover:bg-slate-700"
+            className={`${isMuted ? 'border-slate-500 text-slate-400 hover:bg-slate-700' : 'bg-emerald-600 hover:bg-emerald-500 text-white'} transition-all`}
             data-testid="sound-toggle"
           >
-            {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
+            {isMuted ? <VolumeX className="h-4 w-4 mr-1" /> : <Volume2 className="h-4 w-4 mr-1" />}
+            {isMuted ? "Som OFF" : "Som ON"}
           </Button>
         </div>
         <p className="text-sm text-slate-400">USA 🇺🇸 vs URSS 🚩 | Simulador de Mísseis Intercontinentais</p>

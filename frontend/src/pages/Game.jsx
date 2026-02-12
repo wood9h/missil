@@ -295,17 +295,24 @@ export default function Game() {
     ctx.lineTo(targetScreenX + targetPos.width - 5, targetScreenY - 5);
     ctx.stroke();
     
-    // Draw projectile
+    // Draw projectile (missile)
     if (projectilePos) {
-      ctx.fillStyle = "#1E293B";
+      // Missile body
+      ctx.fillStyle = "#2C3E50";
       ctx.beginPath();
-      ctx.arc(projectilePos.x, CANVAS_HEIGHT - projectilePos.y - 30, 6, 0, Math.PI * 2);
+      ctx.arc(projectilePos.x, CANVAS_HEIGHT - projectilePos.y - 30, 8, 0, Math.PI * 2);
       ctx.fill();
       
-      // Projectile glow
-      ctx.fillStyle = "rgba(99, 102, 241, 0.3)";
+      // Missile glow/trail
+      ctx.fillStyle = "rgba(255, 107, 107, 0.6)";
       ctx.beginPath();
-      ctx.arc(projectilePos.x, CANVAS_HEIGHT - projectilePos.y - 30, 10, 0, Math.PI * 2);
+      ctx.arc(projectilePos.x, CANVAS_HEIGHT - projectilePos.y - 30, 14, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Fire trail
+      ctx.fillStyle = "rgba(255, 165, 0, 0.5)";
+      ctx.beginPath();
+      ctx.arc(projectilePos.x - 5, CANVAS_HEIGHT - projectilePos.y - 30, 10, 0, Math.PI * 2);
       ctx.fill();
     }
   };

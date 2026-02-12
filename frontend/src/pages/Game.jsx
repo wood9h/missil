@@ -148,11 +148,13 @@ export default function Game() {
     ctx.lineTo(CANVAS_WIDTH, CANVAS_HEIGHT - 30);
     ctx.stroke();
     
-    // Draw trajectory path (after shot)
+    // Draw trajectory path (missile trail)
     if (trajectoryPath.length > 0) {
-      ctx.strokeStyle = "#6366F1";
-      ctx.lineWidth = 2;
-      ctx.setLineDash([5, 5]);
+      ctx.strokeStyle = "#FF6B6B";
+      ctx.lineWidth = 3;
+      ctx.shadowColor = "#FF0000";
+      ctx.shadowBlur = 10;
+      ctx.setLineDash([]);
       ctx.beginPath();
       trajectoryPath.forEach((point, index) => {
         const screenX = point.x;
@@ -164,32 +166,62 @@ export default function Game() {
         }
       });
       ctx.stroke();
-      ctx.setLineDash([]);
+      ctx.shadowBlur = 0;
     }
     
-    // Draw cannon
+    // Draw USA missile base (left - Estados Unidos)
     const cannonScreenX = cannonPos.x;
     const cannonScreenY = CANVAS_HEIGHT - 30;
     
-    // Cannon base
-    ctx.fillStyle = "#4338CA";
-    ctx.beginPath();
-    ctx.arc(cannonScreenX, cannonScreenY, 20, 0, Math.PI * 2);
-    ctx.fill();
+    // USA Flag colors
+    ctx.fillStyle = "#B22234"; // Red
+    ctx.fillRect(cannonScreenX - 25, cannonScreenY - 50, 50, 30);
     
-    // Cannon barrel
+    // White stripes
+    ctx.fillStyle = "#FFFFFF";
+    for (let i = 0; i < 4; i++) {
+      ctx.fillRect(cannonScreenX - 25, cannonScreenY - 50 + i * 10, 50, 5);
+    }
+    
+    // Blue canton
+    ctx.fillStyle = "#3C3B6E";
+    ctx.fillRect(cannonScreenX - 25, cannonScreenY - 50, 20, 15);
+    
+    // Stars (simplified)
+    ctx.fillStyle = "#FFFFFF";
+    for (let i = 0; i < 8; i++) {
+      ctx.fillRect(cannonScreenX - 22 + (i % 4) * 4, cannonScreenY - 47 + Math.floor(i / 4) * 6, 2, 2);
+    }
+    
+    // Missile launcher base
+    ctx.fillStyle = "#2C3E50";
+    ctx.fillRect(cannonScreenX - 15, cannonScreenY - 20, 30, 20);
+    
+    // Label USA
+    ctx.fillStyle = "#FFFFFF";
+    ctx.font = "bold 14px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("USA", cannonScreenX, cannonScreenY - 55);
+    
+    // Missile/barrel
     const angleRad = (angle * Math.PI) / 180;
-    const barrelLength = 40;
+    const barrelLength = 45;
     const barrelEndX = cannonScreenX + Math.cos(angleRad) * barrelLength;
     const barrelEndY = cannonScreenY - Math.sin(angleRad) * barrelLength;
     
-    ctx.strokeStyle = "#6366F1";
-    ctx.lineWidth = 8;
+    ctx.strokeStyle = "#34495E";
+    ctx.lineWidth = 10;
     ctx.lineCap = "round";
     ctx.beginPath();
-    ctx.moveTo(cannonScreenX, cannonScreenY);
+    ctx.moveTo(cannonScreenX, cannonScreenY - 10);
     ctx.lineTo(barrelEndX, barrelEndY);
     ctx.stroke();
+    
+    // Missile tip
+    ctx.fillStyle = "#E74C3C";
+    ctx.beginPath();
+    ctx.arc(barrelEndX, barrelEndY, 6, 0, Math.PI * 2);
+    ctx.fill();
     
     // Draw wall
     ctx.fillStyle = "#94A3B8";

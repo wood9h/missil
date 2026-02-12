@@ -380,54 +380,133 @@ export default function Game() {
       ctx.fillRect(wallPos.x + (wallPos.width / 4) * i, CANVAS_HEIGHT - wallPos.height - 30, wallPos.width / 4, 5);
     }
     
-    // Draw USSR target (right - União Soviética)
+    // Draw USSR target/base (right - União Soviética)
     const targetScreenX = targetPos.x;
     const targetScreenY = CANVAS_HEIGHT - 30 - targetPos.height;
     
-    // Soviet base building
-    ctx.fillStyle = "#8B0000"; // Dark red
-    ctx.fillRect(targetScreenX, targetScreenY + 20, targetPos.width, targetPos.height - 20);
+    const settings = DIFFICULTY_SETTINGS[difficulty];
+    const isGuerraTotal = settings.ussrRetaliates;
     
-    // Roof
-    ctx.fillStyle = "#A52A2A";
-    ctx.beginPath();
-    ctx.moveTo(targetScreenX - 5, targetScreenY + 20);
-    ctx.lineTo(targetScreenX + targetPos.width / 2, targetScreenY);
-    ctx.lineTo(targetScreenX + targetPos.width + 5, targetScreenY + 20);
-    ctx.closePath();
-    ctx.fill();
-    
-    // Soviet flag on top
-    ctx.fillStyle = "#CC0000"; // Bright red
-    ctx.fillRect(targetScreenX + targetPos.width / 2 - 2, targetScreenY - 15, 2, 15);
-    ctx.fillRect(targetScreenX + targetPos.width / 2, targetScreenY - 15, 20, 12);
-    
-    // Hammer and Sickle (simplified)
-    ctx.fillStyle = "#FFD700"; // Gold
-    ctx.font = "bold 10px Arial";
-    ctx.fillText("☭", targetScreenX + targetPos.width / 2 + 7, targetScreenY - 5);
-    
-    // Windows
-    ctx.fillStyle = "#FFD700";
-    for (let i = 0; i < 2; i++) {
-      for (let j = 0; j < 2; j++) {
-        ctx.fillRect(targetScreenX + 10 + i * 20, targetScreenY + 30 + j * 15, 8, 10);
+    if (isGuerraTotal) {
+      // USSR Missile Launch Tower (Guerra Total mode)
+      const towerCenterX = targetScreenX + targetPos.width / 2;
+      const towerBaseY = CANVAS_HEIGHT - 30;
+      
+      // Tower base platform
+      ctx.fillStyle = "#8B0000";
+      ctx.fillRect(towerCenterX - 30, towerBaseY - 10, 60, 10);
+      
+      // Main tower structure
+      ctx.fillStyle = "#A52A2A";
+      ctx.fillRect(towerCenterX - 15, towerBaseY - 60, 30, 50);
+      
+      // Tower details (panels)
+      ctx.strokeStyle = "#CD5C5C";
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 4; i++) {
+        ctx.beginPath();
+        ctx.moveTo(towerCenterX - 15, towerBaseY - 15 - i * 12);
+        ctx.lineTo(towerCenterX + 15, towerBaseY - 15 - i * 12);
+        ctx.stroke();
       }
+      
+      // Vertical lines
+      ctx.beginPath();
+      ctx.moveTo(towerCenterX - 5, towerBaseY - 60);
+      ctx.lineTo(towerCenterX - 5, towerBaseY - 10);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(towerCenterX + 5, towerBaseY - 60);
+      ctx.lineTo(towerCenterX + 5, towerBaseY - 10);
+      ctx.stroke();
+      
+      // Radar dish on top
+      ctx.fillStyle = "#DC143C";
+      ctx.beginPath();
+      ctx.ellipse(towerCenterX, towerBaseY - 65, 12, 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Antenna
+      ctx.strokeStyle = "#8B0000";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(towerCenterX, towerBaseY - 65);
+      ctx.lineTo(towerCenterX, towerBaseY - 80);
+      ctx.stroke();
+      
+      // Red star on antenna
+      ctx.fillStyle = "#FFD700";
+      ctx.font = "bold 12px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("★", towerCenterX, towerBaseY - 76);
+      
+      // Soviet flag on tower side
+      ctx.fillStyle = "#CC0000";
+      ctx.fillRect(towerCenterX + 12, towerBaseY - 58, 6, 20);
+      
+      // Hammer and Sickle
+      ctx.fillStyle = "#FFD700";
+      ctx.font = "bold 10px Arial";
+      ctx.fillText("☭", towerCenterX + 15, towerBaseY - 45);
+      
+      // Label USSR
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "bold 12px Arial";
+      ctx.fillText("СССР", towerCenterX, towerBaseY - 85);
+      
+      // Missile storage indicators (small rectangles)
+      ctx.fillStyle = "#FFD700";
+      for (let i = 0; i < 3; i++) {
+        ctx.fillRect(towerCenterX - 12 + i * 8, towerBaseY - 25, 6, 10);
+      }
+      
+    } else {
+      // Original building design (non-Guerra Total modes)
+      // Soviet base building
+      ctx.fillStyle = "#8B0000"; // Dark red
+      ctx.fillRect(targetScreenX, targetScreenY + 20, targetPos.width, targetPos.height - 20);
+      
+      // Roof
+      ctx.fillStyle = "#A52A2A";
+      ctx.beginPath();
+      ctx.moveTo(targetScreenX - 5, targetScreenY + 20);
+      ctx.lineTo(targetScreenX + targetPos.width / 2, targetScreenY);
+      ctx.lineTo(targetScreenX + targetPos.width + 5, targetScreenY + 20);
+      ctx.closePath();
+      ctx.fill();
+      
+      // Soviet flag on top
+      ctx.fillStyle = "#CC0000"; // Bright red
+      ctx.fillRect(targetScreenX + targetPos.width / 2 - 2, targetScreenY - 15, 2, 15);
+      ctx.fillRect(targetScreenX + targetPos.width / 2, targetScreenY - 15, 20, 12);
+      
+      // Hammer and Sickle (simplified)
+      ctx.fillStyle = "#FFD700"; // Gold
+      ctx.font = "bold 10px Arial";
+      ctx.fillText("☭", targetScreenX + targetPos.width / 2 + 7, targetScreenY - 5);
+      
+      // Windows
+      ctx.fillStyle = "#FFD700";
+      for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 2; j++) {
+          ctx.fillRect(targetScreenX + 10 + i * 20, targetScreenY + 30 + j * 15, 8, 10);
+        }
+      }
+      
+      // Label USSR
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "bold 14px Arial";
+      ctx.textAlign = "center";
+      ctx.fillText("СССР", targetScreenX + targetPos.width / 2, targetScreenY - 20);
+      
+      // Antenna/tower
+      ctx.strokeStyle = "#8B0000";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(targetScreenX + targetPos.width - 5, targetScreenY + 20);
+      ctx.lineTo(targetScreenX + targetPos.width - 5, targetScreenY - 5);
+      ctx.stroke();
     }
-    
-    // Label USSR
-    ctx.fillStyle = "#FFFFFF";
-    ctx.font = "bold 14px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText("СССР", targetScreenX + targetPos.width / 2, targetScreenY - 20);
-    
-    // Antenna/tower
-    ctx.strokeStyle = "#8B0000";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(targetScreenX + targetPos.width - 5, targetScreenY + 20);
-    ctx.lineTo(targetScreenX + targetPos.width - 5, targetScreenY - 5);
-    ctx.stroke();
     
     // Draw projectile (missile)
     if (projectilePos) {

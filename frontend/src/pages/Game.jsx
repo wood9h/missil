@@ -97,6 +97,7 @@ export default function Game() {
   // Refs to access current values in animation loop
   const angleRef = useRef(angle);
   const velocityRef = useRef(velocity);
+  const difficultyRef = useRef(difficulty);
   
   // Keep refs in sync with state
   useEffect(() => {
@@ -106,6 +107,10 @@ export default function Game() {
   useEffect(() => {
     velocityRef.current = velocity;
   }, [velocity]);
+  
+  useEffect(() => {
+    difficultyRef.current = difficulty;
+  }, [difficulty]);
 
   const [cannonPos] = useState({ x: 50, y: 30 });
   const [wallPos, setWallPos] = useState({ x: 400, y: 0, width: 20, height: 150 });

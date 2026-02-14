@@ -1864,6 +1864,9 @@ export default function Game() {
               <div className="flex flex-col items-center">
                 <div className="text-3xl font-bold text-slate-400">VS</div>
                 <div className="text-xs text-slate-500">Primeiro a {WINNING_SCORE}</div>
+                {difficulty === "antimissil" && (
+                  <div className="text-[10px] text-cyan-400 mt-1 font-medium">DEFESA ANTIMÍSSIL</div>
+                )}
               </div>
               <div className={`rounded-xl px-6 py-3 shadow-lg border-2 transition-all ${gameWinner === 'ussr' ? 'bg-emerald-600 border-emerald-400 scale-110' : 'bg-red-600 border-red-500'}`}>
                 <div className="text-xs uppercase tracking-wider text-red-200 mb-1">🚩 CCCP</div>

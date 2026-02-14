@@ -1446,7 +1446,7 @@ export default function Game() {
         
         // Only generate new round if game not won - use ref for current values
         const currentHits = hitsRef.current;
-        if (currentHits + 1 < WINNING_SCORE || difficultyRef.current !== "total") {
+        if (currentHits + 1 < WINNING_SCORE || (difficultyRef.current !== "total" && difficultyRef.current !== "antimissil")) {
           setTimeout(() => {
             setTrajectory([]);
             generateNewRound(true);

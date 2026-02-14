@@ -1234,6 +1234,70 @@ export default function Game() {
         }
       });
       
+      // Missile-to-missile collision detection (Antimissil mode)
+      const activeProjs = projectilesRef.current.filter(p => p.active);
+      const usaMissiles = activeProjs.filter(p => !p.isUSSR);
+      const ussrMissiles = activeProjs.filter(p => p.isUSSR && p.isInterceptor);
+      
+      for (const usaM of usaMissiles) {
+        for (const ussrM of ussrMissiles) {
+          const dx = usaM.x - ussrM.x;
+          const dy = usaM.y - ussrM.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const interceptRadius = DIFFICULTY_SETTINGS[difficultyRef.current]?.interceptRadius || 40;
+          
+          if (dist < interceptRadius) {
+            // Both missiles destroyed mid-air!
+            usaM.active = false;
+            ussrM.active = false;
+            
+            // Explosion at midpoint
+            const midX = (usaM.x + ussrM.x) / 2;
+            const midY = (usaM.y + ussrM.y) / 2;
+            explosionsRef.current.push({ x: midX, y: midY, frame: 0, maxFrames: 50 });
+            
+            playExplosionSound();
+            
+            // USSR successfully intercepted
+            setUssrHits(prev => {
+              const newScore = prev + 1;
+              if (newScore >= WINNING_SCORE && difficultyRef.current === "antimissil") {
+                setTimeout(() => {
+                  setGameWinner('ussr');
+                  stopBackgroundMusic();
+                  toast.error("☭ VITÓRIA DA URSS! ☭", {
+                    description: `A URSS venceu com ${newScore} interceptações/acertos!`,
+                    duration: 10000,
+                  });
+                }, 1000);
+              }
+              return newScore;
+            });
+            
+            toast.warning("💥 INTERCEPTAÇÃO! Míssil destruído no ar!", {
+              description: "A URSS interceptou o míssil americano!",
+            });
+            
+            setIsAnimating(false);
+            
+            // Store trajectories
+            setTrajectory(prev => [
+              ...usaM.trajectoryPoints,
+              ...ussrM.trajectoryPoints.map(p => ({ ...p, isUSSR: true })),
+            ]);
+            
+            // Generate new round if game not won
+            const currentUssrHits = ussrHitsRef.current;
+            if (currentUssrHits + 1 < WINNING_SCORE || difficultyRef.current !== "antimissil") {
+              setTimeout(() => {
+                setTrajectory([]);
+                generateNewRound(false);
+              }, 3000);
+            }
+          }
+        }
+      }
+      
       // Update explosions
       explosionsRef.current = explosionsRef.current.filter(exp => {
         exp.frame++;

@@ -1333,8 +1333,8 @@ export default function Game() {
       if (hitType === "target") {
         setHits(prev => {
           const newScore = prev + 1;
-          // Check for USA victory
-          if (newScore >= WINNING_SCORE && difficulty === "total") {
+          // Check for USA victory - use ref for current difficulty
+          if (newScore >= WINNING_SCORE && difficultyRef.current === "total") {
             setTimeout(() => {
               setGameWinner('usa');
               stopBackgroundMusic();
@@ -1353,8 +1353,9 @@ export default function Game() {
           });
         }
         
-        // Only generate new round if game not won
-        if (hits + 1 < WINNING_SCORE || difficulty !== "total") {
+        // Only generate new round if game not won - use ref for current values
+        const currentHits = hitsRef.current;
+        if (currentHits + 1 < WINNING_SCORE || difficultyRef.current !== "total") {
           setTimeout(() => {
             setTrajectory([]);
             generateNewRound(true);

@@ -1371,7 +1371,7 @@ export default function Game() {
   };
 
   const fireProjectile = async () => {
-    if (isAnimating) return;
+    if (isAnimating || gameWinner) return; // Block firing if game is won
     
     // Start background music on first interaction
     startBackgroundMusic();

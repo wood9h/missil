@@ -1641,6 +1641,7 @@ export default function Game() {
     setIsAnimating(false);
     setTrajectory([]);
     setLastHitPos(null); // Reset last hit position to allow fresh random positions
+    setGameWinner(null); // Reset winner
     stopBackgroundMusic();
     generateNewRound();
     toast.info("Missão reiniciada!");

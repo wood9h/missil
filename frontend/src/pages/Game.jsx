@@ -2004,10 +2004,10 @@ export default function Game() {
               <div className="flex items-center gap-2 mb-2">
                 <TrendingUp className="h-4 w-4 text-amber-400" />
                 <span className="text-xs uppercase tracking-wider text-slate-400 font-medium">
-                  {difficulty === "total" ? "Placar da Guerra" : "Relatório de Missão"}
+                  {(difficulty === "total" || difficulty === "antimissil") ? "Placar da Guerra" : "Relatório de Missão"}
                 </span>
               </div>
-              {difficulty === "total" ? (
+              {(difficulty === "total" || difficulty === "antimissil") ? (
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="bg-blue-900/50 p-2 rounded border border-blue-800">
                     <div className="font-bold text-blue-300 mb-1">🇺🇸 EUA</div>

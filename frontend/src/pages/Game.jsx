@@ -969,7 +969,7 @@ export default function Game() {
     const targetScreenX = currentTargetPos.x;
     const targetScreenY = CANVAS_HEIGHT - 30 - currentTargetPos.height;
     
-    const settings = DIFFICULTY_SETTINGS[difficulty];
+    const settings = DIFFICULTY_SETTINGS[difficultyRef.current];
     const isGuerraTotal = settings.ussrRetaliates;
     
     if (isGuerraTotal) {

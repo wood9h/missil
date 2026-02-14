@@ -638,14 +638,19 @@ export default function Game() {
   };
 
   // Draw trajectory trail
-  const drawTrajectoryTrail = (ctx, trajectoryPoints, isUSSR) => {
+  const drawTrajectoryTrail = (ctx, trajectoryPoints, isUSSR, isInterceptor = false) => {
     if (trajectoryPoints.length < 2) return;
     
-    ctx.strokeStyle = isUSSR ? "#E23636" : "#4A90E2";
-    ctx.lineWidth = 3;
-    ctx.shadowColor = isUSSR ? "#FF0000" : "#0066FF";
+    if (isInterceptor) {
+      ctx.strokeStyle = "#00E5FF";
+      ctx.shadowColor = "#00BCD4";
+    } else {
+      ctx.strokeStyle = isUSSR ? "#E23636" : "#4A90E2";
+      ctx.shadowColor = isUSSR ? "#FF0000" : "#0066FF";
+    }
+    ctx.lineWidth = isInterceptor ? 2 : 3;
     ctx.shadowBlur = 10;
-    ctx.setLineDash([]);
+    ctx.setLineDash(isInterceptor ? [6, 4] : []);
     ctx.beginPath();
     trajectoryPoints.forEach((point, index) => {
       const screenX = point.x;

@@ -1425,7 +1425,7 @@ export default function Game() {
         setHits(prev => {
           const newScore = prev + 1;
           // Check for USA victory - use ref for current difficulty
-          if (newScore >= WINNING_SCORE && difficultyRef.current === "total") {
+          if (newScore >= WINNING_SCORE && (difficultyRef.current === "total" || difficultyRef.current === "antimissil")) {
             setTimeout(() => {
               setGameWinner('usa');
               stopBackgroundMusic();

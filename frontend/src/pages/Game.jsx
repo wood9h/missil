@@ -1669,6 +1669,84 @@ export default function Game() {
     projectilesRef.current.push(ussrProjectile);
   };
 
+  // Antimissil mode: USSR decides to intercept or counter-attack
+  const ussrDecideResponse = () => {
+    const settings = DIFFICULTY_SETTINGS[difficultyRef.current];
+    const willIntercept = Math.random() < (settings.interceptChance || 0.55);
+    
+    if (willIntercept) {
+      ussrIntercept();
+    } else {
+      // Counter-attack like normal
+      ussrRetaliate();
+    }
+  };
+
+  // USSR fires an interceptor missile aimed at the incoming US missile
+  const ussrIntercept = () => {
+    setUssrAttempts(prev => prev + 1);
+    
+    playLaunchSound(true);
+    
+    toast.error("🛡 URSS Interceptando!", {
+      description: "Míssil antimíssil lançado!",
+    });
+    
+    const currentTargetPos = targetPosRef.current;
+    
+    // Launch from USSR tower
+    const launchX = currentTargetPos.x + currentTargetPos.width / 2;
+    const launchY = 50;
+    
+    // Find the active USA missile to intercept
+    const usaMissile = projectilesRef.current.find(p => !p.isUSSR && p.active);
+    
+    if (!usaMissile) {
+      toast.info("Nenhum míssil para interceptar");
+      return;
+    }
+    
+    // Predict where the US missile will be in ~1-2 seconds
+    const predictTime = 1.0 + Math.random() * 1.0;
+    const predictedX = usaMissile.startX + usaMissile.vx * SCALE * (usaMissile.t + predictTime);
+    const predictedY = usaMissile.startY + usaMissile.vy * SCALE * (usaMissile.t + predictTime) 
+                       - 0.5 * GRAVITY * SCALE * (usaMissile.t + predictTime) * (usaMissile.t + predictTime);
+    
+    // Calculate intercept trajectory
+    const dx = launchX - predictedX;
+    const dy = predictedY - launchY;
+    const distToIntercept = Math.sqrt(dx * dx + dy * dy);
+    
+    // Add some inaccuracy (30% miss chance)
+    const accuracyJitter = (Math.random() - 0.5) * 0.3;
+    
+    const interceptAngle = Math.atan2(dy, dx) + accuracyJitter;
+    const interceptVelocity = distToIntercept / (predictTime * SCALE) * 1.2;
+    
+    const clampedVelocity = Math.max(25, Math.min(70, interceptVelocity));
+    
+    const vx = -clampedVelocity * Math.cos(interceptAngle);
+    const vy = clampedVelocity * Math.sin(interceptAngle);
+    
+    const ussrProjectile = {
+      id: `ussr-intercept-${Date.now()}`,
+      startX: launchX,
+      startY: launchY,
+      x: launchX,
+      y: launchY,
+      vx,
+      vy,
+      t: 0,
+      isUSSR: true,
+      isInterceptor: true,
+      trajectoryPoints: [{ x: launchX, y: launchY, isUSSR: true }],
+      active: true,
+    };
+    
+    projectilesRef.current.push(ussrProjectile);
+  };
+
+
   const resetGame = () => {
     // Clear projectiles and explosions
     projectilesRef.current = [];

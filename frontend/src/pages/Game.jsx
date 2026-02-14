@@ -66,6 +66,21 @@ const DIFFICULTY_SETTINGS = {
     ussrRetaliates: true,
     ussrAccuracy: 0.5, // 50% chance
   },
+  antimissil: {
+    wallMinHeight: 140,
+    wallMaxHeight: 260,
+    wallMinWidth: 20,
+    wallMaxWidth: 40,
+    wallMinX: 300,
+    wallMaxX: 500,
+    targetMinDist: 200,
+    targetMaxDist: 320,
+    ussrRetaliates: true,
+    ussrAccuracy: 0.5,
+    interceptMode: true,
+    interceptChance: 0.55, // 55% chance USSR tries to intercept vs counter-attack
+    interceptRadius: 40, // Distance to count as successful intercept
+  },
 };
 
 export default function Game() {

@@ -86,6 +86,9 @@ export default function Game() {
   const [trajectory, setTrajectory] = useState([]);
   const [isMuted, setIsMuted] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
+  const [gameWinner, setGameWinner] = useState(null); // null, 'usa', or 'ussr'
+  
+  const WINNING_SCORE = 5; // Score needed to win in Guerra Total
   
   // Unified projectile management for simultaneous missile flights
   const projectilesRef = useRef([]); // Array of active projectiles: { id, x, y, vx, vy, t, isUSSR, trajectoryPoints, active }

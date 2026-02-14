@@ -11,6 +11,7 @@ Jogo de artilharia com tema de física da Guerra Fria. Um canhão (EUA) à esque
 - Obstáculo (montanhas) no centro bloqueia trajetórias baixas
 - Jogador ajusta ângulo (0-90°) e velocidade (10-80 m/s)
 - Física de lançamento oblíquo aplicada
+- **Posições aleatórias a cada rodada** ✅
 
 ### Design e Tema
 - Tema da Guerra Fria (EUA vs União Soviética)
@@ -18,6 +19,7 @@ Jogo de artilharia com tema de física da Guerra Fria. Um canhão (EUA) à esque
 - Torres de lançamento de mísseis detalhadas
 - Sprites de mísseis orientados pela trajetória
 - **Layout centralizado com tema escuro imersivo** ✅
+- **Linha de mira mostrando ângulo de lançamento** ✅
 
 ### Níveis de Dificuldade
 - **Fácil**: Obstáculos menores, alvos mais próximos
@@ -28,6 +30,7 @@ Jogo de artilharia com tema de física da Guerra Fria. Um canhão (EUA) à esque
 ### Modo "Guerra Total" ✅
 - Torre de lançamento para USA E URSS (ambas com mísseis visíveis)
 - URSS lança contra-ataque 3 segundos após disparo americano
+- Míssil soviético lança da posição correta da torre CCCP ✅
 - Ambos os mísseis voam simultaneamente na tela ✅
 - Míssil USA = trajetória azul, Míssil USSR = trajetória vermelha ✅
 - Placar "USA vs CCCP" substitui estatísticas normais ✅
@@ -45,10 +48,9 @@ Jogo de artilharia com tema de física da Guerra Fria. Um canhão (EUA) à esque
 - Animação de cogumelo atômico em qualquer impacto
 - Dano por raio de explosão (80 pixels)
 - Míssil na plataforma indica o ângulo de lançamento ✅
+- Linha de mira pontilhada mostrando direção do disparo ✅
 
-## O Que Foi Implementado
-
-### Data: Dezembro 2025
+## O Que Foi Implementado - Dezembro 2025
 
 **Funcionalidades Completas:**
 1. ✅ Jogo de artilharia com física de lançamento oblíquo
@@ -62,17 +64,19 @@ Jogo de artilharia com tema de física da Guerra Fria. Um canhão (EUA) à esque
 9. ✅ Trajetórias com cores diferenciadas
 10. ✅ Animação de cogumelo atômico
 11. ✅ Sistema de dano por raio de explosão
-12. ✅ Aleatoriedade na posição de alvos e obstáculos
+12. ✅ **Posições aleatórias de alvos e obstáculos a cada rodada**
 13. ✅ Placar "USA vs CCCP" no modo Guerra Total
-14. ✅ **Layout centralizado com tema escuro**
-15. ✅ **Sistema de áudio com Web Audio API**
-16. ✅ **Sons de lançamento de míssil (USA e USSR diferentes)**
-17. ✅ **Som de explosão nuclear**
-18. ✅ **Sirene de alerta para revide soviético**
-19. ✅ **Música de fundo com batida militar**
-20. ✅ **Botão de controle de áudio "Som ON/OFF"**
-21. ✅ **Torre de lançamento soviética com míssil no modo Guerra Total**
-22. ✅ **Míssil na plataforma mostra ângulo de lançamento**
+14. ✅ Layout centralizado com tema escuro
+15. ✅ Sistema de áudio com Web Audio API
+16. ✅ Sons de lançamento de míssil (USA e USSR diferentes)
+17. ✅ Som de explosão nuclear
+18. ✅ Sirene de alerta para revide soviético
+19. ✅ Música de fundo com batida militar
+20. ✅ Botão de controle de áudio "Som ON/OFF"
+21. ✅ Torre de lançamento soviética com míssil no modo Guerra Total
+22. ✅ Míssil na plataforma mostra ângulo de lançamento
+23. ✅ Linha de mira pontilhada indicando direção do disparo
+24. ✅ Míssil soviético lança da posição correta da torre
 
 ## Arquitetura
 

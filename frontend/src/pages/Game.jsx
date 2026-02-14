@@ -1266,7 +1266,21 @@ export default function Game() {
       explosionsRef.current.push({ x, y, frame: 0, maxFrames: 60 });
       
       if (hitType === "usa") {
-        setUssrHits(prev => prev + 1);
+        setUssrHits(prev => {
+          const newScore = prev + 1;
+          // Check for USSR victory
+          if (newScore >= WINNING_SCORE && difficulty === "total") {
+            setTimeout(() => {
+              setGameWinner('ussr');
+              stopBackgroundMusic();
+              toast.error("☭ VITÓRIA DA UNIÃO SOVIÉTICA! ☭", {
+                description: `A URSS venceu a Guerra Fria com ${newScore} acertos!`,
+                duration: 10000,
+              });
+            }, 1000);
+          }
+          return newScore;
+        });
         if (!usaHitByExplosion) {
           toast.error("💥 Base Americana Atingida!", {
             description: "URSS marcou ponto!",

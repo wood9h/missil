@@ -1273,8 +1273,8 @@ export default function Game() {
       if (hitType === "usa") {
         setUssrHits(prev => {
           const newScore = prev + 1;
-          // Check for USSR victory
-          if (newScore >= WINNING_SCORE && difficulty === "total") {
+          // Check for USSR victory - use ref for current difficulty
+          if (newScore >= WINNING_SCORE && difficultyRef.current === "total") {
             setTimeout(() => {
               setGameWinner('ussr');
               stopBackgroundMusic();

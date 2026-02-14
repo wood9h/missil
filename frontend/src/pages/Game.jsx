@@ -1326,7 +1326,21 @@ export default function Game() {
       setIsAnimating(false);
       
       if (hitType === "target") {
-        setHits(prev => prev + 1);
+        setHits(prev => {
+          const newScore = prev + 1;
+          // Check for USA victory
+          if (newScore >= WINNING_SCORE && difficulty === "total") {
+            setTimeout(() => {
+              setGameWinner('usa');
+              stopBackgroundMusic();
+              toast.success("🇺🇸 VITÓRIA DOS ESTADOS UNIDOS! 🇺🇸", {
+                description: `Os EUA venceram a Guerra Fria com ${newScore} acertos!`,
+                duration: 10000,
+              });
+            }, 1000);
+          }
+          return newScore;
+        });
         if (!targetHitByExplosion) {
           toast.success("Alvo Soviético Destruído! 🎯", {
             description: `Explosão nuclear confirmada!`,
@@ -1334,13 +1348,16 @@ export default function Game() {
           });
         }
         
-        setTimeout(() => {
-          setTrajectory([]);
-          generateNewRound(true);
-          toast.info("Nova Localização URSS!", {
-            description: "Base soviética reposicionada em local distante",
-          });
-        }, 3000);
+        // Only generate new round if game not won
+        if (hits + 1 < WINNING_SCORE || difficulty !== "total") {
+          setTimeout(() => {
+            setTrajectory([]);
+            generateNewRound(true);
+            toast.info("Nova Localização URSS!", {
+              description: "Base soviética reposicionada em local distante",
+            });
+          }, 3000);
+        }
       } else if (hitType === "wall") {
         toast.error("Bloqueado por obstáculo geográfico!", {
           description: "Explosão na montanha",

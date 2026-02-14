@@ -2018,8 +2018,8 @@ export default function Game() {
                     <div className="text-slate-300">Disparos: <span className="font-bold text-white">{attempts}</span></div>
                   </div>
                   <div className="bg-red-900/50 p-2 rounded border border-red-800">
-                    <div className="font-bold text-red-300 mb-1">🚩 URSS</div>
-                    <div className="text-slate-300">Acertos: <span className="font-bold text-white">{ussrHits}</span></div>
+                    <div className="font-bold text-red-300 mb-1">{difficulty === "antimissil" ? "🛡 URSS" : "🚩 URSS"}</div>
+                    <div className="text-slate-300">{difficulty === "antimissil" ? "Pontos:" : "Acertos:"} <span className="font-bold text-white">{ussrHits}</span></div>
                     <div className="text-slate-300">Disparos: <span className="font-bold text-white">{ussrAttempts}</span></div>
                   </div>
                 </div>

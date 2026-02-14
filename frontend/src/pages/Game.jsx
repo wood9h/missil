@@ -1675,12 +1675,15 @@ export default function Game() {
         <div className="flex items-center gap-4 mt-4">
           {difficulty === "total" ? (
             <>
-              <div className="bg-blue-600 rounded-xl px-6 py-3 shadow-lg border-2 border-blue-500">
+              <div className={`rounded-xl px-6 py-3 shadow-lg border-2 transition-all ${gameWinner === 'usa' ? 'bg-emerald-600 border-emerald-400 scale-110' : 'bg-blue-600 border-blue-500'}`}>
                 <div className="text-xs uppercase tracking-wider text-blue-200 mb-1">🇺🇸 USA</div>
                 <div className="text-3xl font-bold text-white font-mono">{hits}</div>
               </div>
-              <div className="text-3xl font-bold text-slate-400">VS</div>
-              <div className="bg-red-600 rounded-xl px-6 py-3 shadow-lg border-2 border-red-500">
+              <div className="flex flex-col items-center">
+                <div className="text-3xl font-bold text-slate-400">VS</div>
+                <div className="text-xs text-slate-500">Primeiro a {WINNING_SCORE}</div>
+              </div>
+              <div className={`rounded-xl px-6 py-3 shadow-lg border-2 transition-all ${gameWinner === 'ussr' ? 'bg-emerald-600 border-emerald-400 scale-110' : 'bg-red-600 border-red-500'}`}>
                 <div className="text-xs uppercase tracking-wider text-red-200 mb-1">🚩 CCCP</div>
                 <div className="text-3xl font-bold text-white font-mono">{ussrHits}</div>
               </div>
@@ -1698,6 +1701,18 @@ export default function Game() {
             </>
           )}
         </div>
+        
+        {/* Victory Banner */}
+        {gameWinner && (
+          <div className={`mt-4 px-8 py-4 rounded-xl ${gameWinner === 'usa' ? 'bg-blue-600' : 'bg-red-600'} animate-pulse`}>
+            <div className="text-2xl font-bold text-white text-center">
+              {gameWinner === 'usa' ? '🇺🇸 VITÓRIA DOS EUA! 🇺🇸' : '☭ VITÓRIA DA URSS! ☭'}
+            </div>
+            <div className="text-sm text-white/80 text-center mt-1">
+              Clique em "Reiniciar Missão" para jogar novamente
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Main Content - Centered */}

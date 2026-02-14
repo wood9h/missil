@@ -737,7 +737,7 @@ export default function Game() {
     // Draw all trajectory trails
     activeProjectiles.forEach(proj => {
       if (proj.trajectoryPoints && proj.trajectoryPoints.length > 1) {
-        drawTrajectoryTrail(ctx, proj.trajectoryPoints, proj.isUSSR);
+        drawTrajectoryTrail(ctx, proj.trajectoryPoints, proj.isUSSR, proj.isInterceptor);
       }
     });
     

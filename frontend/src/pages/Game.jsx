@@ -1416,18 +1416,25 @@ export default function Game() {
     setAttempts(prev => prev + 1);
     setTrajectory([]);
     
-    // USSR retaliation triggered immediately in "Guerra Total" mode
+    // USSR retaliation triggered immediately in "Guerra Total" or "Defesa Antimíssil" mode
     const settings = DIFFICULTY_SETTINGS[difficulty];
     if (settings.ussrRetaliates) {
+      const isInterceptMode = settings.interceptMode;
       setTimeout(() => {
         playAlertSound();
-        toast.warning("⚠️ Lançamento Detectado!", {
-          description: "URSS preparando contra-ataque...",
+        toast.warning(isInterceptMode ? "⚠️ Lançamento Detectado!" : "⚠️ Lançamento Detectado!", {
+          description: isInterceptMode
+            ? "URSS avaliando resposta..."
+            : "URSS preparando contra-ataque...",
         });
       }, 1000);
       
       setTimeout(() => {
-        ussrRetaliate();
+        if (isInterceptMode) {
+          ussrDecideResponse();
+        } else {
+          ussrRetaliate();
+        }
       }, 3000);
     }
     

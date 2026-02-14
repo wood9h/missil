@@ -1778,6 +1778,7 @@ export default function Game() {
                 <SelectItem value="medium" className="text-white hover:bg-slate-600">Médio</SelectItem>
                 <SelectItem value="hard" className="text-white hover:bg-slate-600">Difícil</SelectItem>
                 <SelectItem value="total" className="text-white hover:bg-slate-600">Guerra Total 🔥</SelectItem>
+                <SelectItem value="antimissil" className="text-white hover:bg-slate-600">Defesa Antimíssil 🛡</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -90,6 +90,18 @@ export default function Game() {
   
   const WINNING_SCORE = 5; // Score needed to win in Guerra Total
   
+  // Refs for hits to check in callbacks
+  const hitsRef = useRef(hits);
+  const ussrHitsRef = useRef(ussrHits);
+  
+  useEffect(() => {
+    hitsRef.current = hits;
+  }, [hits]);
+  
+  useEffect(() => {
+    ussrHitsRef.current = ussrHits;
+  }, [ussrHits]);
+  
   // Unified projectile management for simultaneous missile flights
   const projectilesRef = useRef([]); // Array of active projectiles: { id, x, y, vx, vy, t, isUSSR, trajectoryPoints, active }
   const explosionsRef = useRef([]); // Array of active explosions: { x, y, frame, maxFrames }

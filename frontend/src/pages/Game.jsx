@@ -1366,6 +1366,11 @@ export default function Game() {
           const newScore = prev + 1;
           // Check for USSR victory - use ref for current difficulty
           if (newScore >= WINNING_SCORE && (difficultyRef.current === "total" || difficultyRef.current === "antimissil")) {
+            setTimeout(() => {
+              setGameWinner('ussr');
+              stopBackgroundMusic();
+              toast.error("☭ VITÓRIA DA UNIÃO SOVIÉTICA! ☭", {
+                description: `A URSS venceu a Guerra Fria com ${newScore} acertos!`,
                 duration: 10000,
               });
             }, 1000);

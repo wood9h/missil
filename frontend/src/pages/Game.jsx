@@ -1263,24 +1263,8 @@ export default function Game() {
             
             playExplosionSound();
             
-            // USSR successfully intercepted
-            setUssrHits(prev => {
-              const newScore = prev + 1;
-              if (newScore >= WINNING_SCORE && difficultyRef.current === "antimissil") {
-                setTimeout(() => {
-                  setGameWinner('ussr');
-                  stopBackgroundMusic();
-                  toast.error("☭ VITÓRIA DA URSS! ☭", {
-                    description: `A URSS venceu com ${newScore} interceptações/acertos!`,
-                    duration: 10000,
-                  });
-                }, 1000);
-              }
-              return newScore;
-            });
-            
             toast.warning("💥 INTERCEPTAÇÃO! Míssil destruído no ar!", {
-              description: "A URSS interceptou o míssil americano!",
+              description: "A URSS se defendeu! Nenhum ponto marcado.",
             });
             
             setIsAnimating(false);
@@ -1291,14 +1275,11 @@ export default function Game() {
               ...ussrM.trajectoryPoints.map(p => ({ ...p, isUSSR: true })),
             ]);
             
-            // Generate new round if game not won
-            const currentUssrHits = ussrHitsRef.current;
-            if (currentUssrHits + 1 < WINNING_SCORE || difficultyRef.current !== "antimissil") {
-              setTimeout(() => {
-                setTrajectory([]);
-                generateNewRound(false);
-              }, 3000);
-            }
+            // Generate new round
+            setTimeout(() => {
+              setTrajectory([]);
+              generateNewRound(false);
+            }, 3000);
           }
         }
       }

@@ -152,6 +152,19 @@ async def get_me(request: Request):
     user = await get_current_user(request)
     return {"user_id": user["user_id"], "email": user["email"], "name": user["name"], "picture": user.get("picture")}
 
+@api_router.get("/auth/ws-token")
+async def get_ws_token(request: Request):
+    """Return a short-lived token for WebSocket auth (since httpOnly cookies can't be read by JS)"""
+    user = await get_current_user(request)
+    ws_token = f"ws_{uuid.uuid4().hex}"
+    await db.ws_tokens.insert_one({
+        "token": ws_token, "user_id": user["user_id"],
+        "expires_at": datetime.now(timezone.utc) + timedelta(minutes=5),
+        "created_at": datetime.now(timezone.utc)
+    })
+    return {"ws_token": ws_token}
+
+
 @api_router.post("/auth/logout")
 async def logout(request: Request, response: Response):
     token = request.cookies.get("session_token")
@@ -292,11 +305,26 @@ def generate_round():
 
 @app.websocket("/api/ws/{room_id}")
 async def websocket_endpoint(ws: WebSocket, room_id: str, token: str = ""):
-    session = await db.user_sessions.find_one({"session_token": token}, {"_id": 0})
-    if not session:
+    # Try ws_token first, then session_token
+    user_id = None
+    ws_tok = await db.ws_tokens.find_one({"token": token}, {"_id": 0})
+    if ws_tok:
+        exp = ws_tok["expires_at"]
+        if isinstance(exp, str):
+            exp = datetime.fromisoformat(exp)
+        if exp.tzinfo is None:
+            exp = exp.replace(tzinfo=timezone.utc)
+        if exp >= datetime.now(timezone.utc):
+            user_id = ws_tok["user_id"]
+        await db.ws_tokens.delete_one({"token": token})  # one-time use
+    if not user_id:
+        session = await db.user_sessions.find_one({"session_token": token}, {"_id": 0})
+        if session:
+            user_id = session["user_id"]
+    if not user_id:
         await ws.close(code=4001, reason="Unauthorized")
         return
-    user = await db.users.find_one({"user_id": session["user_id"]}, {"_id": 0})
+    user = await db.users.find_one({"user_id": user_id}, {"_id": 0})
     if not user:
         await ws.close(code=4001, reason="User not found")
         return

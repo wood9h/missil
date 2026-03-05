@@ -111,23 +111,32 @@ export default function MultiplayerGame() {
   // WebSocket connection
   useEffect(() => {
     if (!user) return;
-    const getCookie = (name) => {
-      const m = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-      return m ? m[2] : "";
+    let ws = null;
+    let cancelled = false;
+
+    const connect = async () => {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/auth/ws-token`, { credentials: "include" });
+        if (!res.ok) return;
+        const { ws_token } = await res.json();
+        if (cancelled) return;
+
+        ws = new WebSocket(`${WS_URL}/${roomId}?token=${ws_token}`);
+        wsRef.current = ws;
+
+        ws.onopen = () => setGamePhase("waiting");
+        ws.onclose = () => { if (!cancelled) { setGamePhase("connecting"); toast.error("Conexão perdida"); } };
+        ws.onmessage = (e) => {
+          const data = JSON.parse(e.data);
+          handleWsMessage(data);
+        };
+      } catch {
+        toast.error("Erro ao conectar");
+      }
     };
-    const token = getCookie("session_token");
-    const ws = new WebSocket(`${WS_URL}/${roomId}?token=${token}`);
-    wsRef.current = ws;
+    connect();
 
-    ws.onopen = () => setGamePhase("waiting");
-    ws.onclose = () => { setGamePhase("connecting"); toast.error("Conexão perdida"); };
-
-    ws.onmessage = (e) => {
-      const data = JSON.parse(e.data);
-      handleWsMessage(data);
-    };
-
-    return () => { ws.close(); };
+    return () => { cancelled = true; if (ws) ws.close(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, roomId]);
 

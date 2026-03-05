@@ -2,15 +2,9 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import axios from "axios";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { Target, Play, RotateCcw, TrendingUp, Volume2, VolumeX } from "lucide-react";
+import { Target, Play, RotateCcw, TrendingUp, Volume2, VolumeX, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -86,13 +80,14 @@ const DIFFICULTY_SETTINGS = {
 export default function Game() {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
+  const navigate = useNavigate();
   
   // Audio context ref
   const audioContextRef = useRef(null);
 
   const [angle, setAngle] = useState(45);
   const [velocity, setVelocity] = useState(30);
-  const [difficulty, setDifficulty] = useState("medium");
+  const [difficulty, setDifficulty] = useState("antimissil");
   const [hits, setHits] = useState(0);
   const [attempts, setAttempts] = useState(0);
   const [ussrHits, setUssrHits] = useState(0);
@@ -1822,8 +1817,11 @@ export default function Game() {
       {/* Header - Centered */}
       <header className="mb-4 flex flex-col items-center text-center">
         <div className="flex items-center gap-4 mb-2">
+          <Button onClick={() => navigate("/lobby")} variant="ghost" size="sm" className="text-slate-400 hover:text-white" data-testid="back-to-lobby">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
-            Guerra Fria: Cálculo Balístico
+            Defesa Antimíssil - Solo
           </h1>
           {/* Sound Toggle Button */}
           <Button
@@ -1902,23 +1900,9 @@ export default function Game() {
 
         {/* Controls Panel - Compact and Centered */}
         <div className="w-full lg:w-80 bg-slate-800/90 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700 p-5 flex flex-col gap-4">
-          {/* Difficulty Selector */}
-          <div>
-            <label className="text-xs font-medium uppercase tracking-wider text-slate-400 mb-2 block">
-              Dificuldade
-            </label>
-            <Select value={difficulty} onValueChange={setDifficulty}>
-              <SelectTrigger className="w-full bg-slate-700 border-slate-600 text-white" data-testid="difficulty-select">
-                <SelectValue placeholder="Selecione" />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
-                <SelectItem value="easy" className="text-white hover:bg-slate-600">Fácil</SelectItem>
-                <SelectItem value="medium" className="text-white hover:bg-slate-600">Médio</SelectItem>
-                <SelectItem value="hard" className="text-white hover:bg-slate-600">Difícil</SelectItem>
-                <SelectItem value="total" className="text-white hover:bg-slate-600">Guerra Total 🔥</SelectItem>
-                <SelectItem value="antimissil" className="text-white hover:bg-slate-600">Defesa Antimíssil 🛡</SelectItem>
-              </SelectContent>
-            </Select>
+          {/* Mode Label */}
+          <div className="text-xs font-medium uppercase tracking-wider text-cyan-400 text-center">
+            Defesa Antimíssil - Modo Solo
           </div>
 
           {/* Angle Control */}
